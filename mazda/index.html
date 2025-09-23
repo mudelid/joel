@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MAZDA</title>
+  <style>
+@font-face {
+  font-family: 'BebasKai';
+  src: url('../fonts/bebaskai.woff2') format('woff2'),
+       url('../fonts/bebaskai.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+    :root{
+      --bg:#242424; --panel:#005490; --text:#FFFFFF; --muted:#FFFFFF; --border:#2C84C7; --link:#FFBF00;
+      --maxw:900px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: var(--bg) url("../img/taust.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text);
+      font-family: 'BebasKai', sans-serif;
+      font-size: 30px;
+    }
+    .logo{position:fixed; top:12px; left:12px; width:60px; height:60px; border-radius:7px; object-fit:cover; border:1px solid var(--border); background:#005490}
+    header{max-width:var(--maxw); margin:60px auto 10px; padding:0 16px}
+    a.back{color:var(--link); text-decoration:none}
+    h1{margin:6px 0 0; font-size:70px;}
+    p.lead{margin:0; color:var(--muted)}
+    main{
+      max-width:var(--maxw); margin:18px auto 60px; padding:0 16px;
+      display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(220px,1fr))
+    }
+    .card{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
+    .thumb{aspect-ratio:4/3; width:100%; object-fit:cover; display:block; background:#222}
+    .content{padding:10px 12px}
+    .title{margin:0 0 6px; font-size:20px}
+    .desc{margin:0; color:var(--muted); font-size:16px}
+    footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:18px}
+
+/* suurendatud pildi overlay */
+#lightbox {
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+#lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  box-shadow: 0 0 20px #000;
+  border-radius: 8px;
+}
+
+  </style>
+</head>
+<body>
+  <img class="logo" src="../img/logo.png" alt="Logo" onerror="this.remove()"/>
+
+  <header>
+    <a class="back" href="../index.html">← tagasi</a>
+    <h1>MAZDA</h1>
+    <p class="lead">VAJUTA PILDILE, ET NÄHA SUURELT</p>
+  </header>
+
+  <main>
+    <!-- Näidiskaardid – kopeeri neid nii palju kui vaja -->
+    <article class="card">
+      <img class="thumb" src="img/787b5.jpg" alt="MAZDA 787B">
+      <div class="content">
+        <h3 class="title">MAZDA 787B</h3>
+        <p class="desc">2025 - PEAK PURSUIT - 226/250</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="thumb" src="img/95rx71.jpg" alt="1995 MAZDA RX-7">
+      <div class="content">
+        <h3 class="title">1995 MAZDA RX-7</h3>
+        <p class="desc">2023 - FAST & FURIOUS - 1/5</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="thumb" src="img/95rx79.jpg" alt="´95 MAZDA RX-7">
+      <div class="content">
+        <h3 class="title">´95 MAZDA RX-7</h3>
+        <p class="desc">2024 - HW J-IMPORTS - 170/250</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="thumb" src="img/mx5miatahal.jpg" alt="MAZDA MX-5 MIATA">
+      <div class="content">
+        <h3 class="title">MAZDA MX-5 MIATA</h3>
+        <p class="desc">2025 - HW DREAM GARAGE - 1/250</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="thumb" src="img/mx5miataroh.jpg" alt="MAZDA MX-5 MIATA">
+      <div class="content">
+        <h3 class="title">MAZDA MX-5 MIATA</h3>
+        <p class="desc">2025 - HW DREAM GARAGE - 1/250</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="thumb" src="img/15mx5miata2.jpg" alt="´15 mazda mx-5 miata">
+      <div class="content">
+        <h3 class="title">´15 mazda mx-5 miata</h3>
+        <p class="desc">2025 - COMPACT KINGS - 80/250</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <img class="thumb" src="img/91mx5miata6.jpg" alt="´91 MAZDA MX-5 MIATA">
+      <div class="content">
+        <h3 class="title">´91 MAZDA MX-5 MIATA</h3>
+        <p class="desc">2024 - HW J-IMPORTS - 120/250</p>
+      </div>
+    </article>
+
+  </main>
+
+  <footer>© <span id="year"></span></footer>
+
+<div id="lightbox">
+  <img src="" alt="Suur pilt">
+</div>
+
+<script>
+  const lightbox = document.getElementById('lightbox');
+  const bigImg = lightbox.querySelector('img');
+
+  // igale .thumb pildile klikk
+  document.querySelectorAll('.thumb').forEach(img => {
+    img.addEventListener('click', () => {
+      bigImg.src = img.src;       // kasuta sama faili
+      lightbox.style.display = 'flex';
+    });
+  });
+
+  // sulgemine klikkides overlayle
+  lightbox.addEventListener('click', () => {
+    lightbox.style.display = 'none';
+    bigImg.src = '';
+  });
+</script>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

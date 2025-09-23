@@ -1,0 +1,168 @@
+
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JOELI KOLLEKTSIOON</title>
+  <style>
+@font-face {
+  font-family: 'BebasKai';
+  src: url('fonts/bebaskai.woff2') format('woff2'),
+       url('fonts/bebaskai.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+    :root{
+      --bg:#242424; --panel:#005490; --text:#FFFFFF; --muted:#FFFFFF; --border:#2C84C7; --link:#FFBF00;
+      --maxw:500px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body {
+  margin:0;
+  background: var(--bg) url("img/taust.jpg") no-repeat center center fixed;
+  background-size: cover;
+  color: var(--text);
+  font-family: 'BebasKai', sans-serif;
+  font-size: 30px;
+}
+    /* Väike logo vasakusse ülanurka */
+    .logo{position:fixed; top:12px; left:12px; width:100px; height:100px; border-radius:7px; object-fill:cover; border:1px solid var(--border); background:#005490}
+    header{max-width:var(--maxw); margin:60px auto 10px; padding:0 16px}
+    h1{margin:0 0 6px; font-size:50px; }
+    p.lead{margin:0; color:var(--muted)}
+    main{max-width:var(--maxw); margin:18px auto 60px; padding:0 16px}
+    .list{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
+
+.brand { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-top:1px solid var(--border); color:var(--link); text-decoration:none; }
+.brand:first-child { border-top:none; }
+.brand:hover { opacity:.9; background:rgba(255,255,255,0.05); }
+
+    .hint{color:#FFBF00; font-size:20px}
+    footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:22px}
+
+  </style>
+</head>
+<body>
+  <img class="logo" src="img/logo.png" alt="Logo" onerror="this.remove()"/>
+
+  <header>
+    <h1>joeli kollektsioon</h1>
+    <p class="lead">ERINEVAID MUDELEID: <span id="count">0</span></p>
+  </header>
+
+  <main class="list">
+    <!-- Muuda nimed pärisnimedeks; link viitab kaustale TOOTJAxx/index.html -->
+
+<a class="brand" href="audi/index.html"><span>Audi</span><span class="hint"></span></a>
+<a class="brand" href="bmw/index.html"><span>BMW</span><span class="hint"></span></a>
+<a class="brand" href="bugatti/index.html"><span>Bugatti</span><span class="hint"></span></a>
+<a class="brand" href="buick/index.html"><span>Buick</span><span class="hint"></span></a>
+<a class="brand" href="chevrolet/index.html"><span>Chevrolet</span><span class="hint"></span></a>
+<a class="brand" href="dodge/index.html"><span>Dodge</span><span class="hint"></span></a>
+<a class="brand" href="ferrari/index.html"><span>Ferrari</span><span class="hint"></span></a>
+<a class="brand" href="fiat/index.html"><span>Fiat</span><span class="hint"></span></a>
+<a class="brand" href="ford/index.html"><span>Ford</span><span class="hint"></span></a>
+<a class="brand" href="honda/index.html"><span>Honda</span><span class="hint"></span></a>
+<a class="brand" href="jaguar/index.html"><span>Jaguar</span><span class="hint"></span></a>
+<a class="brand" href="lamborghini/index.html"><span>Lamborghini</span><span class="hint"></span></a>
+<a class="brand" href="lotus/index.html"><span>Lotus</span><span class="hint"></span></a>
+<a class="brand" href="maserati/index.html"><span>Maserati</span><span class="hint"></span></a>
+<a class="brand" href="mazda/index.html"><span>Mazda</span><span class="hint"></span></a>
+<a class="brand" href="mercedes-benz/index.html"><span>Mercedes-Benz</span><span class="hint"></span></a>
+<a class="brand" href="mitsubishi/index.html"><span>Mitsubishi</span><span class="hint"></span></a>
+<a class="brand" href="nissan/index.html"><span>Nissan</span><span class="hint"></span></a>
+<a class="brand" href="porsche/index.html"><span>Porsche</span><span class="hint"></span></a>
+<a class="brand" href="proton/index.html"><span>Proton</span><span class="hint"></span></a>
+<a class="brand" href="subaru/index.html"><span>Subaru</span><span class="hint"></span></a>
+<a class="brand" href="toyota/index.html"><span>Toyota</span><span class="hint"></span></a>
+<a class="brand" href="volkswagen/index.html"><span>Volkswagen</span><span class="hint"></span></a>
+<a class="brand" href="wmotors/index.html"><span>W Motors</span><span class="hint"></span></a>
+
+
+  </main>
+
+  <footer>© <span id="year"></span></footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+<script>
+(async () => {
+  const hrefs = [...document.querySelectorAll('.brand a')].map(a => a.getAttribute('href'));
+  let total = 0;
+  await Promise.all(hrefs.map(async (url) => {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) return;
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      total += doc.querySelectorAll('.card').length; // loeb <article class="card"> kaardid
+    } catch(_) {}
+  }));
+  const el = document.getElementById('count');
+  if (el) el.textContent = total;
+})();
+</script>
+
+<script>
+(async () => {
+  const rows = [...document.querySelectorAll('.brand')]; // võib olla <div> või <a>
+  let total = 0;
+
+  if (location.protocol === 'file:') {
+    console.warn('Ava läbi http:// (start_server.command või GitHub Pages).');
+    return;
+  }
+
+  await Promise.all(rows.map(async row => {
+    // toimi nii uue (<a class="brand" href="...">) kui vana (<div><a href>…) struktuuriga
+    const url = row.tagName === 'A'
+      ? row.getAttribute('href')
+      : row.querySelector('a')?.getAttribute('href');
+
+    const hint = row.querySelector('.hint');
+    if (!url) return;
+
+    try {
+      const res = await fetch(url + (url.includes('?') ? '&' : '?') + 'v=' + Date.now(), { cache: 'no-store' });
+      if (!res.ok) return;
+
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+
+      // 1) eelistame .card kaarte
+      let n = doc.querySelectorAll('.card').length;
+
+      // 2) kui kaarte pole, loe <main> sees pildid (väldi logo/tausta)
+      if (!n) {
+        const main = doc.querySelector('main') || doc.body;
+        n = [...main.querySelectorAll('img')].filter(img => {
+          const src = (img.getAttribute('src') || '').toLowerCase();
+          return !src.includes('logo') && !src.includes('taust');
+        }).length;
+      }
+
+      // 3) viimane variant: meta
+      if (!n) {
+        const meta = doc.querySelector('meta[name="models-count"]');
+        if (meta) n = parseInt(meta.content) || 0;
+      }
+
+      total += n;
+      if (hint) hint.textContent = n ? `(${n})` : '';
+    } catch (_) {}
+  }));
+
+  const totalEl = document.getElementById('count');
+  if (totalEl) totalEl.textContent = total;
+})();
+</script>
+
+
+</body>
+</html>
+
