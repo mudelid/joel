@@ -15,32 +15,29 @@
 }
 
     :root{
-      --bg:#242424; --panel:#005490; --text:#FFFFFF; --muted:#FFFFFF; --border:#2C84C7; --link:#FFBF00;
+      --bg:#FFFFFF; --panel:#FFFFFF; --text:#000000; --muted:#000000; --border:#000000; --link:#000000;
       --maxw:500px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body {
   margin:0;
-  background: var(--bg) url("img/taust.jpg") no-repeat center center fixed;
+  background: var(--bg) url("img/taust3.jpg") no-repeat center center fixed;
   background-size: cover;
   color: var(--text);
   font-family: 'BebasKai', sans-serif;
   font-size: 30px;
 }
     /* Väike logo vasakusse ülanurka */
-    .logo{position:fixed; top:12px; left:12px; width:100px; height:100px; border-radius:7px; object-fill:cover; border:1px solid var(--border); background:#005490}
+    .logo{position:fixed; top:12px; left:12px; width:100px; height:100px; border-radius:7px; object-fill:cover; border:1px solid var(--border); background:#FFFFFF}
     header{max-width:var(--maxw); margin:60px auto 10px; padding:0 16px}
     h1{margin:0 0 6px; font-size:50px; }
     p.lead{margin:0; color:var(--muted)}
     main{max-width:var(--maxw); margin:18px auto 60px; padding:0 16px}
     .list{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
 
-.brand { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-top:1px solid var(--border); color:var(--link); text-decoration:none; }
-.brand:first-child { border-top:none; }
-.brand:hover { opacity:.9; background:rgba(255,255,255,0.05); }
 
-    .hint{color:#FFBF00; font-size:20px}
+    .hint{color:#000000; font-size:20px}
     footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:22px}
 
 @media (max-width: 600px){
@@ -53,47 +50,231 @@
   header{ margin-top:12px; } /* enam pole suurt ülemist vahet vaja */
 }
 
+/* grid */
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  max-width: 1200px;
+  margin: 18px auto 60px;
+  padding: 0 16px;
+}
+
+.brand-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 25px;
+  padding: 24px 16px;
+  text-decoration: none;
+  color: var(--link);
+  transition: transform 0.2s, background 0.2s;
+  text-align: center;
+}
+
+.brand-card:hover {
+  background: #FFFFFF;
+  transform: translateY(-3px);
+}
+
+.brand-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 12px;
+  background: #ffffff;
+  border-radius: 8px;
+}
+
+.brand-name {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.hint {
+  font-size: 16px;
+  color: #000000;
+}
+
+
   </style>
 
 </head>
 <body>
-  <img class="logo" src="img/logo.png" alt="Logo" onerror="this.remove()"/>
+  <img class="logo" src="img/logo2.png" alt="Logo" onerror="this.remove()"/>
 
-  <header>
-    <h1>joeli kollektsioon</h1>
-    <p class="lead">ERINEVAID MUDELEID: <span id="count">0</span></p>
-  </header>
+<header>
+  <h1>JOELI KOLLEKTSIOON</h1>
+  <p class="lead">ERINEVAID MUDELEID: <span id="count">0</span></p>
+</header>
 
-  <main class="list">
-    <!-- Muuda nimed pärisnimedeks; link viitab kaustale TOOTJAxx/index.html -->
+  <main class="brand-grid">
 
-<a class="brand" href="astonmartin/index.html"><span>Aston Martin</span><span class="hint"></span></a>
-<a class="brand" href="audi/index.html"><span>Audi</span><span class="hint"></span></a>
-<a class="brand" href="bmw/index.html"><span>BMW</span><span class="hint"></span></a>
-<a class="brand" href="bugatti/index.html"><span>Bugatti</span><span class="hint"></span></a>
-<a class="brand" href="buick/index.html"><span>Buick</span><span class="hint"></span></a>
-<a class="brand" href="chevrolet/index.html"><span>Chevrolet</span><span class="hint"></span></a>
-<a class="brand" href="dodge/index.html"><span>Dodge</span><span class="hint"></span></a>
-<a class="brand" href="ferrari/index.html"><span>Ferrari</span><span class="hint"></span></a>
-<a class="brand" href="fiat/index.html"><span>Fiat</span><span class="hint"></span></a>
-<a class="brand" href="ford/index.html"><span>Ford</span><span class="hint"></span></a>
-<a class="brand" href="honda/index.html"><span>Honda</span><span class="hint"></span></a>
-<a class="brand" href="jaguar/index.html"><span>Jaguar</span><span class="hint"></span></a>
-<a class="brand" href="lamborghini/index.html"><span>Lamborghini</span><span class="hint"></span></a>
-<a class="brand" href="lotus/index.html"><span>Lotus</span><span class="hint"></span></a>
-<a class="brand" href="maserati/index.html"><span>Maserati</span><span class="hint"></span></a>
-<a class="brand" href="mazda/index.html"><span>Mazda</span><span class="hint"></span></a>
-<a class="brand" href="mercedes-benz/index.html"><span>Mercedes-Benz</span><span class="hint"></span></a>
-<a class="brand" href="mercury/index.html"><span>Mercury</span><span class="hint"></span></a>
-<a class="brand" href="mitsubishi/index.html"><span>Mitsubishi</span><span class="hint"></span></a>
-<a class="brand" href="nissan/index.html"><span>Nissan</span><span class="hint"></span></a>
-<a class="brand" href="porsche/index.html"><span>Porsche</span><span class="hint"></span></a>
-<a class="brand" href="proton/index.html"><span>Proton</span><span class="hint"></span></a>
-<a class="brand" href="subaru/index.html"><span>Subaru</span><span class="hint"></span></a>
-<a class="brand" href="toyota/index.html"><span>Toyota</span><span class="hint"></span></a>
-<a class="brand" href="volkswagen/index.html"><span>Volkswagen</span><span class="hint"></span></a>
-<a class="brand" href="wmotors/index.html"><span>W Motors</span><span class="hint"></span></a>
+  <a class="brand-card" href="astonmartin/index.html">
+    <img src="img/logod/astonmartin.jpg" alt="Aston Martin logo" class="brand-logo">
+    <span class="brand-name">Aston Martin</span>
+    <span class="hint"></span>
+  </a>
 
+  <a class="brand-card" href="audi/index.html">
+    <img src="img/logod/audi.png" alt="Audi logo" class="brand-logo">
+    <span class="brand-name">Audi</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="bmw/index.html">
+    <img src="img/logod/bmw.png" alt="BMW logo" class="brand-logo">
+    <span class="brand-name">BMW</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="bugatti/index.html">
+    <img src="img/logod/bugatti.jpg" alt="Bugatti logo" class="brand-logo">
+    <span class="brand-name">BUGATTI</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="buick/index.html">
+    <img src="img/logod/buick.png" alt="Buick logo" class="brand-logo">
+    <span class="brand-name">Buick</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="chevrolet/index.html">
+    <img src="img/logod/chevrolet.jpg" alt="Chevrolet logo" class="brand-logo">
+    <span class="brand-name">Chevrolet</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="datsun/index.html">
+    <img src="img/logod/datsun.png" alt="Datsun logo" class="brand-logo">
+    <span class="brand-name">Datsun</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="dodge/index.html">
+    <img src="img/logod/dodge.png" alt="Dodge logo" class="brand-logo">
+    <span class="brand-name">Dodge</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="ferrari/index.html">
+    <img src="img/logod/ferrari.png" alt="Ferrari logo" class="brand-logo">
+    <span class="brand-name">Ferrari</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="fiat/index.html">
+    <img src="img/logod/fiat.png" alt="Fiat logo" class="brand-logo">
+    <span class="brand-name">Fiat</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="ford/index.html">
+    <img src="img/logod/ford.png" alt="Ford logo" class="brand-logo">
+    <span class="brand-name">Ford</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="honda/index.html">
+    <img src="img/logod/honda.png" alt="Honda logo" class="brand-logo">
+    <span class="brand-name">Honda</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="jaguar/index.html">
+    <img src="img/logod/jaguar.png" alt="Jaguar logo" class="brand-logo">
+    <span class="brand-name">Jaguar</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="lamborghini/index.html">
+    <img src="img/logod/lambo.png" alt="Lamborghini logo" class="brand-logo">
+    <span class="brand-name">Lamborghini</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="lotus/index.html">
+    <img src="img/logod/lotus.png" alt="Lotus logo" class="brand-logo">
+    <span class="brand-name">Lotus</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="maserati/index.html">
+    <img src="img/logod/maserati.png" alt="Maserati logo" class="brand-logo">
+    <span class="brand-name">Maserati</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="mazda/index.html">
+    <img src="img/logod/mazda.png" alt="Mazda logo" class="brand-logo">
+    <span class="brand-name">Mazda</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="mercedes-benz/index.html">
+    <img src="img/logod/mercedes.png" alt="Mercedes-Benz logo" class="brand-logo">
+    <span class="brand-name">Mercedes-Benz</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="mercury/index.html">
+    <img src="img/logod/mercury.png" alt="Mercury logo" class="brand-logo">
+    <span class="brand-name">Mercury</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="mitsubishi/index.html">
+    <img src="img/logod/mitsu.png" alt="Mitsubishi logo" class="brand-logo">
+    <span class="brand-name">Mitsubishi</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="nissan/index.html">
+    <img src="img/logod/nissan.png" alt="Nissan logo" class="brand-logo">
+    <span class="brand-name">Nissan</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="porsche/index.html">
+    <img src="img/logod/porsche.png" alt="Porsche logo" class="brand-logo">
+    <span class="brand-name">Porsche</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="proton/index.html">
+    <img src="img/logod/proton.png" alt="Proton logo" class="brand-logo">
+    <span class="brand-name">Proton</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="subaru/index.html">
+    <img src="img/logod/subaru.png" alt="Subaru logo" class="brand-logo">
+    <span class="brand-name">Subaru</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="toyota/index.html">
+    <img src="img/logod/toyota.png" alt="Toyota logo" class="brand-logo">
+    <span class="brand-name">Toyota</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="volkswagen/index.html">
+    <img src="img/logod/volks.png" alt="Volkswagen logo" class="brand-logo">
+    <span class="brand-name">Volkswagen</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="wmotors/index.html">
+    <img src="img/logod/wmotors.png" alt="W Motors logo" class="brand-logo">
+    <span class="brand-name">W Motors</span>
+    <span class="hint"></span>
+  </a>
 
   </main>
 
@@ -105,61 +286,27 @@
 
 <script>
 (async () => {
-  const hrefs = [...document.querySelectorAll('.brand a')].map(a => a.getAttribute('href'));
+  const rows = [...document.querySelectorAll('.brand-card')];
   let total = 0;
-  await Promise.all(hrefs.map(async (url) => {
+
+  if (location.protocol === 'file:') {
+    console.warn('Ava leht läbi http://localhost:8000 või GitHub Pages.');
+    return;
+  }
+
+  await Promise.all(rows.map(async row => {
+    const url = row.getAttribute('href');
+    const hint = row.querySelector('.hint');
+    if (!url) return;
+
     try {
       const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) return;
       const html = await res.text();
       const doc = new DOMParser().parseFromString(html, 'text/html');
-      total += doc.querySelectorAll('.card').length; // loeb <article class="card"> kaardid
-    } catch(_) {}
-  }));
-  const el = document.getElementById('count');
-  if (el) el.textContent = total;
-})();
-</script>
 
-<script>
-(async () => {
-  const rows = [...document.querySelectorAll('.brand')]; // võib olla <div> või <a>
-  let total = 0;
-
-  if (location.protocol === 'file:') {
-    console.warn('Ava läbi http:// (start_server.command või GitHub Pages).');
-    return;
-  }
-
-  await Promise.all(rows.map(async row => {
-    // toimi nii uue (<a class="brand" href="...">) kui vana (<div><a href>…) struktuuriga
-    const url = row.tagName === 'A'
-      ? row.getAttribute('href')
-      : row.querySelector('a')?.getAttribute('href');
-
-    const hint = row.querySelector('.hint');
-    if (!url) return;
-
-    try {
-      const res = await fetch(url + (url.includes('?') ? '&' : '?') + 'v=' + Date.now(), { cache: 'no-store' });
-      if (!res.ok) return;
-
-      const html = await res.text();
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-
-      // 1) eelistame .card kaarte
+      // loeme .card elemente või fallback
       let n = doc.querySelectorAll('.card').length;
-
-      // 2) kui kaarte pole, loe <main> sees pildid (väldi logo/tausta)
-      if (!n) {
-        const main = doc.querySelector('main') || doc.body;
-        n = [...main.querySelectorAll('img')].filter(img => {
-          const src = (img.getAttribute('src') || '').toLowerCase();
-          return !src.includes('logo') && !src.includes('taust');
-        }).length;
-      }
-
-      // 3) viimane variant: meta
       if (!n) {
         const meta = doc.querySelector('meta[name="models-count"]');
         if (meta) n = parseInt(meta.content) || 0;
@@ -174,7 +321,6 @@
   if (totalEl) totalEl.textContent = total;
 })();
 </script>
-
 
 </body>
 </html>
