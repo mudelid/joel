@@ -128,6 +128,62 @@
   }
 }
 
+/* --- kaheveeruline paigutus --- */
+.layout{
+  display: grid;
+  grid-template-columns: 1fr 320px;   /* kaardid | külgriba */
+  gap: 16px;
+  max-width: 1400px;
+  margin: 18px auto 60px;
+  padding: 0 16px;
+}
+
+/* kohanda brand-grid, kui ta on layouti sees (väldi topelt sisemarginaale) */
+.layout .brand-grid{
+  max-width: unset;
+  margin: 0;          /* layout ise lisab välismarginaali */
+  padding: 0;         /* layout ise lisab paddingu */
+}
+
+/* --- TOP tootjate külgriba --- */
+.sidebar{
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  background: #ffffffcc;
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  font-size: 18px; line-height: 1.25;
+  max-height: calc(100dvh - 32px);
+  overflow:auto;
+}
+
+.sidebar h3{ margin: 0 0 8px; font-size: 22px; }
+.sidebar ol{ list-style: none; margin: 8px 0 0; padding: 0; }
+.sidebar li{
+  display:flex; justify-content:space-between; gap:10px; align-items:baseline;
+  padding: 6px 0; border-bottom: 1px solid var(--border);
+}
+.sidebar li:last-child{ border-bottom: 0; }
+.sidebar .names a{ color: var(--link); text-decoration: none; }
+.sidebar .names a:hover{ text-decoration: underline; }
+.sidebar .count{ opacity:.7; }
+
+/* Mobiil/kitsem vaade: külgriba alla, täislaius, ei kata midagi */
+@media (max-width: 1100px){
+  .layout{
+    grid-template-columns: 1fr;
+  }
+  .sidebar{
+    position: static;
+    max-height: none;
+    margin-top: 12px;
+  }
+}
+
   </style>
 
 </head>
@@ -139,6 +195,7 @@
   <p class="lead">ERINEVAID MUDELEID: <span id="count">0</span></p>
 </header>
 
+<div class="layout">
   <main class="brand-grid">
 
   <a class="brand-card" href="astonmartin/index.html">
@@ -328,163 +385,82 @@
   </a>
 
   </main>
+ <aside id="top-brands-sidebar" class="sidebar"></aside>
+</div>
 
-  <footer>© <span id="year"></span></footer>
+  <footer>© <span id="year">JOEL-MARK STOMMA</span></footer>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 
 <script>
-(function(){
-  // Väike util
-  const slug = (s) => String(s||'')
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
-
-  // Loome parempoolse paneeli
-  const sidebar = document.createElement('aside');
-  sidebar.id = 'top-models-sidebar';
-  sidebar.innerHTML = `<h3>TOP mudelid</h3><ol id="top-list"></ol>`;
-  document.body.appendChild(sidebar);
-
+(async () => {
   const brandCards = [...document.querySelectorAll('.brand-card')];
-  let totalModels = 0;
+  const sidebar = document.getElementById('top-brands-sidebar');
+  if (sidebar) sidebar.innerHTML = `<h3>TOP tootjad</h3><ol id="top-list"></ol>`;
 
-  // Kui failina avatud, katkestame (nagu sul juba oli)
+  const topList = document.getElementById('top-list');
+  let total = 0;
+  const brandCounts = []; // {name, href, count}
+
+  // Kui avad faili lokaalselt (file://), siis fetch ei toimi – näitame teadet
   if (location.protocol === 'file:') {
     console.warn('Ava leht läbi http://localhost:8000 või GitHub Pages.');
-    document.getElementById('count').textContent = '—';
+    const totalEl = document.getElementById('count');
+    if (totalEl) totalEl.textContent = '—';
+    if (topList) topList.innerHTML = `<li><span class="names">Andmeid ei saa failist lugeda</span></li>`;
     return;
   }
 
-  // Mudelite koondus: key = make|||model -> {make, model, count, brandHref}
-  const map = new Map();
+  // Loe iga tootja alamleht ja loe sealsete mudelikaartide arv
+  await Promise.all(brandCards.map(async card => {
+    const href = card.getAttribute('href');
+    const hint = card.querySelector('.hint');
+    const brandName = (card.querySelector('.brand-name')?.textContent || '').trim();
+    if (!href) return;
 
-  // Heuristika mudelinime leidmiseks alamlehel
-  function extractModelsFromDoc(doc){
-    const out = [];
+    try {
+      const res = await fetch(href, { cache: 'no-store' });
+      if (!res.ok) return;
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
 
-    // 1) Kaardid klassiga .card
-    const cards = [...doc.querySelectorAll('.card')];
+      // brändi nimi meta-st või kaardilt
+      const metaBrand = doc.querySelector('meta[name="brand"]')?.content?.trim();
+      const name = metaBrand || brandName || href;
 
-    for (const el of cards){
-      // Proovime kõigepealt data-* atribuute
-      let model =
-        el.getAttribute?.('data-model') ||
-        el.dataset?.model ||
-        el.querySelector?.('[data-model]')?.getAttribute('data-model') ||
-        el.querySelector?.('[itemprop="model"]')?.textContent ||
-        el.querySelector?.('.model, .model-name, .title, h3, h2')?.textContent ||
-        el.getAttribute?.('aria-label') ||
-        '';
-
-      model = (model || '').toString().trim();
-      if (!model) continue;
-
-      // Puhasta liigsed tühikud/sulud jms
-      model = model.replace(/\s+/g,' ').replace(/\s*[\(\[][^)\]]*[\)\]]\s*/g,'').trim();
-      if (!model) continue;
-
-      out.push(model);
-    }
-
-    // 2) Fallback: meta(name="models") content="Model1;Model2;..."
-    if (!out.length){
-      const metaList = doc.querySelector('meta[name="models"]')?.content || '';
-      if (metaList){
-        metaList.split(/[;,]/).map(s=>s.trim()).filter(Boolean).forEach(m => out.push(m));
+      // mudelite arv .card järgi (või meta fallback)
+      let n = doc.querySelectorAll('.card').length;
+      if (!n) {
+        const meta = doc.querySelector('meta[name="models-count"]');
+        if (meta) n = parseInt(meta.content) || 0;
       }
-    }
 
-    // 3) Fallback: kõik elemendid, millel on [data-model]
-    if (!out.length){
-      doc.querySelectorAll('[data-model]').forEach(n=>{
-        const m = n.getAttribute('data-model')?.trim();
-        if (m) out.push(m);
-      });
-    }
+      total += n;
+      if (hint) hint.textContent = n ? `(${n})` : '';
+      brandCounts.push({ name, href, count: n });
 
-    return out;
+    } catch (_) { /* kui leht ei vasta, jätame vahele */ }
+  }));
+
+  // uuenda päise kogusumma
+  const totalEl = document.getElementById('count');
+  if (totalEl) totalEl.textContent = total;
+
+  // sorteeri tootjad suuremast väiksemani ja võta TOP 15
+  brandCounts.sort((a,b)=> (b.count - a.count) || a.name.localeCompare(b.name));
+  const top = brandCounts.slice(0, 15);
+
+  // kuva külgribal
+  if (topList) {
+    topList.innerHTML = top.map(({name, href, count}) => `
+      <li>
+        <span class="names"><a href="${href}" aria-label="Tootja: ${name}">${name}</a></span>
+        <span class="count">${count}</span>
+      </li>
+    `).join('') || `<li><span class="names">Andmeid ei leitud</span></li>`;
   }
-
-  // Põhitsükkel: käime brändid läbi, loeme mudelid ja kogume TOP jaoks
-  (async () => {
-    await Promise.all(brandCards.map(async (card) => {
-      const brandHref = card.getAttribute('href');
-      const hintSpan = card.querySelector('.hint');
-      const brandName = (card.querySelector('.brand-name')?.textContent || '').trim();
-
-      if (!brandHref) return;
-
-      try{
-        const res = await fetch(brandHref, { cache: 'no-store' });
-        if (!res.ok) return;
-
-        const html = await res.text();
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-
-        // Püüa võtta brändi nimi lehelt (meta), kui olemas
-        const metaBrand = doc.querySelector('meta[name="brand"]')?.content?.trim();
-        const make = metaBrand || brandName || '';
-
-        // Mudelite leidmine
-        let models = extractModelsFromDoc(doc);
-
-        // Kui ei leidnud, kasuta sinu varasemat "lihtsat loendust" ja jäta nimedeta (ei lähe TOPi)
-        if (!models.length){
-          let n = doc.querySelectorAll('.card').length;
-          if (!n) {
-            const meta = doc.querySelector('meta[name="models-count"]');
-            if (meta) n = parseInt(meta.content) || 0;
-          }
-          totalModels += n;
-          if (hintSpan) hintSpan.textContent = n ? `(${n})` : '';
-          return;
-        }
-
-        // Arvuta kogusumma ja brändile vihje
-        totalModels += models.length;
-        if (hintSpan) hintSpan.textContent = `(${models.length})`;
-
-        // Koonda TOP jaoks
-        for (const model of models){
-          const key = `${make}|||${model}`;
-          const row = map.get(key) || { make, model, count: 0, brandHref };
-          row.count++;
-          row.brandHref = brandHref; // hoia viimast/ainust
-          map.set(key, row);
-        }
-
-      }catch(e){
-        // vaikus – kui mõni leht ei vasta, jätame vahele
-      }
-    }));
-
-    // Uuenda kokkuarv
-    const totalEl = document.getElementById('count');
-    if (totalEl) totalEl.textContent = totalModels;
-
-    // TOP edetabel
-    const ranked = Array.from(map.values())
-      .sort((a,b)=> b.count - a.count || a.make.localeCompare(b.make) || a.model.localeCompare(b.model))
-      .slice(0, 15);
-
-    const list = document.getElementById('top-list');
-    list.innerHTML = ranked.map(({make, model, count, brandHref}) => {
-      const brandUrl = brandHref;                     // sinu olemasolev tootjaleht
-      const modelUrl = `${brandHref}?m=${encodeURIComponent(model)}`; // tulevikus saad alamlehel sellega mudeleid filtreerida/kerida
-      return `
-        <li>
-          <span class="names">
-            <a href="${brandUrl}" aria-label="Tootja: ${make}">${make}</a>
-            &nbsp;•&nbsp;
-            <a href="${modelUrl}" aria-label="Mudel: ${model}">${model}</a>
-          </span>
-          <span class="count">${count}</span>
-        </li>`;
-    }).join('') || `<li><span class="names">Andmeid ei leitud</span></li>`;
-  })();
 })();
 </script>
 
