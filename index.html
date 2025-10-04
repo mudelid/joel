@@ -100,6 +100,33 @@
   color: #000000;
 }
 
+/* --- TOP edetabel paremas servas --- */
+#top-models-sidebar{
+  position: fixed; right: 16px; top: 16px;
+  width: 300px; max-height: calc(100dvh - 32px);
+  overflow: auto; z-index: 10;
+  background: #ffffffcc; backdrop-filter: blur(6px);
+  border: 1px solid #000000; border-radius: 16px;
+  padding: 12px 14px; box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  font-size: 18px; line-height: 1.25;
+}
+#top-models-sidebar h3{ margin: 0 0 8px; font-size: 22px; }
+#top-models-sidebar ol{ list-style: none; margin: 8px 0 0; padding: 0; }
+#top-models-sidebar li{
+  display:flex; justify-content:space-between; gap:10px; align-items:baseline;
+  padding: 6px 0; border-bottom: 1px solid #000000;
+}
+#top-models-sidebar li:last-child{ border-bottom: 0; }
+#top-models-sidebar .names a{ color: var(--link); text-decoration: none; }
+#top-models-sidebar .names a:hover{ text-decoration: underline; }
+#top-models-sidebar .count{ opacity:.7; }
+
+@media (max-width: 1200px){
+  #top-models-sidebar{
+    position: static; width:auto; max-width: var(--maxw);
+    margin: 12px auto; display:block;
+  }
+}
 
   </style>
 
@@ -309,42 +336,158 @@
   </script>
 
 <script>
-(async () => {
-  const rows = [...document.querySelectorAll('.brand-card')];
-  let total = 0;
+(function(){
+  // Väike util
+  const slug = (s) => String(s||'')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
 
+  // Loome parempoolse paneeli
+  const sidebar = document.createElement('aside');
+  sidebar.id = 'top-models-sidebar';
+  sidebar.innerHTML = `<h3>TOP mudelid</h3><ol id="top-list"></ol>`;
+  document.body.appendChild(sidebar);
+
+  const brandCards = [...document.querySelectorAll('.brand-card')];
+  let totalModels = 0;
+
+  // Kui failina avatud, katkestame (nagu sul juba oli)
   if (location.protocol === 'file:') {
     console.warn('Ava leht läbi http://localhost:8000 või GitHub Pages.');
+    document.getElementById('count').textContent = '—';
     return;
   }
 
-  await Promise.all(rows.map(async row => {
-    const url = row.getAttribute('href');
-    const hint = row.querySelector('.hint');
-    if (!url) return;
+  // Mudelite koondus: key = make|||model -> {make, model, count, brandHref}
+  const map = new Map();
 
-    try {
-      const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) return;
-      const html = await res.text();
-      const doc = new DOMParser().parseFromString(html, 'text/html');
+  // Heuristika mudelinime leidmiseks alamlehel
+  function extractModelsFromDoc(doc){
+    const out = [];
 
-      // loeme .card elemente või fallback
-      let n = doc.querySelectorAll('.card').length;
-      if (!n) {
-        const meta = doc.querySelector('meta[name="models-count"]');
-        if (meta) n = parseInt(meta.content) || 0;
+    // 1) Kaardid klassiga .card
+    const cards = [...doc.querySelectorAll('.card')];
+
+    for (const el of cards){
+      // Proovime kõigepealt data-* atribuute
+      let model =
+        el.getAttribute?.('data-model') ||
+        el.dataset?.model ||
+        el.querySelector?.('[data-model]')?.getAttribute('data-model') ||
+        el.querySelector?.('[itemprop="model"]')?.textContent ||
+        el.querySelector?.('.model, .model-name, .title, h3, h2')?.textContent ||
+        el.getAttribute?.('aria-label') ||
+        '';
+
+      model = (model || '').toString().trim();
+      if (!model) continue;
+
+      // Puhasta liigsed tühikud/sulud jms
+      model = model.replace(/\s+/g,' ').replace(/\s*[\(\[][^)\]]*[\)\]]\s*/g,'').trim();
+      if (!model) continue;
+
+      out.push(model);
+    }
+
+    // 2) Fallback: meta(name="models") content="Model1;Model2;..."
+    if (!out.length){
+      const metaList = doc.querySelector('meta[name="models"]')?.content || '';
+      if (metaList){
+        metaList.split(/[;,]/).map(s=>s.trim()).filter(Boolean).forEach(m => out.push(m));
       }
+    }
 
-      total += n;
-      if (hint) hint.textContent = n ? `(${n})` : '';
-    } catch (_) {}
-  }));
+    // 3) Fallback: kõik elemendid, millel on [data-model]
+    if (!out.length){
+      doc.querySelectorAll('[data-model]').forEach(n=>{
+        const m = n.getAttribute('data-model')?.trim();
+        if (m) out.push(m);
+      });
+    }
 
-  const totalEl = document.getElementById('count');
-  if (totalEl) totalEl.textContent = total;
+    return out;
+  }
+
+  // Põhitsükkel: käime brändid läbi, loeme mudelid ja kogume TOP jaoks
+  (async () => {
+    await Promise.all(brandCards.map(async (card) => {
+      const brandHref = card.getAttribute('href');
+      const hintSpan = card.querySelector('.hint');
+      const brandName = (card.querySelector('.brand-name')?.textContent || '').trim();
+
+      if (!brandHref) return;
+
+      try{
+        const res = await fetch(brandHref, { cache: 'no-store' });
+        if (!res.ok) return;
+
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+
+        // Püüa võtta brändi nimi lehelt (meta), kui olemas
+        const metaBrand = doc.querySelector('meta[name="brand"]')?.content?.trim();
+        const make = metaBrand || brandName || '';
+
+        // Mudelite leidmine
+        let models = extractModelsFromDoc(doc);
+
+        // Kui ei leidnud, kasuta sinu varasemat "lihtsat loendust" ja jäta nimedeta (ei lähe TOPi)
+        if (!models.length){
+          let n = doc.querySelectorAll('.card').length;
+          if (!n) {
+            const meta = doc.querySelector('meta[name="models-count"]');
+            if (meta) n = parseInt(meta.content) || 0;
+          }
+          totalModels += n;
+          if (hintSpan) hintSpan.textContent = n ? `(${n})` : '';
+          return;
+        }
+
+        // Arvuta kogusumma ja brändile vihje
+        totalModels += models.length;
+        if (hintSpan) hintSpan.textContent = `(${models.length})`;
+
+        // Koonda TOP jaoks
+        for (const model of models){
+          const key = `${make}|||${model}`;
+          const row = map.get(key) || { make, model, count: 0, brandHref };
+          row.count++;
+          row.brandHref = brandHref; // hoia viimast/ainust
+          map.set(key, row);
+        }
+
+      }catch(e){
+        // vaikus – kui mõni leht ei vasta, jätame vahele
+      }
+    }));
+
+    // Uuenda kokkuarv
+    const totalEl = document.getElementById('count');
+    if (totalEl) totalEl.textContent = totalModels;
+
+    // TOP edetabel
+    const ranked = Array.from(map.values())
+      .sort((a,b)=> b.count - a.count || a.make.localeCompare(b.make) || a.model.localeCompare(b.model))
+      .slice(0, 15);
+
+    const list = document.getElementById('top-list');
+    list.innerHTML = ranked.map(({make, model, count, brandHref}) => {
+      const brandUrl = brandHref;                     // sinu olemasolev tootjaleht
+      const modelUrl = `${brandHref}?m=${encodeURIComponent(model)}`; // tulevikus saad alamlehel sellega mudeleid filtreerida/kerida
+      return `
+        <li>
+          <span class="names">
+            <a href="${brandUrl}" aria-label="Tootja: ${make}">${make}</a>
+            &nbsp;•&nbsp;
+            <a href="${modelUrl}" aria-label="Mudel: ${model}">${model}</a>
+          </span>
+          <span class="count">${count}</span>
+        </li>`;
+    }).join('') || `<li><span class="names">Andmeid ei leitud</span></li>`;
+  })();
 })();
 </script>
+
 
 </body>
 </html>
