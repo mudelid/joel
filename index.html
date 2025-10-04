@@ -431,7 +431,7 @@
  <aside id="top-brands-sidebar" class="sidebar"></aside>
 </div>
 
-  <footer>© <span id="year">JOEL-MARK STOMMA</span></footer>
+  <footer>© JOEL-MARK STOMMA<span id="year"></span></footer>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -441,7 +441,7 @@
 (async () => {
   const brandCards = [...document.querySelectorAll('.brand-card')];
   const sidebar = document.getElementById('top-brands-sidebar');
-  if (sidebar) sidebar.innerHTML = `<h3>TOP tootjad</h3><ol id="top-list"></ol>`;
+  if (sidebar) sidebar.innerHTML = `<h3>TOP 15</h3><ol id="top-list"></ol>`;
 
   const topList = document.getElementById('top-list');
   let total = 0;
