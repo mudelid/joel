@@ -43,22 +43,53 @@
     .desc{margin:0; color:var(--muted); font-size:16px}
     footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:18px}
 
-/* suurendatud pildi overlay */
-#lightbox {
-  position: fixed;
-  top:0; left:0; right:0; bottom:0;
-  background: rgba(0,0,0,0.85);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
+/* Lightbox (täisekraanil pildi vaatamine) */
+#lb-overlay{
+  position: fixed; inset: 0; z-index: 9999;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.85);
 }
-#lightbox img {
-  max-width: 90%;
-  max-height: 90%;
-  box-shadow: 0 0 20px #000;
-  border-radius: 8px;
+#lb-overlay.open{ display: flex; }
+
+#lb-img{
+  max-width: 90vw; max-height: 85vh;
+  box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  border-radius: 12px;
 }
+
+/* Ülanurga sulgemisnupp */
+#lb-close{
+  position: fixed; top: 16px; right: 16px; z-index: 10000;
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.5);
+  color: #fff; font-size: 20px; border-radius: 10px; padding: 8px 12px; cursor: pointer;
+}
+
+/* Vasak/parem nooled */
+.lb-arrow{
+  position: fixed; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.5);
+  color: #fff; font-size: 28px; border-radius: 12px; padding: 10px 14px; cursor: pointer;
+  user-select: none;
+}
+#lb-prev{ left: 16px; }
+#lb-next{ right: 16px; }
+
+/* All pealkiri (mudeli nimi) */
+#lb-cap{
+  position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+  color: #fff; font-size: 16px; text-align: center; opacity: .9;
+  max-width: 90vw;
+}
+
+/* Taustakerimise keelamine kui lightbox on avatud */
+body.lb-open{ overflow: hidden; }
+
+/* Väiksel ekraanil veidi väiksemad nupud */
+@media (max-width: 600px){
+  .lb-arrow{ font-size: 24px; padding: 8px 12px; }
+  #lb-close{ font-size: 18px; padding: 6px 10px; }
+}
+
 
   </style>
 </head>
@@ -133,5 +164,134 @@
 </script>
 
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+
+<script>
+(() => {
+  // --- KOKKUPANEK: loome lightboxi elemendid ---
+  const overlay = document.createElement('div'); overlay.id = 'lb-overlay';
+  overlay.innerHTML = `
+    <button id="lb-close" aria-label="Sulge">✕</button>
+    <button class="lb-arrow" id="lb-prev" aria-label="Eelmine">‹</button>
+    <img id="lb-img" alt="">
+    <button class="lb-arrow" id="lb-next" aria-label="Järgmine">›</button>
+    <div id="lb-cap" aria-live="polite"></div>
+  `;
+  document.body.appendChild(overlay);
+
+  const imgEl = overlay.querySelector('#lb-img');
+  const capEl = overlay.querySelector('#lb-cap');
+  const btnPrev = overlay.querySelector('#lb-prev');
+  const btnNext = overlay.querySelector('#lb-next');
+  const btnClose = overlay.querySelector('#lb-close');
+
+  // --- KOGU SAMA LEHE (sama tootja) mudelipildid ---
+  // Muuda SELECTOR vajadusel, kui sinu .card struktuur erineb
+  const cards = [...document.querySelectorAll('.card')];
+
+  function getModelLabel(card){
+    return (
+      card.getAttribute('data-model') ||
+      card.dataset?.model ||
+      card.querySelector?.('.model-name, .title, h3, h2')?.textContent ||
+      card.querySelector?.('img')?.alt ||
+      ''
+    )?.toString().trim();
+  }
+
+  function getFullSrc(card){
+    const a = card.querySelector('a[href]');
+    const img = card.querySelector('img');
+    // Eelistame <a href> originaali, muidu img.src
+    return a?.getAttribute('href') || img?.getAttribute('data-full') || img?.src || '';
+  }
+
+  const gallery = cards
+    .map(card => {
+      const src = getFullSrc(card);
+      if (!src) return null;
+      let label = getModelLabel(card);
+      if (!label) {
+        // Fallback: võta failinimi
+        try { label = src.split('/').pop().split('?')[0]; } catch(e) {}
+      }
+      return { card, src, label };
+    })
+    .filter(Boolean);
+
+  if (!gallery.length) return; // pole midagi avada
+
+  let i = 0; // aktiivse pildi index
+
+  function openAt(idx){
+    i = (idx + gallery.length) % gallery.length;
+    const { src, label } = gallery[i];
+    imgEl.src = src;
+    imgEl.alt = label || '';
+    capEl.textContent = label || '';
+    overlay.classList.add('open');
+    document.body.classList.add('lb-open');
+    // eellae naabrid
+    const prev = new Image(); prev.src = gallery[(i-1+gallery.length)%gallery.length].src;
+    const next = new Image(); next.src = gallery[(i+1)%gallery.length].src;
+    // peida nooled kui ainult 1 pilt
+    const single = gallery.length < 2;
+    btnPrev.style.display = single ? 'none' : '';
+    btnNext.style.display = single ? 'none' : '';
+  }
+
+  function closeLB(){
+    overlay.classList.remove('open');
+    document.body.classList.remove('lb-open');
+    imgEl.src = '';
+  }
+
+  function next(){ openAt(i+1); }
+  function prev(){ openAt(i-1); }
+
+  // --- KLIKID PEALE: igale kaardi pildile ---
+  cards.forEach((card, idx) => {
+    const clickable = card.querySelector('a, img');
+    if (!clickable) return;
+    clickable.addEventListener('click', (e) => {
+      // Kui see on link suure pildini, ära lase brauseril eraldi lehte avada
+      if (clickable.tagName === 'A') e.preventDefault();
+      // Leia galerii indeks sama kaardi järgi (mitte lihtsalt idx – filtrid võisid ära jätta)
+      const found = gallery.findIndex(g => g.card === card);
+      openAt(found >= 0 ? found : idx);
+    });
+  });
+
+  // --- Nupud ja klaviatuur ---
+  btnClose.addEventListener('click', closeLB);
+  btnNext.addEventListener('click', next);
+  btnPrev.addEventListener('click', prev);
+
+  // Klaviatuur: Esc sulgeb; ←/→ liiklus
+  window.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') return closeLB();
+    if (e.key === 'ArrowRight') return next();
+    if (e.key === 'ArrowLeft') return prev();
+  });
+
+  // Klõps tumedal taustal sulgeb
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeLB();
+  });
+
+  // --- Valikuline: kui tullakse lehele ?m=Model päringuga, ava esimene vastav ---
+  const qp = new URLSearchParams(location.search);
+  const m = qp.get('m');
+  if (m) {
+    const mLower = m.toLowerCase();
+    const firstMatch = gallery.findIndex(g =>
+      (g.label || '').toLowerCase().includes(mLower) ||
+      g.card.getAttribute('data-model')?.toLowerCase() === mLower
+    );
+    if (firstMatch >= 0) openAt(firstMatch);
+  }
+})();
+</script>
+
 </body>
 </html>
