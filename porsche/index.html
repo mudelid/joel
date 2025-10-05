@@ -121,6 +121,14 @@ body.lb-open{ overflow: hidden; }
     </article>
 
     <article class="card">
+      <img class="thumb" src="img/comingsoon.jpg" alt="PORSCHE 911 TURBO CABRIOLET">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 TURBO CABRIOLET</h3>
+        <p class="desc">2025 - THEN AND NOW - 238/250</p>
+      </div>
+    </article>
+
+    <article class="card">
       <img class="thumb" src="img/911must.jpg" alt="PORSCHE 911 GT3">
       <div class="content">
         <h3 class="title">PORSCHE 911 GT3</h3>
@@ -202,30 +210,7 @@ body.lb-open{ overflow: hidden; }
 
   </main>
 
-  <footer>© <span id="year"></span></footer>
-
-<div id="lightbox">
-  <img src="" alt="Suur pilt">
-</div>
-
-<script>
-  const lightbox = document.getElementById('lightbox');
-  const bigImg = lightbox.querySelector('img');
-
-  // igale .thumb pildile klikk
-  document.querySelectorAll('.thumb').forEach(img => {
-    img.addEventListener('click', () => {
-      bigImg.src = img.src;       // kasuta sama faili
-      lightbox.style.display = 'flex';
-    });
-  });
-
-  // sulgemine klikkides overlayle
-  lightbox.addEventListener('click', () => {
-    lightbox.style.display = 'none';
-    bigImg.src = '';
-  });
-</script>
+  <footer>© JOEL-MARK STOMMA <span id="year"></span></footer>
 
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 

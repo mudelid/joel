@@ -186,29 +186,7 @@ body.lb-open{ overflow: hidden; }
     </article>
   </main>
 
-  <footer>© <span id="year"></span></footer>
-
-  <!-- Lightbox peab olema siin, enne </body> -->
-  <div id="lightbox">
-    <img src="" alt="Suur pilt">
-  </div>
-
-  <script>
-    const lightbox = document.getElementById('lightbox');
-    const bigImg = lightbox.querySelector('img');
-
-    document.querySelectorAll('.thumb').forEach(img => {
-      img.addEventListener('click', () => {
-        bigImg.src = img.src;
-        lightbox.style.display = 'flex';
-      });
-    });
-
-    lightbox.addEventListener('click', () => {
-      lightbox.style.display = 'none';
-      bigImg.src = '';
-    });
-  </script>
+  <footer>© JOEL-MARK STOMMA <span id="year"></span></footer>
 
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script>
