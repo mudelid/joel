@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ferrari</title>
+  <title>FERRARI</title>
   <style>
 @font-face {
   font-family: 'BebasKai';
@@ -40,7 +40,7 @@
     .thumb{aspect-ratio:4/3; width:100%; object-fit:cover; display:block; background:#222}
     .content{padding:10px 12px}
     .title{margin:0 0 6px; font-size:20px}
-    .desc{margin:0; color:var(--muted); font-size:16px}
+    .desc{margin:0; color:var(--muted); font-size:10px}
     footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:18px}
 
 /* Lightbox (täisekraanil pildi vaatamine) */
@@ -139,6 +139,29 @@ body.lb-open .brand-bar{ display: none !important; }
   .brand-bar{ display: flex; }
 }
 
+/* Nupu paigutus ja stiil */
+.card{ position: relative; }
+.card .content{ padding-right: 94px; }  /* ruum nupule paremal */
+
+.info-btn{
+  position: absolute; right: 12px; bottom: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px;
+  border: 2px solid #000000;   /* must rõngas */
+  border-radius: 999px;
+  background: #fff;
+  color: #000000;
+  text-decoration: none;
+  font-size: 14px; line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.info-btn:hover{ background:#D3D3D3; }
+.info-btn:focus{ outline: 2px solid #000; outline-offset: 2px; }
+
+@media (max-width:600px){
+  .info-btn{ padding: 5px 10px; font-size: 13px; right: 10px; bottom: 10px; }
+  .card .content{ padding-right: 86px; }
+}
 
   </style>
 </head>
@@ -152,8 +175,8 @@ body.lb-open .brand-bar{ display: none !important; }
   </header>
 
   <main>
-    <!-- Näidiskaardid – kopeeri neid nii palju kui vaja -->
-    <article class="card">
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Ferrari_F40_Competizione">
       <img class="thumb" src="img/f40competizione4.jpg" alt="FERRARI F40 COMPETIZIONE">
       <div class="content">
         <h3 class="title">FERRARI F40 COMPETIZIONE</h3>
@@ -161,7 +184,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Ferrari_SF90_Stradale">
       <img class="thumb" src="img/sf90stradale5.jpg" alt="FERRARI SF90 STRADALE">
       <div class="content">
         <h3 class="title">FERRARI SF90 STRADALE</h3>
@@ -169,7 +192,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Ferrari_365_GTB4_Competizione">
       <img class="thumb" src="img/365gtb4competizione10.jpg" alt="FERRARI 365 GTB4 COMPETIZIONE">
       <div class="content">
         <h3 class="title">FERRARI 365 GTB4 COMPETIZIONE</h3>
@@ -390,6 +413,30 @@ body.lb-open .brand-bar{ display: none !important; }
     prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
   });
 })();
+</script>
+
+<script>
+// 1) Lisa nupud kõigile kaartidele, millel on data-info
+document.querySelectorAll('.card[data-info]').forEach(card=>{
+  const url = card.dataset.info;
+  if(!url) return;
+  const a = document.createElement('a');
+  a.className = 'info-btn';
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = 'Lisainfo';
+  card.appendChild(a);
+});
+
+// 2) Kindlusta, et "Lisainfo" klikk ei ava lightboxi
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('a.info-btn');
+  if (btn) {
+    // ära lase kaardil/listeneritel (nt lightbox) edasi reageerida
+    e.stopPropagation();
+  }
+}, true); // capture-faasis, et peatada enne teisi kuulajaid
 </script>
 
 

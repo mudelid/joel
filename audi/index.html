@@ -41,7 +41,7 @@
     .thumb{aspect-ratio:4/3; width:100%; object-fit:cover; display:block; background:#222}
     .content{padding:10px 12px}
     .title{margin:0 0 6px; font-size:20px}
-    .desc{margin:0; color:var(--muted); font-size:16px}
+    .desc{margin:0; color:var(--muted); font-size:10px}
     footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:18px}
 
 /* Lightbox (täisekraanil pildi vaatamine) */
@@ -141,6 +141,30 @@ body.lb-open .brand-bar{ display: none !important; }
   .brand-bar{ display: flex; }
 }
 
+/* Nupu paigutus ja stiil */
+.card{ position: relative; }
+.card .content{ padding-right: 94px; }  /* ruum nupule paremal */
+
+.info-btn{
+  position: absolute; right: 12px; bottom: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px;
+  border: 2px solid #000000;   /* must rõngas */
+  border-radius: 999px;
+  background: #fff;
+  color: #000000;
+  text-decoration: none;
+  font-size: 14px; line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.info-btn:hover{ background:#D3D3D3; }
+.info-btn:focus{ outline: 2px solid #000; outline-offset: 2px; }
+
+@media (max-width:600px){
+  .info-btn{ padding: 5px 10px; font-size: 13px; right: 10px; bottom: 10px; }
+  .card .content{ padding-right: 86px; }
+}
+
   </style>
 </head>
 <body>
@@ -155,7 +179,7 @@ body.lb-open .brand-bar{ display: none !important; }
 
   <main>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2717_Audi_RS_6_Avant">
       <img class="thumb" src="img/17rs6avant5.jpg" alt="´17 Audi RS6 Avant">
       <div class="content">
         <h3 class="title">´17 Audi RS6 Avant</h3>
@@ -163,7 +187,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Audi_RS_6_Avant">
       <img class="thumb" src="img/rs6avant1.jpg" alt="Audi RS6 Avant">
       <div class="content">
         <h3 class="title">Audi RS6 Avant</h3>
@@ -171,7 +195,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Audi_RS_e-tron_GT">
       <img class="thumb" src="img/rsetrongt6.jpg" alt="Audi RS e-tron GT">
       <div class="content">
         <h3 class="title">Audi RS e-tron GT</h3>
@@ -179,7 +203,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Audi_90_quattro">
       <img class="thumb" src="img/90quattro6.jpg" alt="Audi ´90 Quattro">
       <div class="content">
         <h3 class="title">Audi ´90 Quattro</h3>
@@ -187,35 +211,35 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Audi_90_quattro">
       <img class="thumb" src="img/90quattro2.jpg" alt="Audi ´90 Quattro">
       <div class="content">
         <h3 class="title">Audi ´90 Quattro</h3>
         <p class="desc">2025 - Peak Pursuit - 199/250</p>
       </div>
     </article>
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2794_Audi_Avant_RS2">
       <img class="thumb" src="img/94avantrs29.jpg" alt="´94 Audi Avant RS2">
       <div class="content">
         <h3 class="title">´94 Audi Avant RS2</h3>
         <p class="desc">2024 - Factory fresh - 133/250</p>
       </div>
     </article>
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2794_Audi_Avant_RS2">
       <img class="thumb" src="img/94avantrs22.jpg" alt="´94 Audi Avant RS2">
       <div class="content">
         <h3 class="title">´94 Audi Avant RS2</h3>
         <p class="desc">2025 - HW: ´70s vs. ´90s - 199/250</p>
       </div>
     </article>
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2787_Audi_quattro">
       <img class="thumb" src="img/87quattro2.jpg" alt="´87 Audi Quattro">
       <div class="content">
         <h3 class="title">´87 Audi Quattro</h3>
         <p class="desc">2025 - Factory fresh - 16/250</p>
       </div>
     </article>
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2784_Audi_Sport_quattro">
       <img class="thumb" src="img/84sportquattro9.jpg" alt="´84 audi sport quattro">
       <div class="content">
         <h3 class="title">´84 audi sport quattro</h3>
@@ -437,6 +461,31 @@ body.lb-open .brand-bar{ display: none !important; }
   });
 })();
 </script>
+
+<script>
+// 1) Lisa nupud kõigile kaartidele, millel on data-info
+document.querySelectorAll('.card[data-info]').forEach(card=>{
+  const url = card.dataset.info;
+  if(!url) return;
+  const a = document.createElement('a');
+  a.className = 'info-btn';
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = 'Lisainfo';
+  card.appendChild(a);
+});
+
+// 2) Kindlusta, et "Lisainfo" klikk ei ava lightboxi
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('a.info-btn');
+  if (btn) {
+    // ära lase kaardil/listeneritel (nt lightbox) edasi reageerida
+    e.stopPropagation();
+  }
+}, true); // capture-faasis, et peatada enne teisi kuulajaid
+</script>
+
 
 
 </body>
