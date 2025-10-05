@@ -226,6 +226,33 @@
   .brand-name{ font-size: 13px; }
 }
 
+.search{
+  max-width: var(--maxw);
+  margin: 10px auto 0;
+  padding: 0 16px;
+}
+.search input{
+  width: 90%;
+  font: 16px/1.3 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.ml-card{
+  background:#fff; border:1px solid var(--border); border-radius:12px;
+  padding:12px; margin-top:8px;
+}
+.ml-row{ display:grid; grid-template-columns: 100px 1fr auto; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid #000; }
+.ml-row:last-child{ border-bottom:0; }
+.ml-year{ font-size:18px; }
+.ml-bar{ height:10px; border:1px solid #000; border-radius:999px; overflow:hidden; background:#f3f4f6; }
+.ml-fill{ display:block; height:100%; width:0%; background:#000; }
+.ml-val{ font-size:16px; opacity:.8; }
+@media (max-width:600px){
+  .ml-row{ grid-template-columns: 70px 1fr auto; }
+}
+
 
   </style>
 
@@ -236,9 +263,13 @@
 <header>
   <h1>JOELI MUDELIKOLLEKTSIOON</h1>
   <p class="lead">KOKKU ERINEVAID MUDELEID: <span id="count">0</span></p>
+   <div class="search">
+    <input id="brandSearch" type="search" placeholder="Otsi…" autocomplete="off">
+     </div>
 </header>
 
 <div class="layout">
+
   <main class="brand-grid">
 
   <a class="brand-card" href="astonmartin/index.html">
@@ -441,7 +472,7 @@
 (async () => {
   const brandCards = [...document.querySelectorAll('.brand-card')];
   const sidebar = document.getElementById('top-brands-sidebar');
-  if (sidebar) sidebar.innerHTML = `<h3>TOP 15</h3><ol id="top-list"></ol>`;
+  if (sidebar) sidebar.innerHTML = `<h3>TOP JÄRJEKORD</h3><ol id="top-list"></ol>`;
 
   const topList = document.getElementById('top-list');
   let total = 0;
@@ -493,7 +524,7 @@
 
   // sorteeri tootjad suuremast väiksemani ja võta TOP 15
   brandCounts.sort((a,b)=> (b.count - a.count) || a.name.localeCompare(b.name));
-  const top = brandCounts.slice(0, 15);
+  const top = brandCounts.slice(0, 50);
 
   // kuva külgribal
   if (topList) {
@@ -504,6 +535,31 @@
       </li>
     `).join('') || `<li><span class="names">Andmeid ei leitud</span></li>`;
   }
+})();
+</script>
+
+<script>
+(() => {
+  const input = document.getElementById('brandSearch');
+  if (!input) return;
+
+  const norm = s => (s||'').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,''); // eemaldab täpitähtede diakriitikad
+
+  const cards = Array.from(document.querySelectorAll('.brand-card'));
+  const getName = el => (el.querySelector('.brand-name')?.textContent || '');
+
+  function applyFilter(){
+    const term = norm(input.value.trim());
+    cards.forEach(card => {
+      const name = norm(getName(card));
+      // ainult algusest: "Audi" matchib "au", aga mitte "di"
+      const ok = term === '' || name.startsWith(term);
+      card.style.display = ok ? '' : 'none';
+    });
+  }
+  input.addEventListener('input', applyFilter);
+  input.addEventListener('keydown', e => { if (e.key === 'Escape'){ input.value=''; applyFilter(); input.blur(); }});
 })();
 </script>
 
