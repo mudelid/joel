@@ -40,7 +40,7 @@
     .thumb{aspect-ratio:4/3; width:100%; object-fit:cover; display:block; background:#222}
     .content{padding:10px 12px}
     .title{margin:0 0 6px; font-size:20px}
-    .desc{margin:0; color:var(--muted); font-size:16px}
+    .desc{margin:0; color:var(--muted); font-size:10px}
     footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:18px}
 
 /* Lightbox (täisekraanil pildi vaatamine) */
@@ -139,6 +139,29 @@ body.lb-open .brand-bar{ display: none !important; }
   .brand-bar{ display: flex; }
 }
 
+/* Nupu paigutus ja stiil */
+.card{ position: relative; }
+.card .content{ padding-right: 94px; }  /* ruum nupule paremal */
+
+.info-btn{
+  position: absolute; right: 12px; bottom: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px;
+  border: 2px solid #000000;   /* must rõngas */
+  border-radius: 999px;
+  background: #fff;
+  color: #000000;
+  text-decoration: none;
+  font-size: 14px; line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.info-btn:hover{ background:#D3D3D3; }
+.info-btn:focus{ outline: 2px solid #000; outline-offset: 2px; }
+
+@media (max-width:600px){
+  .info-btn{ padding: 5px 10px; font-size: 13px; right: 10px; bottom: 10px; }
+  .card .content{ padding-right: 86px; }
+}
 
   </style>
 </head>
@@ -152,8 +175,8 @@ body.lb-open .brand-bar{ display: none !important; }
   </header>
 
   <main>
-    <!-- Näidiskaardid – kopeeri neid nii palju kui vaja -->
-    <article class="card">
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2778_Porsche_935-78">
       <img class="thumb" src="img/93578.jpg" alt="´78 PORSCHE 935-78">
       <div class="content">
         <h3 class="title">´78 PORSCHE 935-78</h3>
@@ -161,7 +184,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_934_Turbo_RSR">
       <img class="thumb" src="img/934turbo.jpg" alt="PORSCHE 934 TURBO RSR">
       <div class="content">
         <h3 class="title">PORSCHE 934 TURBO RSR</h3>
@@ -169,15 +192,15 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
-      <img class="thumb" src="img/comingsoon.jpg" alt="PORSCHE 911 TURBO CABRIOLET">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Turbo_Cabriolet">
+      <img class="thumb" src="img/911cabrio.jpg" alt="PORSCHE 911 TURBO CABRIOLET">
       <div class="content">
         <h3 class="title">PORSCHE 911 TURBO CABRIOLET</h3>
         <p class="desc">2025 - THEN AND NOW - 238/250</p>
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_GT3">
       <img class="thumb" src="img/911must.jpg" alt="PORSCHE 911 GT3">
       <div class="content">
         <h3 class="title">PORSCHE 911 GT3</h3>
@@ -185,7 +208,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_GT3_RS_(2016)">
       <img class="thumb" src="img/911roosa.jpg" alt="PORSCHE 911 GT3 RS">
       <div class="content">
         <h3 class="title">PORSCHE 911 GT3 RS</h3>
@@ -193,7 +216,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_Taycan_Turbo_S">
       <img class="thumb" src="img/taycanroh.jpg" alt="PORSCHE TAYCAN TURBO S">
       <div class="content">
         <h3 class="title">PORSCHE TAYCAN TURBO S</h3>
@@ -201,7 +224,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/1983_Porsche_928S">
       <img class="thumb" src="img/928spun.jpg" alt="1983 PORSCHE 928S">
       <div class="content">
         <h3 class="title">1983 PORSCHE 928S</h3>
@@ -209,7 +232,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_904_Carrera_GTS">
       <img class="thumb" src="img/904tume.jpg" alt="PORSCHE 904 CARRERA GTS">
       <div class="content">
         <h3 class="title">PORSCHE 904 CARRERA GTS</h3>
@@ -217,7 +240,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_904_Carrera_GTS">
       <img class="thumb" src="img/904hele.jpg" alt="PORSCHE 904 CARRERA GTS">
       <div class="content">
         <h3 class="title">PORSCHE 904 CARRERA GTS</h3>
@@ -225,7 +248,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2796_Porsche_Carrera">
       <img class="thumb" src="img/96carrera.jpg" alt="´96 PORSCHE CARRERA">
       <div class="content">
         <h3 class="title">´96 PORSCHE CARRERA</h3>
@@ -233,7 +256,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Carrera_RS_2.7">
       <img class="thumb" src="img/kollanecarrera.jpg" alt="PORSCHE 911 CARRERA RS 2.7">
       <div class="content">
         <h3 class="title">PORSCHE 911 CARRERA RS 2.7</h3>
@@ -241,7 +264,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Carrera_Clip">
       <img class="thumb" src="img/911carreraclip6.jpg" alt="PORSCHE 911 CARRERA CLIP">
       <div class="content">
         <h3 class="title">PORSCHE 911 CARRERA CLIP</h3>
@@ -249,7 +272,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Turbo_3.6_(964)">
       <img class="thumb" src="img/pisikemust.jpg" alt="PORSCHE 911 TURBO 3.6(964)">
       <div class="content">
         <h3 class="title">PORSCHE 911 TURBO 3.6(964)</h3>
@@ -471,6 +494,30 @@ body.lb-open .brand-bar{ display: none !important; }
     prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
   });
 })();
+</script>
+
+<script>
+// 1) Lisa nupud kõigile kaartidele, millel on data-info
+document.querySelectorAll('.card[data-info]').forEach(card=>{
+  const url = card.dataset.info;
+  if(!url) return;
+  const a = document.createElement('a');
+  a.className = 'info-btn';
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = 'Lisainfo';
+  card.appendChild(a);
+});
+
+// 2) Kindlusta, et "Lisainfo" klikk ei ava lightboxi
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('a.info-btn');
+  if (btn) {
+    // ära lase kaardil/listeneritel (nt lightbox) edasi reageerida
+    e.stopPropagation();
+  }
+}, true); // capture-faasis, et peatada enne teisi kuulajaid
 </script>
 
 

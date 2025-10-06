@@ -40,7 +40,7 @@
     .thumb{aspect-ratio:4/3; width:100%; object-fit:cover; display:block; background:#222}
     .content{padding:10px 12px}
     .title{margin:0 0 6px; font-size:20px}
-    .desc{margin:0; color:var(--muted); font-size:16px}
+    .desc{margin:0; color:var(--muted); font-size:10px}
     footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:18px}
 
 /* Lightbox (täisekraanil pildi vaatamine) */
@@ -139,6 +139,29 @@ body.lb-open .brand-bar{ display: none !important; }
   .brand-bar{ display: flex; }
 }
 
+/* Nupu paigutus ja stiil */
+.card{ position: relative; }
+.card .content{ padding-right: 94px; }  /* ruum nupule paremal */
+
+.info-btn{
+  position: absolute; right: 12px; bottom: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px;
+  border: 2px solid #000000;   /* must rõngas */
+  border-radius: 999px;
+  background: #fff;
+  color: #000000;
+  text-decoration: none;
+  font-size: 14px; line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.info-btn:hover{ background:#D3D3D3; }
+.info-btn:focus{ outline: 2px solid #000; outline-offset: 2px; }
+
+@media (max-width:600px){
+  .info-btn{ padding: 5px 10px; font-size: 13px; right: 10px; bottom: 10px; }
+  .card .content{ padding-right: 86px; }
+}
 
   </style>
 </head>
@@ -152,32 +175,41 @@ body.lb-open .brand-bar{ display: none !important; }
   </header>
 
   <main>
-    <!-- Näidiskaardid – kopeeri neid nii palju kui vaja -->
-    <article class="card">
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Honda_S2000">
       <img class="thumb" src="img/s2000mus.jpg" alt="HONDA S2000">
       <div class="content">
         <h3 class="title">HONDA S2000</h3>
-        <p class="desc">2024 - FAST & FURIOUS VILLAINS - 1/5</p>
+        <p class="desc">2025 - FAST & FURIOUS VILLAINS - 1/5</p>
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Honda_S2000">
       <img class="thumb" src="img/s2000roh.jpg" alt="HONDA S2000">
       <div class="content">
         <h3 class="title">HONDA S2000</h3>
-        <p class="desc">2022 - NEON SPEEDERS - 6/8</p>
+        <p class="desc">2024 - NEON SPEEDERS - 6/8</p>
+      </div>
+    </article> 
+
+   <article class="card" data-info="https://hotwheels.fandom.com/wiki/2018_Honda_Civic_Type_R
+">
+      <img class="thumb" src="img/2018civictyper.jpg" alt="2018 HONDA CIVIC TYPE R">
+      <div class="content">
+        <h3 class="title">2018 HONDA CIVIC TYPE R</h3>
+        <p class="desc">2025 - THEN AND NOW - 123/250</p>
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Honda_Civic_Si_(2006)">
       <img class="thumb" src="img/civicsi5.jpg" alt="HONDA CIVIC SI">
       <div class="content">
         <h3 class="title">HONDA CIVIC SI</h3>
-        <p class="desc">2024 - THE HOT ONES - 5/8</p>
+        <p class="desc">2025 - THE HOT ONES - 5/8</p>
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Honda_Civic_Si_(2001)">
       <img class="thumb" src="img/civicsi2.jpg" alt="HONDA CIVIC SI">
       <div class="content">
         <h3 class="title">HONDA CIVIC SI</h3>
@@ -185,7 +217,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2773_Honda_Civic_Custom">
       <img class="thumb" src="img/civiccustom9.jpg" alt="´73 HONDA CIVIC CUSTOM">
       <div class="content">
         <h3 class="title">´73 HONDA CIVIC CUSTOM</h3>
@@ -193,7 +225,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Honda_Civic_EG">
       <img class="thumb" src="img/92civicegpun.jpg" alt="´92 HONDA CIVIC EG">
       <div class="content">
         <h3 class="title">´92 HONDA CIVIC EG</h3>
@@ -201,7 +233,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Honda_Civic_Custom">
       <img class="thumb" src="img/civiccustom5.jpg" alt="HONDA CIVIC CUSTOM">
       <div class="content">
         <h3 class="title">HONDA CIVIC CUSTOM</h3>
@@ -209,7 +241,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2790_Honda_Civic_EF">
       <img class="thumb" src="img/90civicefroh.jpg" alt="´90 HONDA CIVIC EF">
       <div class="content">
         <h3 class="title">´90 HONDA CIVIC EF</h3>
@@ -217,7 +249,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2790_Honda_Civic_EF">
       <img class="thumb" src="img/90civicefsin.jpg" alt="´90 HONDA CIVIC EF">
       <div class="content">
         <h3 class="title">´90 HONDA CIVIC EF</h3>
@@ -225,7 +257,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2788_Honda_CR-X">
       <img class="thumb" src="img/88crxsin.jpg" alt="´88 HONDA CR-X">
       <div class="content">
         <h3 class="title">´88 HONDA CR-X</h3>
@@ -446,6 +478,30 @@ body.lb-open .brand-bar{ display: none !important; }
     prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
   });
 })();
+</script>
+
+<script>
+// 1) Lisa nupud kõigile kaartidele, millel on data-info
+document.querySelectorAll('.card[data-info]').forEach(card=>{
+  const url = card.dataset.info;
+  if(!url) return;
+  const a = document.createElement('a');
+  a.className = 'info-btn';
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = 'Lisainfo';
+  card.appendChild(a);
+});
+
+// 2) Kindlusta, et "Lisainfo" klikk ei ava lightboxi
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('a.info-btn');
+  if (btn) {
+    // ära lase kaardil/listeneritel (nt lightbox) edasi reageerida
+    e.stopPropagation();
+  }
+}, true); // capture-faasis, et peatada enne teisi kuulajaid
 </script>
 
 

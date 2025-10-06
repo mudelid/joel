@@ -40,7 +40,7 @@
     .thumb{aspect-ratio:4/3; width:100%; object-fit:cover; display:block; background:#222}
     .content{padding:10px 12px}
     .title{margin:0 0 6px; font-size:20px}
-    .desc{margin:0; color:var(--muted); font-size:16px}
+    .desc{margin:0; color:var(--muted); font-size:10px}
     footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:18px}
 
 /* Lightbox (täisekraanil pildi vaatamine) */
@@ -139,6 +139,29 @@ body.lb-open .brand-bar{ display: none !important; }
   .brand-bar{ display: flex; }
 }
 
+/* Nupu paigutus ja stiil */
+.card{ position: relative; }
+.card .content{ padding-right: 94px; }  /* ruum nupule paremal */
+
+.info-btn{
+  position: absolute; right: 12px; bottom: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px;
+  border: 2px solid #000000;   /* must rõngas */
+  border-radius: 999px;
+  background: #fff;
+  color: #000000;
+  text-decoration: none;
+  font-size: 14px; line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.info-btn:hover{ background:#D3D3D3; }
+.info-btn:focus{ outline: 2px solid #000; outline-offset: 2px; }
+
+@media (max-width:600px){
+  .info-btn{ padding: 5px 10px; font-size: 13px; right: 10px; bottom: 10px; }
+  .card .content{ padding-right: 86px; }
+}
 
   </style>
 </head>
@@ -152,8 +175,8 @@ body.lb-open .brand-bar{ display: none !important; }
   </header>
 
   <main>
-    <!-- Näidiskaardid – kopeeri neid nii palju kui vaja -->
-    <article class="card">
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Mazda_787B">
       <img class="thumb" src="img/787b5.jpg" alt="MAZDA 787B">
       <div class="content">
         <h3 class="title">MAZDA 787B</h3>
@@ -161,7 +184,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/1968_Mazda_Cosmo_Sport">
       <img class="thumb" src="img/cosmosport.jpg" alt="1968 MAZDA COSMO SPORT">
       <div class="content">
         <h3 class="title">1968 MAZDA COSMO SPORT</h3>
@@ -169,7 +192,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2795_Mazda_RX-7">
       <img class="thumb" src="img/95rx71.jpg" alt="1995 MAZDA RX-7">
       <div class="content">
         <h3 class="title">1995 MAZDA RX-7</h3>
@@ -177,7 +200,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2795_Mazda_RX-7_Drift">
       <img class="thumb" src="img/mazda163.jpg" alt="´95 MAZDA RX-7 DRIFT">
       <div class="content">
         <h3 class="title">´95 MAZDA RX-7 DRIFT</h3>
@@ -185,7 +208,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2795_Mazda_RX-7">
       <img class="thumb" src="img/95rx79.jpg" alt="´95 MAZDA RX-7">
       <div class="content">
         <h3 class="title">´95 MAZDA RX-7</h3>
@@ -193,7 +216,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Mazda_MX-5_Miata_(2025)">
       <img class="thumb" src="img/mx5miatahal.jpg" alt="MAZDA MX-5 MIATA">
       <div class="content">
         <h3 class="title">MAZDA MX-5 MIATA</h3>
@@ -201,7 +224,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Mazda_MX-5_Miata_(2025)">
       <img class="thumb" src="img/mx5miataroh.jpg" alt="MAZDA MX-5 MIATA">
       <div class="content">
         <h3 class="title">MAZDA MX-5 MIATA</h3>
@@ -209,7 +232,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2715_Mazda_MX-5_Miata">
       <img class="thumb" src="img/15mx5miata2.jpg" alt="´15 mazda mx-5 miata">
       <div class="content">
         <h3 class="title">´15 mazda mx-5 miata</h3>
@@ -217,7 +240,7 @@ body.lb-open .brand-bar{ display: none !important; }
       </div>
     </article>
 
-    <article class="card">
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2791_Mazda_MX-5_Miata">
       <img class="thumb" src="img/91mx5miata6.jpg" alt="´91 MAZDA MX-5 MIATA">
       <div class="content">
         <h3 class="title">´91 MAZDA MX-5 MIATA</h3>
@@ -439,6 +462,30 @@ body.lb-open .brand-bar{ display: none !important; }
     prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
   });
 })();
+</script>
+
+<script>
+// 1) Lisa nupud kõigile kaartidele, millel on data-info
+document.querySelectorAll('.card[data-info]').forEach(card=>{
+  const url = card.dataset.info;
+  if(!url) return;
+  const a = document.createElement('a');
+  a.className = 'info-btn';
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = 'Lisainfo';
+  card.appendChild(a);
+});
+
+// 2) Kindlusta, et "Lisainfo" klikk ei ava lightboxi
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('a.info-btn');
+  if (btn) {
+    // ära lase kaardil/listeneritel (nt lightbox) edasi reageerida
+    e.stopPropagation();
+  }
+}, true); // capture-faasis, et peatada enne teisi kuulajaid
 </script>
 
 
