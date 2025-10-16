@@ -239,6 +239,24 @@
   border-radius: 10px;
 }
 
+
+.recent-wrap{
+  max-width: 1200px; margin: 12px auto 24px; padding: 0 16px;
+}
+.recent-wrap h3{ margin: 0 0 8px; font-size: 22px; }
+.recent-grid{
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+.recent-card{
+  background: #fff; border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; text-decoration: none; color: var(--text);
+}
+.recent-card .thumb{ aspect-ratio: 4/3; width: 100%; object-fit: cover; display: block; background:#222; }
+.recent-card .meta{ padding: 8px 10px; font-size: 16px; line-height:1.2 }
+.recent-card .meta .brand{ opacity:.7; font-size:14px }
+
+
   </style>
 
 </head>
@@ -252,6 +270,13 @@
     <input id="brandSearch" type="search" placeholder="Otsi…" autocomplete="off">
      </div>
 </header>
+
+
+<section id="recent" class="recent-wrap">
+  <h3>Hiljuti lisatud</h3>
+  <div class="recent-grid" id="recentGrid"></div>
+</section>
+
 
 <div class="layout">
 
@@ -599,6 +624,69 @@
   }
   input.addEventListener('input', applyFilter);
   input.addEventListener('keydown', e => { if (e.key === 'Escape'){ input.value=''; applyFilter(); input.blur(); }});
+})();
+</script>
+
+
+<script>
+(async () => {
+  const grid = document.getElementById('recentGrid');
+  if (!grid || location.protocol === 'file:') return;
+
+  // võta avalehe kaardid (tootjalehed)
+  const base = new URL(location.href);
+  const brandLinks = [...document.querySelectorAll('.brand-card[href]')]
+    .map(a => ({ href: new URL(a.getAttribute('href'), base).href,
+                  name: (a.querySelector('.brand-name')?.textContent || '').trim() }));
+
+  const items = [];
+
+  await Promise.all(brandLinks.map(async ({href, name:brandName}) => {
+    try{
+      const res = await fetch(href, {cache:'no-store'}); if(!res.ok) return;
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+
+      const brand = doc.querySelector('meta[name="brand"]')?.content?.trim() || brandName;
+
+      // kogu kaardid, millel on data-added (ISO kuupäev)
+      doc.querySelectorAll('.card[data-added]').forEach(card => {
+        const addedStr = card.getAttribute('data-added') || '';
+        const added = Date.parse(addedStr);
+        if (isNaN(added)) return;
+
+        const title = (card.querySelector('.title')?.textContent || '').trim();
+        const img   = card.querySelector('.thumb')?.getAttribute('src') || '';
+        if (!title || !img) return;
+
+        const fullImg = new URL(img, href).href;
+        const modelURL = new URL(href, base);
+        modelURL.searchParams.set('m', title); // klikk viib tootjalehele ja avab selle mudeli lightboxis
+
+        items.push({ brand, title, img: fullImg, url: modelURL.pathname + modelURL.search, added });
+      });
+    }catch(_){ /* ignore */ }
+  }));
+
+  if (!items.length){ 
+    grid.innerHTML = '<div style="opacity:.7">Hiljuti lisatud mudeleid ei leitud.</div>';
+    return;
+  }
+
+  // sorteeri uued enne ja võta Top N
+  const N = 12;
+  items.sort((a,b)=> b.added - a.added);
+  const recent = items.slice(0, N);
+
+  grid.innerHTML = recent.map(it => `
+    <a class="recent-card" href="${it.url}">
+      <img class="thumb" src="${it.img}" alt="${it.title}" loading="lazy" decoding="async">
+      <div class="meta">
+        <div class="title">${it.title}</div>
+        <div class="brand">${it.brand} • ${new Date(it.added).toLocaleDateString()}</div>
+      </div>
+    </a>
+  `).join('');
 })();
 </script>
 
