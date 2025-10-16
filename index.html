@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="et">
 <head>
@@ -13,684 +12,281 @@
   font-weight: normal;
   font-style: normal;
 }
-
-    :root{
-      --bg:#FFFFFF; --panel:#FFFFFF; --text:#000000; --muted:#000000; --border:#000000; --link:#000000;
-      --maxw:500px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body {
+:root{
+  --bg:#FFFFFF; --panel:#FFFFFF; --text:#000000; --muted:#000000;
+  --border:#000000; --link:#000000; --maxw:500px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
   margin:0;
-  background: url("img/taust3.jpg?v=2") no-repeat center center fixed;
-  background-size: cover;
-  color: var(--text);
-  font-family: 'BebasKai', sans-serif;
-  font-size: 30px;
+  background:url("img/taust3.jpg?v=2") no-repeat center center fixed;
+  background-size:cover;
+  color:var(--text);
+  font-family:'BebasKai',sans-serif;
+  font-size:30px;
 }
-    /* Väike logo vasakusse ülanurka */
-    .logo{position:fixed; top:12px; left:12px; width:100px; height:100px; border-radius:7px; object-fill:cover; border:1px solid var(--border); background:#FFFFFF}
-    header{max-width:var(--maxw); margin:60px auto 10px; padding:0 16px}
-    h1{margin:0 0 6px; font-size:50px; }
-    p.lead{margin:0; color:var(--muted)}
-    main{max-width:var(--maxw); margin:18px auto 60px; padding:0 16px}
-    .list{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
+.logo{position:fixed;top:12px;left:12px;width:100px;height:100px;
+  border-radius:7px;object-fill:cover;border:1px solid var(--border);background:#fff}
+header{max-width:var(--maxw);margin:60px auto 10px;padding:0 16px}
+h1{margin:0 0 6px;font-size:50px;}
+p.lead{margin:0;color:var(--muted)}
+footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
+  color:var(--muted);font-size:22px}
 
-
-    .hint{color:#000000; font-size:20px}
-    footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:22px}
-
-@media (max-width: 600px){
-  .logo{
-    position: static;        /* pole enam fixed */
-    display: block;
-    width:40px; height:40px;
-    margin:8px 0 0 8px;      /* väike serv */
-  }
-  header{ margin-top:12px; } /* enam pole suurt ülemist vahet vaja */
+@media(max-width:600px){
+  .logo{position:static;display:block;width:40px;height:40px;margin:8px 0 0 8px;}
+  header{margin-top:12px;}
+  h1{font-size:28px;}
+  .lead{font-size:14px;}
 }
 
-/* grid */
-.brand-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  max-width: 1200px;
-  margin: 18px auto 60px;
-  padding: 0 16px;
-}
-
-.brand-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 25px;
-  padding: 24px 16px;
-  text-decoration: none;
-  color: var(--link);
-  transition: transform 0.2s, background 0.2s;
-  text-align: center;
-}
-
-.brand-card:hover {
-  background: #FFFFFF;
-  transform: translateY(-3px);
-}
-
-.brand-logo {
-  width: 100px;
-  height: 100px;
-  object-fit: contain;
-  margin-bottom: 12px;
-  background: #FFFFFF;
-  border-radius: 8px;
-}
-
-.brand-name {
-  font-size: 25px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.hint {
-  font-size: 16px;
-  color: #000000;
-}
-
-/* --- TOP edetabel paremas servas --- */
-#top-models-sidebar{
-  position: fixed; right: 16px; top: 16px;
-  width: 300px; max-height: calc(100dvh - 32px);
-  overflow: auto; z-index: 10;
-  background: #ffffffcc; backdrop-filter: blur(6px);
-  border: 1px solid #000000; border-radius: 16px;
-  padding: 12px 14px; box-shadow: 0 2px 10px rgba(0,0,0,.08);
-  font-size: 18px; line-height: 1.25;
-}
-#top-models-sidebar h3{ margin: 0 0 8px; font-size: 22px; }
-#top-models-sidebar ol{ list-style: none; margin: 8px 0 0; padding: 0; }
-#top-models-sidebar li{
-  display:flex; justify-content:space-between; gap:10px; align-items:baseline;
-  padding: 6px 0; border-bottom: 1px solid #000000;
-}
-#top-models-sidebar li:last-child{ border-bottom: 0; }
-#top-models-sidebar .names a{ color: var(--link); text-decoration: none; }
-#top-models-sidebar .names a:hover{ text-decoration: underline; }
-#top-models-sidebar .count{ opacity:.7; }
-
-@media (max-width: 1200px){
-  #top-models-sidebar{
-    position: static; width:auto; max-width: var(--maxw);
-    margin: 12px auto; display:block;
-  }
-}
-
-/* --- kaheveeruline paigutus --- */
-.layout{
-  display: grid;
-  grid-template-columns: 1fr 320px;   /* kaardid | külgriba */
-  gap: 16px;
-  max-width: 1400px;
-  margin: 18px auto 60px;
-  padding: 0 16px;
-}
-
-/* kohanda brand-grid, kui ta on layouti sees (väldi topelt sisemarginaale) */
-.layout .brand-grid{
-  max-width: unset;
-  margin: 0;          /* layout ise lisab välismarginaali */
-  padding: 0;         /* layout ise lisab paddingu */
-}
-
-/* --- TOP tootjate külgriba --- */
-.sidebar{
-  position: sticky;
-  top: 16px;
-  align-self: start;
-  background: #ffffffcc;
-  backdrop-filter: blur(6px);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 12px 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.08);
-  font-size: 18px; line-height: 1.25;
-  max-height: calc(100dvh - 32px);
-  overflow:auto;
-}
-
-.sidebar h3{ margin: 0 0 8px; font-size: 22px; }
-.sidebar ol{ list-style: none; margin: 8px 0 0; padding: 0; }
-.sidebar li{
-  display:flex; justify-content:space-between; gap:10px; align-items:baseline;
-  padding: 6px 0; border-bottom: 1px solid var(--border);
-}
-.sidebar li:last-child{ border-bottom: 0; }
-.sidebar .names a{ color: var(--link); text-decoration: none; }
-.sidebar .names a:hover{ text-decoration: underline; }
-.sidebar .count{ opacity:.7; }
-
-/* Mobiil/kitsem vaade: külgriba alla, täislaius, ei kata midagi */
-@media (max-width: 1100px){
-  .layout{
-    grid-template-columns: 1fr;
-  }
-  .sidebar{
-    position: static;
-    max-height: none;
-    margin-top: 12px;
-  }
-}
-
-/* 📱 Kompaktne mobiilivaade */
-@media (max-width: 600px){
-  /* rohkem kaarte ühele reale */
-  .brand-grid{
-    gap: 8px;
-    /* väiksemad kaardid + rohkem veerge (tavaliselt 3; suurematel telefonidel 4) */
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    padding: 0 8px;         /* kitsamad servad */
-  }
-
-  /* kaart ise väiksem */
-  .brand-card{
-    padding: 10px 8px;
-    border-radius: 12px;
-  }
-
-  /* logo, nimi ja vihje väiksemaks = madalam kaart */
-  .brand-logo{
-    width: 56px; height: 56px;
-    margin-bottom: 6px;
-  }
-  .brand-name{
-    font-size: 14px;
-    margin-bottom: 2px;
-  }
-  .hint{
-    font-size: 12px;
-    opacity: .7;
-  }
-
-  /* päis kompaktsemaks, et kaarte rohkem ekraanile mahuks */
-  header{ margin: 10px auto 6px; }
-  h1{ font-size: 28px; margin-bottom: 2px; }
-  .lead{ font-size: 14px; }
-}
-
-/* Väga väike ekraan (nt 360px lai) – veel pisem logo/tekst */
-@media (max-width: 380px){
-  .brand-logo{ width: 48px; height: 48px; }
-  .brand-name{ font-size: 13px; }
-}
-
-.search{
-  max-width: var(--maxw);
-  margin: 10px auto 0;
-  padding: 0 16px;
-}
+/* otsing */
+.search{max-width:var(--maxw);margin:10px auto 0;padding:0 16px;}
 .search input{
-  width: 90%;
-  font: 16px/1.3 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  width:90%;font:16px/1.3 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  padding:10px 12px;border:1px solid var(--border);border-radius:10px;
+}
+
+/* KÕIK MUDELID nupp — lai, valge taust, hall tekst */
+.cta-wrap{
+  max-width:1200px;
+  margin:24px auto 24px;
+  padding:0 16px;
+  text-align:center;
+}
+.cta-btn{
+  display:inline-block;
+  width:100%;
+  max-width:500px;       /* piiratud, et mobiilis ei oleks liiga lai */
+  padding:16px 24px;
+  border-radius:14px;
+  background:#ffffff;
+  color:#555555;
+  font-family:'BebasKai', sans-serif;
+  font-size:28px;
+  letter-spacing:0.5px;
+  text-decoration:none;
+  border:1px solid var(--border);
+  transition:background .2s, transform .2s;
+}
+.cta-btn:hover{
+  background:#f2f2f2;
+  transform:translateY(-2px);
+}
+
+/* mobiilivaates veidi väiksem */
+@media (max-width:600px){
+  .cta-btn{
+    font-size:22px;
+    padding:14px 18px;
+    border-radius:10px;
+  }
 }
 
 
-.recent-wrap{
-  max-width: 600px; margin: 12px auto 24px; padding: 0 16px;
-}
-.recent-wrap h3{ margin: 0 0 8px; font-size: 22px; }
+/* Hiljuti lisatud kaardid */
+.recent-wrap{max-width:1200px;margin:12px auto 24px;padding:0 16px;}
+.recent-wrap h3{margin:0 0 8px;font-size:22px;}
 .recent-grid{
-  display: grid; gap: 12px;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  display:grid;gap:12px;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
 }
 .recent-card{
-  background: #fff; border: 1px solid var(--border); border-radius: 12px;
-  overflow: hidden; text-decoration: none; color: var(--text);
+  background:#fff;border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;text-decoration:none;color:var(--text);
 }
-.recent-card .thumb{ aspect-ratio: 4/3; width: 100%; object-fit: cover; display: block; background:#222; }
-.recent-card .meta{ padding: 8px 10px; font-size: 18px; line-height:1.2 }
-.recent-card .meta .brand{ opacity:.7; font-size:12px }
+.recent-card .thumb{aspect-ratio:4/3;width:100%;object-fit:cover;display:block;background:#222;}
+.recent-card .meta{padding:8px 10px;font-size:18px;line-height:1.2;}
+.recent-card .meta .brand{opacity:.7;font-size:12px;}
 
+/* TOP külgriba */
+.sidebar-standalone{
+  max-width:var(--maxw);margin:12px auto 24px;
+  background:#ffffffcc;backdrop-filter:blur(6px);
+  border:1px solid var(--border);border-radius:16px;
+  padding:12px 14px;box-shadow:0 2px 10px rgba(0,0,0,.08);
+  font-size:18px;line-height:1.25;
+}
+.sidebar-standalone h3{margin:0 0 8px;font-size:22px;}
+.sidebar-standalone ol{list-style:none;margin:8px 0 0;padding:0;}
+.sidebar-standalone li{
+  display:flex;justify-content:space-between;gap:10px;align-items:baseline;
+  padding:6px 0;border-bottom:1px solid var(--border);
+}
+.sidebar-standalone li:last-child{border-bottom:0;}
+.sidebar-standalone .names a{color:var(--link);text-decoration:none;}
+.sidebar-standalone .names a:hover{text-decoration:underline;}
+.sidebar-standalone .count{opacity:.7;}
+
+/* 🔹 Kompaktsemad "Hiljuti lisatud" kaardid avalehel */
+.recent-grid {
+  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* väiksemad kaardid */
+}
+
+.recent-card {
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.recent-card .thumb {
+  aspect-ratio: 4/3;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  background: #222;
+  transform: scale(0.95);          /* pilt visuaalselt väiksem */
+  border-radius: 6px;
+  transition: transform .2s ease;
+}
+
+.recent-card:hover .thumb {
+  transform: scale(0.98);
+}
+
+.recent-card .meta {
+  padding: 6px 8px;                /* vähem paddingut */
+  font-size: 18px;                 /* sama suur tekst */
+  line-height: 1.2;
+}
+
+.recent-card .meta .brand {
+  font-size: 12px;
+  opacity: .7;
+}
+
+/* 🔸 mobiilis veel veidi tihedam */
+@media (max-width: 600px) {
+  .recent-grid {
+    gap: 6px;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  }
+  .recent-card .meta {
+    padding: 5px 6px;
+    font-size: 16px;
+  }
+}
 
   </style>
 
 </head>
+
 <body>
+
   <img class="logo" src="img/logo2.png" alt="Logo" onerror="this.remove()"/>
 
 <header>
+
   <h1>JOELI MUDELIKOLLEKTSIOON</h1>
   <p class="lead">KOKKU ERINEVAID MUDELEID: <span id="count">0</span></p>
-   <div class="search">
+  <div class="search">
     <input id="brandSearch" type="search" placeholder="Otsi…" autocomplete="off">
-     </div>
-</header>
+  </div>
 
+</header>
 
 <section id="recent" class="recent-wrap">
   <h3>Hiljuti lisatud</h3>
   <div class="recent-grid" id="recentGrid"></div>
 </section>
 
-
-<div class="layout">
-
-  <main class="brand-grid">
-
-  <a class="brand-card" href="astonmartin/index.html">
-    <img src="img/logod/astonmartin.jpg" alt="Aston Martin logo" class="brand-logo">
-    <span class="brand-name">Aston Martin</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="audi/index.html">
-    <img src="img/logod/audi.png" alt="Audi logo" class="brand-logo">
-    <span class="brand-name">Audi</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="bentley/index.html">
-    <img src="img/logod/bentley.png" alt="Bentley logo" class="brand-logo">
-    <span class="brand-name">BENTLEY</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="bmw/index.html">
-    <img src="img/logod/bmw.png" alt="BMW logo" class="brand-logo">
-    <span class="brand-name">BMW</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="bugatti/index.html">
-    <img src="img/logod/bugatti.jpg" alt="Bugatti logo" class="brand-logo">
-    <span class="brand-name">BUGATTI</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="buick/index.html">
-    <img src="img/logod/buick.png" alt="Buick logo" class="brand-logo">
-    <span class="brand-name">Buick</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="cadillac/index.html">
-    <img src="img/logod/cadillac.png" alt="Cadillac logo" class="brand-logo">
-    <span class="brand-name">Cadillac</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="chevrolet/index.html">
-    <img src="img/logod/chevrolet.jpg" alt="Chevrolet logo" class="brand-logo">
-    <span class="brand-name">Chevrolet</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="cupra/index.html">
-    <img src="img/logod/cupra.png" alt="Cupra logo" class="brand-logo">
-    <span class="brand-name">Cupra</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="datsun/index.html">
-    <img src="img/logod/datsun.png" alt="Datsun logo" class="brand-logo">
-    <span class="brand-name">Datsun</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="dodge/index.html">
-    <img src="img/logod/dodge.png" alt="Dodge logo" class="brand-logo">
-    <span class="brand-name">Dodge</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="ferrari/index.html">
-    <img src="img/logod/ferrari.png" alt="Ferrari logo" class="brand-logo">
-    <span class="brand-name">Ferrari</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="fiat/index.html">
-    <img src="img/logod/fiat.png" alt="Fiat logo" class="brand-logo">
-    <span class="brand-name">Fiat</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="ford/index.html">
-    <img src="img/logod/ford.png" alt="Ford logo" class="brand-logo">
-    <span class="brand-name">Ford</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="honda/index.html">
-    <img src="img/logod/honda.png" alt="Honda logo" class="brand-logo">
-    <span class="brand-name">Honda</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="jaguar/index.html">
-    <img src="img/logod/jaguar.png" alt="Jaguar logo" class="brand-logo">
-    <span class="brand-name">Jaguar</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="kia/index.html">
-    <img src="img/logod/kia.png" alt="Kia logo" class="brand-logo">
-    <span class="brand-name">KIA</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="koenigsegg/index.html">
-    <img src="img/logod/koenigsegg.png" alt="Koenigsegg logo" class="brand-logo">
-    <span class="brand-name">Koenigsegg</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="lamborghini/index.html">
-    <img src="img/logod/lambo.png" alt="Lamborghini logo" class="brand-logo">
-    <span class="brand-name">Lamborghini</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="lotus/index.html">
-    <img src="img/logod/lotus.png" alt="Lotus logo" class="brand-logo">
-    <span class="brand-name">Lotus</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="maserati/index.html">
-    <img src="img/logod/maserati.png" alt="Maserati logo" class="brand-logo">
-    <span class="brand-name">Maserati</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="mazda/index.html">
-    <img src="img/logod/mazda.png" alt="Mazda logo" class="brand-logo">
-    <span class="brand-name">Mazda</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="mclaren/index.html">
-    <img src="img/logod/mclaren.png" alt="McLaren logo" class="brand-logo">
-    <span class="brand-name">McLaren</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="mercedes-benz/index.html">
-    <img src="img/logod/mercedes.png" alt="Mercedes-Benz logo" class="brand-logo">
-    <span class="brand-name">Mercedes-Benz</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="mercury/index.html">
-    <img src="img/logod/mercury.png" alt="Mercury logo" class="brand-logo">
-    <span class="brand-name">Mercury</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="mitsubishi/index.html">
-    <img src="img/logod/mitsu.png" alt="Mitsubishi logo" class="brand-logo">
-    <span class="brand-name">Mitsubishi</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="nissan/index.html">
-    <img src="img/logod/nissan.png" alt="Nissan logo" class="brand-logo">
-    <span class="brand-name">Nissan</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="pagani/index.html">
-    <img src="img/logod/pagani.png" alt="Pagani logo" class="brand-logo">
-    <span class="brand-name">Pagani</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="peugeot/index.html">
-    <img src="img/logod/peugeot.png" alt="Peugeot logo" class="brand-logo">
-    <span class="brand-name">Peugeot</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="pontiac/index.html">
-    <img src="img/logod/pontiac.png" alt="Pontiac logo" class="brand-logo">
-    <span class="brand-name">Pontiac</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="porsche/index.html">
-    <img src="img/logod/porsche.png" alt="Porsche logo" class="brand-logo">
-    <span class="brand-name">Porsche</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="proton/index.html">
-    <img src="img/logod/proton.png" alt="Proton logo" class="brand-logo">
-    <span class="brand-name">Proton</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="subaru/index.html">
-    <img src="img/logod/subaru.png" alt="Subaru logo" class="brand-logo">
-    <span class="brand-name">Subaru</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="tesla/index.html">
-    <img src="img/logod/tesla.png" alt="Tesla logo" class="brand-logo">
-    <span class="brand-name">Tesla</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="toyota/index.html">
-    <img src="img/logod/toyota.png" alt="Toyota logo" class="brand-logo">
-    <span class="brand-name">Toyota</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="volkswagen/index.html">
-    <img src="img/logod/volks.png" alt="Volkswagen logo" class="brand-logo">
-    <span class="brand-name">Volkswagen</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="volvo/index.html">
-    <img src="img/logod/volvo.png" alt="Volvo logo" class="brand-logo">
-    <span class="brand-name">Volvo</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="wmotors/index.html">
-    <img src="img/logod/wmotors.png" alt="W Motors logo" class="brand-logo">
-    <span class="brand-name">W Motors</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="f1/index.html">
-    <img src="img/logod/f1.png" alt="F1 logo" class="brand-logo">
-    <span class="brand-name">F1</span>
-    <span class="hint"></span>
-  </a>
-
-  <a class="brand-card" href="joelwheels/index.html">
-    <img src="img/logod/joelwheels.png" alt="JoelWheels logo" class="brand-logo">
-    <span class="brand-name">JoelWheels</span>
-    <span class="hint"></span>
-  </a>
-
-  </main>
- <aside id="top-brands-sidebar" class="sidebar"></aside>
+<div class="cta-wrap">
+  <a href="mudelid.html" class="cta-btn">KÕIK MUDELID</a>
 </div>
 
-  <footer>© JOEL-MARK STOMMA <span id="year"></span></footer>
+<aside id="top-brands-sidebar" class="sidebar-standalone"></aside>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+<footer>© JOEL-MARK STOMMA <span id="year"></span></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
 
+<!-- Otsing viib mudelid.html?q=... -->
 <script>
-(async () => {
-  const brandCards = [...document.querySelectorAll('.brand-card')];
-  const sidebar = document.getElementById('top-brands-sidebar');
-  if (sidebar) sidebar.innerHTML = `<h3>TOP JÄRJEKORD</h3><ol id="top-list"></ol>`;
+(()=>{const i=document.getElementById('brandSearch');if(!i)return;
+function go(q){const u=new URL('mudelid.html',location.href);
+if(q.trim())u.searchParams.set('q',q.trim());location.href=u.href;}
+i.addEventListener('keydown',e=>{
+if(e.key==='Enter'){go(i.value);}
+if(e.key==='Escape'){i.value='';i.blur();}
+});})();
+</script>
 
-  const topList = document.getElementById('top-list');
-  let total = 0;
-  const brandCounts = []; // {name, href, count}
-
-  // Kui avad faili lokaalselt (file://), siis fetch ei toimi – näitame teadet
-  if (location.protocol === 'file:') {
-    console.warn('Ava leht läbi http://localhost:8000 või GitHub Pages.');
-    const totalEl = document.getElementById('count');
-    if (totalEl) totalEl.textContent = '—';
-    if (topList) topList.innerHTML = `<li><span class="names">Andmeid ei saa failist lugeda</span></li>`;
-    return;
-  }
-
-  // Loe iga tootja alamleht ja loe sealsete mudelikaartide arv
-  await Promise.all(brandCards.map(async card => {
-    const href = card.getAttribute('href');
-    const hint = card.querySelector('.hint');
-    const brandName = (card.querySelector('.brand-name')?.textContent || '').trim();
-    if (!href) return;
-
-    try {
-      const res = await fetch(href, { cache: 'no-store' });
-      if (!res.ok) return;
-      const html = await res.text();
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-
-      // brändi nimi meta-st või kaardilt
-      const metaBrand = doc.querySelector('meta[name="brand"]')?.content?.trim();
-      const name = metaBrand || brandName || href;
-
-      // mudelite arv .card järgi (või meta fallback)
-      let n = doc.querySelectorAll('.card').length;
-      if (!n) {
-        const meta = doc.querySelector('meta[name="models-count"]');
-        if (meta) n = parseInt(meta.content) || 0;
-      }
-
-      total += n;
-      if (hint) hint.textContent = n ? `(${n})` : '';
-      brandCounts.push({ name, href, count: n });
-
-    } catch (_) { /* kui leht ei vasta, jätame vahele */ }
-  }));
-
-  // uuenda päise kogusumma
-  const totalEl = document.getElementById('count');
-  if (totalEl) totalEl.textContent = total;
-
-  // sorteeri tootjad suuremast väiksemani ja võta TOP 15
-  brandCounts.sort((a,b)=> (b.count - a.count) || a.name.localeCompare(b.name));
-  const top = brandCounts.slice(0, 50);
-
-  // kuva külgribal
-  if (topList) {
-    topList.innerHTML = top.map(({name, href, count}) => `
-      <li>
-        <span class="names"><a href="${href}" aria-label="Tootja: ${name}">${name}</a></span>
-        <span class="count">${count}</span>
-      </li>
-    `).join('') || `<li><span class="names">Andmeid ei leitud</span></li>`;
-  }
+<!-- TOP tabel mudelid.html-ist -->
+<script>
+(async()=>{
+const sb=document.getElementById('top-brands-sidebar');
+if(sb)sb.innerHTML=`<h3>TOP 10</h3><ol id="top-list"></ol>`;
+const list=document.getElementById('top-list');
+let total=0;const brands=[];
+if(location.protocol==='file:'){
+if(list)list.innerHTML='<li><span class="names">Ava http serveris</span></li>';return;}
+let html='';try{const r=await fetch('mudelid.html',{cache:'no-store'});
+if(!r.ok)throw 0;html=await r.text();}catch{if(list)list.innerHTML='<li><span>Ei saanud mudelid.html</span></li>';return;}
+const doc=new DOMParser().parseFromString(html,'text/html');
+const cards=[...doc.querySelectorAll('.brand-card')];
+await Promise.all(cards.map(async c=>{
+const href=c.getAttribute('href');
+const name=(c.querySelector('.brand-name')?.textContent||'').trim();
+if(!href)return;
+try{
+const r=await fetch(href,{cache:'no-store'});if(!r.ok)return;
+const h=await r.text();const d=new DOMParser().parseFromString(h,'text/html');
+let n=d.querySelectorAll('.card').length;
+if(!n){const m=d.querySelector('meta[name="models-count"]');
+if(m)n=parseInt(m.content)||0;}
+total+=n;brands.push({name,href,count:n});
+}catch{}
+}));
+document.getElementById('count').textContent=total;
+brands.sort((a,b)=>(b.count-a.count)||a.name.localeCompare(b.name));
+const top=brands.slice(0,10);
+list.innerHTML=top.map(x=>`
+<li><span class="names"><a href="${x.href}">${x.name}</a></span>
+<span class="count">${x.count}</span></li>`).join('')||
+'<li><span>Andmeid ei leitud</span></li>';
 })();
 </script>
 
+<!-- Hiljuti lisatud mudelid mudelid.html-ist -->
 <script>
-(() => {
-  const input = document.getElementById('brandSearch');
-  if (!input) return;
-
-  const norm = s => (s||'').toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,''); // eemaldab täpitähtede diakriitikad
-
-  const cards = Array.from(document.querySelectorAll('.brand-card'));
-  const getName = el => (el.querySelector('.brand-name')?.textContent || '');
-
-  function applyFilter(){
-    const term = norm(input.value.trim());
-    cards.forEach(card => {
-      const name = norm(getName(card));
-      // ainult algusest: "Audi" matchib "au", aga mitte "di"
-      const ok = term === '' || name.startsWith(term);
-      card.style.display = ok ? '' : 'none';
-    });
-  }
-  input.addEventListener('input', applyFilter);
-  input.addEventListener('keydown', e => { if (e.key === 'Escape'){ input.value=''; applyFilter(); input.blur(); }});
+(async()=>{
+const grid=document.getElementById('recentGrid');
+if(!grid||location.protocol==='file:')return;
+let html='';
+try{const r=await fetch('mudelid.html',{cache:'no-store'});
+if(!r.ok)throw 0;html=await r.text();}catch{
+grid.innerHTML='<div style="opacity:.7">Ei saanud mudelid.html lugeda.</div>';return;}
+const doc=new DOMParser().parseFromString(html,'text/html');
+const base=new URL(location.href);
+const brands=[...doc.querySelectorAll('.brand-card[href]')].map(a=>({
+href:new URL(a.getAttribute('href'),base).href,
+name:(a.querySelector('.brand-name')?.textContent||'').trim()
+}));
+const items=[];
+await Promise.all(brands.map(async({href,name:brandName})=>{
+try{
+const r=await fetch(href,{cache:'no-store'});if(!r.ok)return;
+const h=await r.text();const d=new DOMParser().parseFromString(h,'text/html');
+const brand=d.querySelector('meta[name="brand"]')?.content?.trim()||brandName;
+d.querySelectorAll('.card[data-added]').forEach(c=>{
+const t=(c.querySelector('.title')?.textContent||'').trim();
+const img=c.querySelector('.thumb')?.getAttribute('src')||'';
+const a=c.getAttribute('data-added')||'';const ad=Date.parse(a);
+if(!t||!img||isNaN(ad))return;
+const full=new URL(img,href).href;
+const u=new URL(href,base);u.searchParams.set('m',t);
+items.push({brand,title:t,img:full,url:u.pathname+u.search,added:ad});
+});}catch{} }));
+if(!items.length){grid.innerHTML='<div style="opacity:.7">Hiljuti lisatud mudeleid ei leitud.</div>';return;}
+items.sort((a,b)=>b.added-a.added);
+const N=12;const recent=items.slice(0,N);
+grid.innerHTML=recent.map(it=>`
+<a class="recent-card" href="${it.url}">
+<img class="thumb" src="${it.img}" alt="${it.title}" loading="lazy" decoding="async">
+<div class="meta"><div class="title">${it.title}</div>
+<div class="brand">${it.brand} • ${new Date(it.added).toLocaleDateString()}</div>
+</div></a>`).join('');
 })();
 </script>
-
-
-<script>
-(async () => {
-  const grid = document.getElementById('recentGrid');
-  if (!grid || location.protocol === 'file:') return;
-
-  // võta avalehe kaardid (tootjalehed)
-  const base = new URL(location.href);
-  const brandLinks = [...document.querySelectorAll('.brand-card[href]')]
-    .map(a => ({ href: new URL(a.getAttribute('href'), base).href,
-                  name: (a.querySelector('.brand-name')?.textContent || '').trim() }));
-
-  const items = [];
-
-  await Promise.all(brandLinks.map(async ({href, name:brandName}) => {
-    try{
-      const res = await fetch(href, {cache:'no-store'}); if(!res.ok) return;
-      const html = await res.text();
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-
-      const brand = doc.querySelector('meta[name="brand"]')?.content?.trim() || brandName;
-
-      // kogu kaardid, millel on data-added (ISO kuupäev)
-      doc.querySelectorAll('.card[data-added]').forEach(card => {
-        const addedStr = card.getAttribute('data-added') || '';
-        const added = Date.parse(addedStr);
-        if (isNaN(added)) return;
-
-        const title = (card.querySelector('.title')?.textContent || '').trim();
-        const img   = card.querySelector('.thumb')?.getAttribute('src') || '';
-        if (!title || !img) return;
-
-        const fullImg = new URL(img, href).href;
-        const modelURL = new URL(href, base);
-        modelURL.searchParams.set('m', title); // klikk viib tootjalehele ja avab selle mudeli lightboxis
-
-        items.push({ brand, title, img: fullImg, url: modelURL.pathname + modelURL.search, added });
-      });
-    }catch(_){ /* ignore */ }
-  }));
-
-  if (!items.length){ 
-    grid.innerHTML = '<div style="opacity:.7">Hiljuti lisatud mudeleid ei leitud.</div>';
-    return;
-  }
-
-  // sorteeri uued enne ja võta Top N
-  const N = 12;
-  items.sort((a,b)=> b.added - a.added);
-  const recent = items.slice(0, N);
-
-  grid.innerHTML = recent.map(it => `
-    <a class="recent-card" href="${it.url}">
-      <img class="thumb" src="${it.img}" alt="${it.title}" loading="lazy" decoding="async">
-      <div class="meta">
-        <div class="title">${it.title}</div>
-        <div class="brand">${it.brand} • ${new Date(it.added).toLocaleDateString()}</div>
-      </div>
-    </a>
-  `).join('');
-})();
-</script>
-
-
 </body>
 </html>
-
