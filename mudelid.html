@@ -27,40 +27,27 @@
   font-family: 'BebasKai', sans-serif;
   font-size: 30px;
 }
+    /* Väike logo vasakusse ülanurka */
+    .logo{position:fixed; top:12px; left:12px; width:100px; height:100px; border-radius:7px; object-fill:cover; border:1px solid var(--border); background:#FFFFFF}
+    header{max-width:var(--maxw); margin:60px auto 10px; padding:0 16px}
+    h1{margin:0 0 6px; font-size:50px; }
+    p.lead{margin:0; color:var(--muted)}
+    main{max-width:var(--maxw); margin:18px auto 60px; padding:0 16px}
+    .list{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
 
-/* 🔹 Logo fikseeritult vasakus ülanurgas (ei liigu kerimisel) */
-.logo {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  width: 100px;
-  height: 100px;
-  border-radius: 10px;
-  object-fit: cover;
-  border: 1px solid var(--border);
-  background: #ffffff;
-  z-index: 1000;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
 
-/* Nihuta sisu allapoole, et logo ette ei jääks */
-header {
-  margin-top: 130px; /* umbes logo kõrgus + veidi õhku */
-}
+    .hint{color:#000000; font-size:20px}
+    footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:22px}
 
-/* 📱 Mobiilivaates väiksem logo ja väiksem vahe */
-@media (max-width: 600px) {
-  .logo {
-    width: 60px;
-    height: 60px;
-    top: 8px;
-    left: 8px;
+@media (max-width: 600px){
+  .logo{
+    position: static;        /* pole enam fixed */
+    display: block;
+    width:40px; height:40px;
+    margin:8px 0 0 8px;      /* väike serv */
   }
-  header {
-    margin-top: 90px;
-  }
+  header{ margin-top:12px; } /* enam pole suurt ülemist vahet vaja */
 }
-
 
 /* grid */
 .brand-grid {
