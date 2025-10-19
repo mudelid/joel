@@ -27,18 +27,29 @@ body{
   font-size:30px;
 }
 
+/* link (kest) – fikseeritud positsioon ja mõõdud */
 .logo{
   position: fixed;
   top: 12px;
   left: 12px;
   width: 100px;
   height: 100px;
-  border-radius: 7px;
-  object-fit: cover;            /* ← parandus (varem object-fill) */
+  display: block;
   border: 1px solid var(--border);
+  border-radius: 7px;
   background: #fff;
-  z-index: 1000;                /* ← hoiab logo kaardikihtidest eespool */
+  z-index: 1000;        /* jääb kaartidest ettepoole */
+  text-decoration: none;
 }
+/* pilt sees – täidab kesta ilusti */
+.logo img{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;    /* parandus: object-fit (mitte object-fill) */
+  border-radius: 7px;
+}
+
 
 
 header{max-width:var(--maxw);margin:60px auto 10px;padding:0 16px}
@@ -47,8 +58,14 @@ p.lead{margin:0;color:var(--muted)}
 footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
   color:var(--muted);font-size:22px}
 
-@media(max-width:600px){
-  .logo{position: static;display:block;width:40px;height:40px;margin:8px 0 0 8px;}
+@media (max-width:600px){
+  .logo{
+    width: 40px;
+    height: 40px;
+    margin: 8px 0 0 8px;
+  }
+  /* pildi reegleid muutma ei pea */
+}
   header{margin-top:12px;}
   h1{font-size:28px;}
   .lead{font-size:14px;}
@@ -187,7 +204,9 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
 
 <body>
 
-  <img class="logo" src="img/logo2.png" alt="Logo" onerror="this.remove()"/>
+  <a href="index.html" class="logo" aria-label="Avaleht">
+  <img src="img/logo2.png" alt="Logo" onerror="this.parentElement.remove()">
+</a>
 
 <header>
 
