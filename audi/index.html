@@ -165,7 +165,27 @@ body.lb-open .brand-bar{ display: none !important; }
   .card .content{ padding-right: 86px; }
 }
 
-  </style>
+  /* ← TAGASI nupu stiil (täpsem selektor, et ületada olemasolevad lühemad reeglid) */
+header a.back {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 24px;
+  color: var(--link);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+header a.back:hover {
+  background: #f0f0f0;
+}
+
+/* Extra top space so fixed logo doesn't overlap */
+@media (max-width: 1000px){
+  header{ margin-top: 110px !important; }
+}
+</style>
 </head>
 <body>
   <a href="../index.html"><img class="logo" src="../img/logo2.png" alt="Logo" onerror="this.remove()"/></a>

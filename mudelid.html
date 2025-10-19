@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KÕIK MUDELID | JOELI KOLLEKTSIOON</title>
+  <title>KÕIK MUDELID</title>
   <style>
 @font-face {
   font-family: 'BebasKai';
@@ -203,6 +203,23 @@
 .recent-wrap{ display:none; }
 .recent-grid{ display:none; }
 .recent-card{ display:none; }
+
+a.back {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 24px;
+  color: var(--link);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+a.back:hover {
+  background: #FFFFFF;
+}
+
   </style>
 
 </head>
@@ -213,10 +230,11 @@
 </a>
 
 <header>
-  <h1>JOELI MUDELIKOLLEKTSIOON</h1>
-  <p class="lead">KOKKU ERINEVAID MUDELEID: <span id="count">0</span></p>
+  <a class="back" href="index.html">← TAGASI</a>
+  <h1>KÕIK MUDELID</h1>
+  <p class="lead">KOKKU ERINEVAID: <span id="count">0</span></p>
    <div class="search">
-    <input id="brandSearch" type="search" placeholder="Otsi…" autocomplete="off">
+    <input id="brandSearch" type="search" placeholder="Otsi nime" autocomplete="off">
      </div>
 </header>
 
