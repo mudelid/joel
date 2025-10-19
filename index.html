@@ -198,6 +198,34 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
   }
 }
 
+/* ===========================
+   Suurem pealkiri ja lead tekst
+   =========================== */
+
+/* Desktop ja suuremad ekraanid */
+@media (min-width: 601px) {
+  h1 {
+    font-size: 60px !important;  /* enne 50px, nüüd selgelt suurem */
+    margin-bottom: 8px;
+  }
+
+  .lead {
+    font-size: 26px !important;  /* enne ~20–22px */
+    margin-top: 0;
+  }
+}
+
+/* Väikesed ekraanid (nutitelefonid) – jätame kompaktseks */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 32px !important;
+  }
+
+  .lead {
+    font-size: 16px !important;
+  }
+}
+
   </style>
 
 </head>
@@ -212,9 +240,6 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
 
   <h1>JOELI MUDELIKOLLEKTSIOON</h1>
   <p class="lead">KOKKU ERINEVAID MUDELEID: <span id="count">0</span></p>
-  <div class="search">
-    <input id="brandSearch" type="search" placeholder="Otsi…" autocomplete="off">
-  </div>
 
 </header>
 
@@ -232,16 +257,6 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
 <footer>© JOEL-MARK STOMMA <span id="year"></span></footer>
 <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
 
-<!-- Otsing viib mudelid.html?q=... -->
-<script>
-(()=>{const i=document.getElementById('brandSearch');if(!i)return;
-function go(q){const u=new URL('mudelid.html',location.href);
-if(q.trim())u.searchParams.set('q',q.trim());location.href=u.href;}
-i.addEventListener('keydown',e=>{
-if(e.key==='Enter'){go(i.value);}
-if(e.key==='Escape'){i.value='';i.blur();}
-});})();
-</script>
 
 <!-- TOP tabel mudelid.html-ist -->
 <script>
@@ -320,5 +335,6 @@ grid.innerHTML=recent.map(it=>`
 </div></a>`).join('');
 })();
 </script>
+
 </body>
 </html>
