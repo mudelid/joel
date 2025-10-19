@@ -26,8 +26,21 @@ body{
   font-family:'BebasKai',sans-serif;
   font-size:30px;
 }
-.logo{position:fixed;top:12px;left:12px;width:100px;height:100px;
-  border-radius:7px;object-fill:cover;border:1px solid var(--border);background:#fff}
+
+.logo{
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: 100px;
+  height: 100px;
+  border-radius: 7px;
+  object-fit: cover;            /* ← parandus (varem object-fill) */
+  border: 1px solid var(--border);
+  background: #fff;
+  z-index: 1000;                /* ← hoiab logo kaardikihtidest eespool */
+}
+
+
 header{max-width:var(--maxw);margin:60px auto 10px;padding:0 16px}
 h1{margin:0 0 6px;font-size:50px;}
 p.lead{margin:0;color:var(--muted)}

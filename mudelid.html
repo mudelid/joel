@@ -27,12 +27,29 @@
   font-family: 'BebasKai', sans-serif;
   font-size: 30px;
 }
-    /* Väike logo vasakusse ülanurka */
-    .logo{position:fixed; top:12px; left:12px; width:100px; height:100px; border-radius:7px; object-fill:cover; border:1px solid var(--border); background:#FFFFFF}
+
+.logo{
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: 100px;
+  height: 100px;
+  border-radius: 7px;
+  object-fit: cover;                  /* ← parandus (varem object-fill) */
+  border: 1px solid var(--border);
+  background: #FFFFFF;
+  z-index: 1000;                      /* ← hoiab logo kaartidest eespool */
+}
+
+
     header{max-width:var(--maxw); margin:60px auto 10px; padding:0 16px}
+
     h1{margin:0 0 6px; font-size:50px; }
+
     p.lead{margin:0; color:var(--muted)}
+
     main{max-width:var(--maxw); margin:18px auto 60px; padding:0 16px}
+
     .list{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
 
 
@@ -41,7 +58,6 @@
 
 @media (max-width: 600px){
   .logo{
-    position: static; 
     display: block;
     width:40px; height:40px;
     margin:8px 0 0 8px;      /* väike serv */
@@ -387,6 +403,12 @@
   <a class="brand-card" href="proton/index.html">
     <img src="img/logod/proton.png" alt="Proton logo" class="brand-logo">
     <span class="brand-name">Proton</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="shelby/index.html">
+    <img src="img/logod/shelby.png" alt="Shelby logo" class="brand-logo">
+    <span class="brand-name">Shelby American</span>
     <span class="hint"></span>
   </a>
 
