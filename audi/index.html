@@ -236,6 +236,20 @@ header a.back:hover {
   .card .info-btn{ top:6px; left:6px; padding:4px 8px; }
   .card .content{ padding:8px 10px; }
 }
+
+/* PATCH: info-btn transparent default + white on hover */
+/* Vaikimisi läbipaistev taust, must tekst; hoveril valge taust */
+.card .info-btn {
+  background: transparent !important;
+  color: #000 !important;
+  border-color: #000 !important;   /* ei muuda paksust, ainult värvi */
+  transition: background .25s ease, color .25s ease;
+}
+@media (hover:hover) {
+  .card .info-btn:hover {
+    background: #fff !important;
+  }
+}
 </style>
 </head>
 <body>
