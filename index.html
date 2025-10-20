@@ -332,7 +332,7 @@ items.push({brand,title:t,img:full,url:u.pathname+u.search,added:ad});
 });}catch{} }));
 if(!items.length){grid.innerHTML='<div style="opacity:.7">Hiljuti lisatud mudeleid ei leitud.</div>';return;}
 items.sort((a,b)=>b.added-a.added);
-const N=12;const recent=items.slice(0,N);
+const N=14;const recent=items.slice(0,N);
 grid.innerHTML=recent.map(it=>`
 <a class="recent-card" href="${it.url}">
 <img class="thumb" src="${it.img}" alt="${it.title}" loading="lazy" decoding="async">

@@ -184,6 +184,57 @@ header a.back:hover {
 @media (max-width: 1000px){
   header{ margin-top: 110px !important; }
 }
+
+/* PATCH: info-btn top-left + centered content */
+.card { position: relative; } /* kindlalt ankur nuppu jaoks */
+
+.card .content {
+  padding: 10px 12px;           /* eemaldame vana padding-right hack'i */
+  text-align: center;           /* pealkiri ja alamrida keskele */
+}
+
+.card .title {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.card .desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+/* LISAINFO – ujuv pildi ülemises vasakus nurgas */
+.card .info-btn {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  left: 8px;
+  right: auto;                  /* tühistame varasema "parem alumine" */
+  bottom: auto;
+
+  /* nupp väiksem, aga sama 14px tekst */
+  padding: 5px 10px;
+  border: 1px solid #000;       /* õhem raam */
+  border-radius: 999px;
+  background: rgba(255,255,255,.95);
+  color: #000;
+  text-decoration: none;
+
+  font-size: 14px;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+@media (hover:hover){
+  .card .info-btn:hover { background: #D3D3D3; }
+}
+.card .info-btn:focus { outline: 2px solid #000; outline-offset: 2px; }
+
+/* mobiilis veidi kompaktsem */
+@media (max-width:600px){
+  .card .info-btn{ top:6px; left:6px; padding:4px 8px; }
+  .card .content{ padding:8px 10px; }
+}
 </style>
 </head>
 <body>
