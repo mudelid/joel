@@ -261,6 +261,51 @@ header a.back:hover {
     font-size: 20px !important;
   }
 }
+
+
+/* ——— ÜLE KAARDI ÄÄRE UJUVA INFO-AKNA STIIL ——— */
+#info-popover{
+  position: fixed;           /* ei lõigata kaardi poolt */
+  inset: auto auto auto auto;
+  z-index: 10000;            /* kõige pealmine */
+  display: none;
+  max-width: min(420px, 90vw);
+  background: rgba(255,255,255,.98);
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.24);
+  line-height: 1.25;
+  font-size: 14px;
+}
+#info-popover.show{ display:block; }
+
+#info-popover .x{
+  position:absolute; top:6px; right:8px;
+  background:transparent; border:0; cursor:pointer;
+  font:inherit; line-height:1;
+}
+#info-popover .t{ font-weight:600; margin:0 0 6px; }
+#info-popover .more a{ color:#000; text-decoration: underline; }
+
+/* soovi korral väike “nooleke” nupu poole */
+#info-popover::after{
+  content:"";
+  position: absolute;
+  width: 10px; height: 10px;
+  background: #fff;
+  border-left:1px solid #000;
+  border-top:1px solid #000;
+  transform: rotate(45deg);
+}
+#info-popover.arrow-top::after{
+  top:-6px; left:16px;
+}
+#info-popover.arrow-bottom::after{
+  bottom:-6px; left:16px; transform: rotate(225deg);
+}
+
 </style>
 </head>
 <body>
@@ -281,6 +326,13 @@ header a.back:hover {
         <h3 class="title">2019 AUDI R8 SPYDER</h3>
         <p class="desc">2020 - FACTORY FRESH - 175/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi R8 is a high-performance sports car produced by Audi AG since 2006 for the 2007 model year. The current generation R8, internally designated the Type 4S, was introduced in 2015. This generation was designed by Florian Liese and shares a platform with the Lamborghini Huracán, as well as engines (which are given a detune in the case of the R8). The car is available in coupe and convertible versions.
+
+The R8 was facelifted in 2018 to give a more aggressive appearance; this facelift was overseen by Manu Müller. This facelift also came with an increase in power for the engine.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/Audi_RS_6_Avant">
@@ -289,6 +341,13 @@ header a.back:hover {
         <h3 class="title">Audi RS6 Avant</h3>
         <p class="desc">2024 - Fast Wagons - 1/5</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi RS 6 is a high-performance version of the Audi A6, only available in station wagon ("Avant") form since 2013. Designed by Stephan Fahr-Becker, the RS 6 Avant underwent a significant facelift for the 2020 model year. It is now powered by a 4.0L DYGA twin-turbocharged V8, now boosted by a belt alternator starter and mild hybrid system as well as a cylinder-on-demand system for the engine. The engine produces 592 horsepower and is mated to an 8-speed ZF 8HP95 automatic; top speed for the wagon is 305 km/h (190 mph) with the installation of optional performance packages.
+
+The initial release is based on the limited-production Audi RS 6 Avant GT variant.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2717_Audi_RS_6_Avant">
@@ -297,6 +356,11 @@ header a.back:hover {
         <h3 class="title">´17 Audi RS6 Avant</h3>
         <p class="desc">2023 - Hot Wagons - 5/5</p>
       </div>
+    <div class="info-text" hidden>
+
+With sporty fenders and striking air vents, the '17 Audi RS6 Avant proves that true beauty goes much deeper than good looks. A 4.0 liter V8, tiptronic gearbox, and permanent four–wheel drive turn this hot wagon into an all–out road hugging speed machine!
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-15" data-info="https://hotwheels.fandom.com/wiki/Audi_S4_quattro">
@@ -305,6 +369,11 @@ header a.back:hover {
         <h3 class="title">Audi S4 QUATTRO</h3>
         <p class="desc">2024 - CAR CULTURE: WORLD TOUR - 5/5</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi S4 is a high-performance version of the Audi A4 sedan. S4s have generally received uprated engines, brakes, suspension, larger wheels and new sheetmetal compared to the A4. This version of the casting is based on the second generation of the Audi S4, internally designated the 8D.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-26" data-info="https://hotwheels.fandom.com/wiki/Audi_RS_e-tron_GT">
@@ -313,6 +382,13 @@ header a.back:hover {
         <h3 class="title">Audi RS e-tron GT</h3>
         <p class="desc">2022 - HW Green Speed - 176/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi e-tron GT is an executive electric car introduced in 2020. Designed by Parys Cybulski and Markus Däsch, the e-tron GT competes against the Porsche Taycan in that segment. The RS e-tron GT is a more performance-oriented version with better performance and acceleration.
+
+While not immediately obvious this casting features a slightly up-sloped front bumper. Due to the way the window piece is constructed there is a line streaking across the side windows.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/Audi_RS_e-tron_GT">
@@ -321,6 +397,13 @@ header a.back:hover {
         <h3 class="title">Audi RS e-tron GT</h3>
         <p class="desc">2023 - HW Green Speed - 109/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi e-tron GT is an executive electric car introduced in 2020. Designed by Parys Cybulski and Markus Däsch, the e-tron GT competes against the Porsche Taycan in that segment. The RS e-tron GT is a more performance-oriented version with better performance and acceleration.
+
+While not immediately obvious this casting features a slightly up-sloped front bumper. Due to the way the window piece is constructed there is a line streaking across the side windows.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-26" data-info="https://hotwheels.fandom.com/wiki/Audi_RS_e-tron_GT">
@@ -329,6 +412,13 @@ header a.back:hover {
         <h3 class="title">Audi RS e-tron GT</h3>
         <p class="desc">2024 - HW Green Speed - 36/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi e-tron GT is an executive electric car introduced in 2020. Designed by Parys Cybulski and Markus Däsch, the e-tron GT competes against the Porsche Taycan in that segment. The RS e-tron GT is a more performance-oriented version with better performance and acceleration.
+
+While not immediately obvious this casting features a slightly up-sloped front bumper. Due to the way the window piece is constructed there is a line streaking across the side windows.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-26" data-info="https://hotwheels.fandom.com/wiki/Audi_RS_e-tron_GT">
@@ -337,6 +427,13 @@ header a.back:hover {
         <h3 class="title">Audi RS e-tron GT</h3>
         <p class="desc">2024 - HW Green Speed - 109/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi e-tron GT is an executive electric car introduced in 2020. Designed by Parys Cybulski and Markus Däsch, the e-tron GT competes against the Porsche Taycan in that segment. The RS e-tron GT is a more performance-oriented version with better performance and acceleration.
+
+While not immediately obvious this casting features a slightly up-sloped front bumper. Due to the way the window piece is constructed there is a line streaking across the side windows.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-26" data-info="https://hotwheels.fandom.com/wiki/Audi_90_quattro">
@@ -345,6 +442,13 @@ header a.back:hover {
         <h3 class="title">Audi ´90 Quattro</h3>
         <p class="desc">2023 - Retro Racers - 77/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi 90 quattro IMSA GTO was a specialized version of the quattro intended for racing in the IMSA GT Championship. Entered into the 1989 IMSA GT Championship by Audi of America and driven by Hans-Joachim Stuck, the quattro GTO was essentially a standard Group B Audi quattro with a silhouette bodyshell and an all-wheel drive drivetrain. The car's 2.2L R5 turbocharged flat-5 could produce 720 horsepower and was very successful, winning seven of thirteen races; despite this, Audi lost the championship to Roush Racing that year. Audi would pull out of the GTO class the next year, instead opting to use their V8 in the DTM with similar levels of success. The quattro GTO has since become one of the most iconic and revered IMSA cars of all time.
+
+This casting features hidden engine detail when taken apart.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/Audi_90_quattro">
@@ -353,6 +457,13 @@ header a.back:hover {
         <h3 class="title">Audi ´90 Quattro</h3>
         <p class="desc">2023 - Retro Racers - 77/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi 90 quattro IMSA GTO was a specialized version of the quattro intended for racing in the IMSA GT Championship. Entered into the 1989 IMSA GT Championship by Audi of America and driven by Hans-Joachim Stuck, the quattro GTO was essentially a standard Group B Audi quattro with a silhouette bodyshell and an all-wheel drive drivetrain. The car's 2.2L R5 turbocharged flat-5 could produce 720 horsepower and was very successful, winning seven of thirteen races; despite this, Audi lost the championship to Roush Racing that year. Audi would pull out of the GTO class the next year, instead opting to use their V8 in the DTM with similar levels of success. The quattro GTO has since become one of the most iconic and revered IMSA cars of all time.
+
+This casting features hidden engine detail when taken apart.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-26" data-info="https://hotwheels.fandom.com/wiki/Audi_90_quattro">
@@ -361,6 +472,13 @@ header a.back:hover {
         <h3 class="title">Audi ´90 Quattro</h3>
         <p class="desc">2024 - HW TURBO - 144/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi 90 quattro IMSA GTO was a specialized version of the quattro intended for racing in the IMSA GT Championship. Entered into the 1989 IMSA GT Championship by Audi of America and driven by Hans-Joachim Stuck, the quattro GTO was essentially a standard Group B Audi quattro with a silhouette bodyshell and an all-wheel drive drivetrain. The car's 2.2L R5 turbocharged flat-5 could produce 720 horsepower and was very successful, winning seven of thirteen races; despite this, Audi lost the championship to Roush Racing that year. Audi would pull out of the GTO class the next year, instead opting to use their V8 in the DTM with similar levels of success. The quattro GTO has since become one of the most iconic and revered IMSA cars of all time.
+
+This casting features hidden engine detail when taken apart.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/Audi_90_quattro">
@@ -369,6 +487,13 @@ header a.back:hover {
         <h3 class="title">Audi ´90 Quattro</h3>
         <p class="desc">2025 - Peak Pursuit - 199/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi 90 quattro IMSA GTO was a specialized version of the quattro intended for racing in the IMSA GT Championship. Entered into the 1989 IMSA GT Championship by Audi of America and driven by Hans-Joachim Stuck, the quattro GTO was essentially a standard Group B Audi quattro with a silhouette bodyshell and an all-wheel drive drivetrain. The car's 2.2L R5 turbocharged flat-5 could produce 720 horsepower and was very successful, winning seven of thirteen races; despite this, Audi lost the championship to Roush Racing that year. Audi would pull out of the GTO class the next year, instead opting to use their V8 in the DTM with similar levels of success. The quattro GTO has since become one of the most iconic and revered IMSA cars of all time.
+
+This casting features hidden engine detail when taken apart.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2794_Audi_Avant_RS2">
@@ -377,6 +502,11 @@ header a.back:hover {
         <h3 class="title">´94 Audi Avant RS2</h3>
         <p class="desc">2024 - Factory fresh - 133/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi RS 2 Avant, also known as the 80 RS 2, was a limited-production high-performance all-wheel drive station wagon produced by Audi from 1994 to 1995. The RS 2 was Audi's first "RS" car and featured their most highly-developed version of the 2.2L 20V inline-5 engine, designated ADU, producing 311 horsepower. The car was co-developed with Porsche and produced at their Zuffenhausen plant. The car was not widely exported; 2,891 were produced.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-26" data-info="https://hotwheels.fandom.com/wiki/%2794_Audi_Avant_RS2">
@@ -385,6 +515,11 @@ header a.back:hover {
         <h3 class="title">´94 Audi Avant RS2</h3>
         <p class="desc">2024 - FACTORY FRESH - 133/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi RS 2 Avant, also known as the 80 RS 2, was a limited-production high-performance all-wheel drive station wagon produced by Audi from 1994 to 1995. The RS 2 was Audi's first "RS" car and featured their most highly-developed version of the 2.2L 20V inline-5 engine, designated ADU, producing 311 horsepower. The car was co-developed with Porsche and produced at their Zuffenhausen plant. The car was not widely exported; 2,891 were produced.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2794_Audi_Avant_RS2">
@@ -393,6 +528,11 @@ header a.back:hover {
         <h3 class="title">´94 Audi Avant RS2</h3>
         <p class="desc">2025 - HW: ´70s vs. ´90s - 29/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi RS 2 Avant, also known as the 80 RS 2, was a limited-production high-performance all-wheel drive station wagon produced by Audi from 1994 to 1995. The RS 2 was Audi's first "RS" car and featured their most highly-developed version of the 2.2L 20V inline-5 engine, designated ADU, producing 311 horsepower. The car was co-developed with Porsche and produced at their Zuffenhausen plant. The car was not widely exported; 2,891 were produced.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-26" data-info="https://hotwheels.fandom.com/wiki/%2794_Audi_Avant_RS2">
@@ -401,6 +541,11 @@ header a.back:hover {
         <h3 class="title">´94 Audi Avant RS2</h3>
         <p class="desc">2025 - HW: ´70s vs. ´90s - 29/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi RS 2 Avant, also known as the 80 RS 2, was a limited-production high-performance all-wheel drive station wagon produced by Audi from 1994 to 1995. The RS 2 was Audi's first "RS" car and featured their most highly-developed version of the 2.2L 20V inline-5 engine, designated ADU, producing 311 horsepower. The car was co-developed with Porsche and produced at their Zuffenhausen plant. The car was not widely exported; 2,891 were produced.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-13" data-info="https://hotwheels.fandom.com/wiki/%2787_Audi_quattro">
@@ -409,6 +554,11 @@ header a.back:hover {
         <h3 class="title">´87 Audi Quattro</h3>
         <p class="desc">2024 - HW TURBO - 102/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi Quattro is a mid-sized model produced by Audi from 1980 to 1991. The name "Quattro" comes from the Italian word for "four", representing the car's all-wheel drive system. In Audi's naming convention, the "Q" in "Quattro" is typically capitalized when referring to the vehicle model to highlight its unique all-wheel drive technology. However, when "quattro" is used to refer to Audi's all-wheel drive system, the "Q" is written in lowercase. Designed by Martin Smith and various others, the Quattro became renowned for its dominance in rally racing with its all-wheel drive system and has since become a cult classic.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2787_Audi_quattro">
@@ -417,6 +567,11 @@ header a.back:hover {
         <h3 class="title">´87 Audi Quattro</h3>
         <p class="desc">2025 - Factory fresh - 16/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Audi Quattro is a mid-sized model produced by Audi from 1980 to 1991. The name "Quattro" comes from the Italian word for "four", representing the car's all-wheel drive system. In Audi's naming convention, the "Q" in "Quattro" is typically capitalized when referring to the vehicle model to highlight its unique all-wheel drive technology. However, when "quattro" is used to refer to Audi's all-wheel drive system, the "Q" is written in lowercase. Designed by Martin Smith and various others, the Quattro became renowned for its dominance in rally racing with its all-wheel drive system and has since become a cult classic.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-26" data-info="https://hotwheels.fandom.com/wiki/%2784_Audi_Sport_quattro">
@@ -425,6 +580,11 @@ header a.back:hover {
         <h3 class="title">´84 audi sport quattro</h3>
         <p class="desc">2022 - RALLY CHAMPS - 180/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The '84 Audi Sport quattro is a Hot Wheels casting which was designed by Dmitriy Shakhmatov and debuted in the 2019 Baja Blazers mainline segment. It is a replication of the Group B Rally homologation of the Audi Quattro from 1984. The Sport Quattro was designed to be lighter and with a shorter wheelbase than the normal Quattro models to make most use of its 4X4 capabilities.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2784_Audi_Sport_quattro">
@@ -433,6 +593,11 @@ header a.back:hover {
         <h3 class="title">´84 audi sport quattro</h3>
         <p class="desc">2023 - HW: THE ´80S - 152/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The '84 Audi Sport quattro is a Hot Wheels casting which was designed by Dmitriy Shakhmatov and debuted in the 2019 Baja Blazers mainline segment. It is a replication of the Group B Rally homologation of the Audi Quattro from 1984. The Sport Quattro was designed to be lighter and with a shorter wheelbase than the normal Quattro models to make most use of its 4X4 capabilities.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-26" data-info="https://hotwheels.fandom.com/wiki/%2784_Audi_Sport_quattro">
@@ -441,6 +606,11 @@ header a.back:hover {
         <h3 class="title">´84 audi sport quattro</h3>
         <p class="desc">2023 - HW: THE ´80S - 152/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The '84 Audi Sport quattro is a Hot Wheels casting which was designed by Dmitriy Shakhmatov and debuted in the 2019 Baja Blazers mainline segment. It is a replication of the Group B Rally homologation of the Audi Quattro from 1984. The Sport Quattro was designed to be lighter and with a shorter wheelbase than the normal Quattro models to make most use of its 4X4 capabilities.
+
+</div>
     </article>
 
   </main>
@@ -685,5 +855,124 @@ document.addEventListener('click', (e) => {
 
 
 
+<script>
+(function(){
+  const isHoverFine = matchMedia("(hover:hover) and (pointer:fine)").matches;
+
+  let pop = document.getElementById('info-popover');
+  if(!pop){
+    pop = document.createElement('div');
+    pop.id = 'info-popover';
+    pop.innerHTML = `
+      <button class="x" aria-label="Sulge">✕</button>
+      <div class="t"></div>
+      <div class="body"></div>
+      <div class="more" style="margin-top:6px;"><a target="_blank" rel="noopener">Loe veel →</a></div>
+    `;
+    document.body.appendChild(pop);
+  }
+  const titleEl = pop.querySelector('.t');
+  const bodyEl  = pop.querySelector('.body');
+  const moreA   = pop.querySelector('.more a');
+  const closeBtn= pop.querySelector('.x');
+
+  let hideTimer = null;
+  let currentBtn = null;
+
+  function fillFromCard(card){
+    const t = (card.querySelector('.title')?.textContent || 'Info').trim();
+    const custom = (card.querySelector('.info-text')?.innerHTML || '').trim();
+    const url = card.dataset.info || '#';
+    titleEl.textContent = t;
+    bodyEl.innerHTML = custom;
+    moreA.href = url;
+  }
+
+  function placeByButton(btn){
+    const r = btn.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const margin = 8;
+    pop.style.visibility = 'hidden';
+    pop.classList.add('show');
+    pop.classList.remove('arrow-top','arrow-bottom');
+    const pr = pop.getBoundingClientRect();
+    let top  = r.bottom + margin;
+    let left = r.left;
+    if (left + pr.width > vw - margin) left = Math.max(margin, vw - margin - pr.width);
+    if (top + pr.height > vh - margin){
+      top = r.top - margin - pr.height;
+      pop.classList.add('arrow-bottom');
+    } else {
+      pop.classList.add('arrow-top');
+    }
+    if (left < margin) left = margin;
+    if (top  < margin) top  = margin;
+    pop.style.left = left + "px";
+    pop.style.top  = top  + "px";
+    pop.style.visibility = '';
+  }
+
+  function showFor(btn){
+    const card = btn.closest('.card');
+    if(!card) return;
+    currentBtn = btn;
+    fillFromCard(card);
+    placeByButton(btn);
+    pop.classList.add('show');
+  }
+  function hideSoon(delay=100){
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=>{ pop.classList.remove('show'); currentBtn=null; }, delay);
+  }
+  function cancelHide(){ clearTimeout(hideTimer); }
+
+  closeBtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    pop.classList.remove('show');
+    currentBtn = null;
+  });
+
+  document.querySelectorAll('.info-btn').forEach(btn=>{
+    const card = btn.closest('.card');
+    if(!card) return;
+    if(isHoverFine){
+      btn.addEventListener('mouseenter', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      pop.addEventListener('mouseenter', cancelHide);
+      pop.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      btn.addEventListener('focus', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('blur',  ()=>{ hideSoon(120); });
+      btn.addEventListener('click', e=>{ e.stopPropagation(); });
+    } else {
+      btn.addEventListener('click', e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(pop.classList.contains('show') && currentBtn === btn){
+          pop.classList.remove('show'); currentBtn=null;
+        } else {
+          showFor(btn);
+        }
+      });
+      pop.addEventListener('click', e=>e.stopPropagation());
+    }
+  });
+
+  ['scroll','resize'].forEach(ev=>{
+    window.addEventListener(ev, ()=>{
+      if(currentBtn && pop.classList.contains('show')){
+        placeByButton(currentBtn);
+      }
+    }, {passive:true});
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(pop.classList.contains('show')){
+      if(!pop.contains(e.target) && !e.target.closest('.info-btn')){
+        pop.classList.remove('show'); currentBtn=null;
+      }
+    }
+  });
+})();
+</script>
 </body>
 </html>

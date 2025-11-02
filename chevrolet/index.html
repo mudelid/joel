@@ -259,6 +259,51 @@ header a.back:hover {
     font-size: 20px !important;
   }
 }
+
+
+/* ——— ÜLE KAARDI ÄÄRE UJUVA INFO-AKNA STIIL ——— */
+#info-popover{
+  position: fixed;           /* ei lõigata kaardi poolt */
+  inset: auto auto auto auto;
+  z-index: 10000;            /* kõige pealmine */
+  display: none;
+  max-width: min(420px, 90vw);
+  background: rgba(255,255,255,.98);
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.24);
+  line-height: 1.25;
+  font-size: 14px;
+}
+#info-popover.show{ display:block; }
+
+#info-popover .x{
+  position:absolute; top:6px; right:8px;
+  background:transparent; border:0; cursor:pointer;
+  font:inherit; line-height:1;
+}
+#info-popover .t{ font-weight:600; margin:0 0 6px; }
+#info-popover .more a{ color:#000; text-decoration: underline; }
+
+/* soovi korral väike “nooleke” nupu poole */
+#info-popover::after{
+  content:"";
+  position: absolute;
+  width: 10px; height: 10px;
+  background: #fff;
+  border-left:1px solid #000;
+  border-top:1px solid #000;
+  transform: rotate(45deg);
+}
+#info-popover.arrow-top::after{
+  top:-6px; left:16px;
+}
+#info-popover.arrow-bottom::after{
+  bottom:-6px; left:16px; transform: rotate(225deg);
+}
+
 </style>
 </head>
 <body>
@@ -278,6 +323,12 @@ header a.back:hover {
         <h3 class="title">´83 CHEVY SILVERADO</h3>
         <p class="desc">2024 - THEN AND NOW - 249/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Chevrolet C/K is a series of trucks manufactured by the Chevrolet division of General Motors. The third generation of the C/K, styled by Bill Mitchell, was introduced in 1971 and was known as the Rounded Line series. This generation of C/K introduced a four door cab configuration as well as trim levels, including the Cheyenne, Scottsdale and Silverado trims. The vehicle underwent a major facelift in 1981 and a more subtle restyling in 1983, receiving revised grilles and minor changes in the front fascia. The third generation C/K was discontinued in 1991, although it was superseded midway through 1988 with a new generation of C/K truck.
+This casting is a depiction of a heavily modified 1983 Silverado with a different grille, lowered ride height and an exposed rear drivetrain. It is one of Hot Wheels's most popular models in the modern day. Jun Imai's initials can be seen cast into the base.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/1967_El_Camino">
@@ -286,6 +337,11 @@ header a.back:hover {
         <h3 class="title">CHEVY EL CAMINO</h3>
         <p class="desc">2025 - HW SCREEN TIME - 147/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Chevrolet El Camino is a coupe utility produced by Chevrolet from 1959 to 1987. This casting replicates the 1967 Chevrolet El Camino used by Jakob Toretto in Fast X.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-20" data-info="https://hotwheels.fandom.com/wiki/1966_Chevy_Impala">
@@ -294,6 +350,12 @@ header a.back:hover {
         <h3 class="title">1966 CHEVY IMPALA</h3>
         <p class="desc">2025 - FAST & FURIOUS 5-PACK</p>
       </div>
+    <div class="info-text" hidden>
+
+The Chevrolet Impala is a full-sized automobile produced by Chevrolet; the car was given a radical redesign in 1965, with all-new body panels and other revisions. The Impala was given a minor facelift in 1966. 774,200 were sold for 1966. This casting depicts the Chevy Impala driven by Dante Reyes (Jason Momoa) in the movie Fast X.
+The base of the casting reads '66 Chevy Impala.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2755_Chevy_(2006)">
@@ -302,6 +364,11 @@ header a.back:hover {
         <h3 class="title">´55 CHEVY</h3>
         <p class="desc">2024 - ROD SQUAD - 45/250</p>
       </div>
+    <div class="info-text" hidden>
+
+Produced by the Chevrolet division of General Motors, the first of the "Tri-Chevy" Bel Airs came with features like chrome headliner bands on hardtops, chrome spears on front fenders, chrome window moldings, and full wheel covers. Models were further distinguished by the Bel Air name script in gold lettering. Check out those fins! They're modeled off a fighter jet, and inspired an entire generation of hot rods. You can't get cooler than this custom classic.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2770_Chevy_Camaro_RS">
@@ -310,6 +377,12 @@ header a.back:hover {
         <h3 class="title">´70 CHEVY CAMARO RS</h3>
         <p class="desc">2025 - HW: ´70S VS. ´90S - 53/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Chevrolet Camaro is a pony car produced by the Chevrolet division of General Motors. The second generation of the Camaro, styled by Henry Haga, was introduced in 1970, intended to be more of a "Driver's Car" than its predecessor.
+Originally featuring an opening hood, the hood was cast shut in 2012.
+
+</div>
     </article>
 
   </main>
@@ -553,5 +626,124 @@ document.addEventListener('click', (e) => {
 </script>
 
 
+<script>
+(function(){
+  const isHoverFine = matchMedia("(hover:hover) and (pointer:fine)").matches;
+
+  let pop = document.getElementById('info-popover');
+  if(!pop){
+    pop = document.createElement('div');
+    pop.id = 'info-popover';
+    pop.innerHTML = `
+      <button class="x" aria-label="Sulge">✕</button>
+      <div class="t"></div>
+      <div class="body"></div>
+      <div class="more" style="margin-top:6px;"><a target="_blank" rel="noopener">Loe veel →</a></div>
+    `;
+    document.body.appendChild(pop);
+  }
+  const titleEl = pop.querySelector('.t');
+  const bodyEl  = pop.querySelector('.body');
+  const moreA   = pop.querySelector('.more a');
+  const closeBtn= pop.querySelector('.x');
+
+  let hideTimer = null;
+  let currentBtn = null;
+
+  function fillFromCard(card){
+    const t = (card.querySelector('.title')?.textContent || 'Info').trim();
+    const custom = (card.querySelector('.info-text')?.innerHTML || '').trim();
+    const url = card.dataset.info || '#';
+    titleEl.textContent = t;
+    bodyEl.innerHTML = custom;
+    moreA.href = url;
+  }
+
+  function placeByButton(btn){
+    const r = btn.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const margin = 8;
+    pop.style.visibility = 'hidden';
+    pop.classList.add('show');
+    pop.classList.remove('arrow-top','arrow-bottom');
+    const pr = pop.getBoundingClientRect();
+    let top  = r.bottom + margin;
+    let left = r.left;
+    if (left + pr.width > vw - margin) left = Math.max(margin, vw - margin - pr.width);
+    if (top + pr.height > vh - margin){
+      top = r.top - margin - pr.height;
+      pop.classList.add('arrow-bottom');
+    } else {
+      pop.classList.add('arrow-top');
+    }
+    if (left < margin) left = margin;
+    if (top  < margin) top  = margin;
+    pop.style.left = left + "px";
+    pop.style.top  = top  + "px";
+    pop.style.visibility = '';
+  }
+
+  function showFor(btn){
+    const card = btn.closest('.card');
+    if(!card) return;
+    currentBtn = btn;
+    fillFromCard(card);
+    placeByButton(btn);
+    pop.classList.add('show');
+  }
+  function hideSoon(delay=100){
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=>{ pop.classList.remove('show'); currentBtn=null; }, delay);
+  }
+  function cancelHide(){ clearTimeout(hideTimer); }
+
+  closeBtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    pop.classList.remove('show');
+    currentBtn = null;
+  });
+
+  document.querySelectorAll('.info-btn').forEach(btn=>{
+    const card = btn.closest('.card');
+    if(!card) return;
+    if(isHoverFine){
+      btn.addEventListener('mouseenter', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      pop.addEventListener('mouseenter', cancelHide);
+      pop.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      btn.addEventListener('focus', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('blur',  ()=>{ hideSoon(120); });
+      btn.addEventListener('click', e=>{ e.stopPropagation(); });
+    } else {
+      btn.addEventListener('click', e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(pop.classList.contains('show') && currentBtn === btn){
+          pop.classList.remove('show'); currentBtn=null;
+        } else {
+          showFor(btn);
+        }
+      });
+      pop.addEventListener('click', e=>e.stopPropagation());
+    }
+  });
+
+  ['scroll','resize'].forEach(ev=>{
+    window.addEventListener(ev, ()=>{
+      if(currentBtn && pop.classList.contains('show')){
+        placeByButton(currentBtn);
+      }
+    }, {passive:true});
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(pop.classList.contains('show')){
+      if(!pop.contains(e.target) && !e.target.closest('.info-btn')){
+        pop.classList.remove('show'); currentBtn=null;
+      }
+    }
+  });
+})();
+</script>
 </body>
 </html>

@@ -259,6 +259,51 @@ header a.back:hover {
     font-size: 20px !important;
   }
 }
+
+
+/* ——— ÜLE KAARDI ÄÄRE UJUVA INFO-AKNA STIIL ——— */
+#info-popover{
+  position: fixed;           /* ei lõigata kaardi poolt */
+  inset: auto auto auto auto;
+  z-index: 10000;            /* kõige pealmine */
+  display: none;
+  max-width: min(420px, 90vw);
+  background: rgba(255,255,255,.98);
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.24);
+  line-height: 1.25;
+  font-size: 14px;
+}
+#info-popover.show{ display:block; }
+
+#info-popover .x{
+  position:absolute; top:6px; right:8px;
+  background:transparent; border:0; cursor:pointer;
+  font:inherit; line-height:1;
+}
+#info-popover .t{ font-weight:600; margin:0 0 6px; }
+#info-popover .more a{ color:#000; text-decoration: underline; }
+
+/* soovi korral väike “nooleke” nupu poole */
+#info-popover::after{
+  content:"";
+  position: absolute;
+  width: 10px; height: 10px;
+  background: #fff;
+  border-left:1px solid #000;
+  border-top:1px solid #000;
+  transform: rotate(45deg);
+}
+#info-popover.arrow-top::after{
+  top:-6px; left:16px;
+}
+#info-popover.arrow-bottom::after{
+  bottom:-6px; left:16px; transform: rotate(225deg);
+}
+
 </style>
 </head>
 <body>
@@ -278,6 +323,12 @@ header a.back:hover {
         <h3 class="title">´20 DODGE CHARGER HELLCAT</h3>
         <p class="desc">2025 - MUSCLE MANIA - 240/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Dodge Charger SRT Hellcat is a high-performance version of the Dodge Charger, using a 707 BHP 6.2L Chrysler Hemi Hellcat V8 engine. For the 2020 model year, the car is given a widebody kit also features additional air intakes to assist with airflow; the widebody kit replaces the old narrow-body model.
+The base of the casting reads 2020 Dodge Charger "Hellcat".
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2718_Dodge_Challenger_SRT_Demon">
@@ -286,6 +337,26 @@ header a.back:hover {
         <h3 class="title">´18 DODGE CHALLENGER SRT DEMON</h3>
         <p class="desc">2023 - MUSCLE MANIA - 151/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The '18 Dodge Challenger SRT Demon is based on the vehicle of the same name. Dodge revived the Demon nameplate with the introduction of this model. Essentially a drag racer commissioned for track and road use, the Demon is a violently powerful car. Dodge made modifications to the existing Dodge Challenger SRT Hellcat, with performance, aesthetic, and underpinning changes.
+This casting features hidden engine detail when taken apart.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-02" data-info="https://hotwheels.fandom.com/wiki/Dodge_Viper_SRT10_ACR">
+      <img class="thumb" src="img/srt10.jpg" alt="Dodge Viper SRT10 ACR">
+      <div class="content">
+        <h3 class="title">Dodge Viper SRT10 ACR</h3>
+        <p class="desc">2024 - HW EXOTICS - 241/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Dodge Viper SRT10 ACR recreates the "track pack" version of the Viper (ZB II).
+The casting's rear wing was made metal in 2015 for cost cutting.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2796_Dodge_Viper_GTS">
@@ -294,6 +365,12 @@ header a.back:hover {
         <h3 class="title">‘96 DODGE VIPER GTS</h3>
         <p class="desc">2025 - THEN AND NOW - 176/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Dodge Viper is a sports car manufactured by the Dodge division of Stellantis (formerly Fiat Chrysler Automobiles) from 1991 to 2017. The second generation Dodge Viper, styled by Tom Gale and codenamed the SR II, was essentially a facelift of the previous generation. The GTS was the first Viper to feature a coupe layout, with a "double bubble" design allowing for slightly more headroom for helmets during track days; it also featured a revised exhaust layout and a slightly more powerful 8.0L Viper V10, now producing 450 horsepower. Production of the SR II ended in 2002 following a few incremental facelifts. 10,422 SR IIs were produced, of which 1,166 were 1996 GTS models.
+This casting features hidden engine detail when taken apart.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/2013_SRT_Viper">
@@ -302,6 +379,11 @@ header a.back:hover {
         <h3 class="title">2013 SRT VIPER</h3>
         <p class="desc">2025 - THEN AND NOW - 214/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Dodge Viper is a sports car manufactured by the Dodge division of Stellantis (formerly Fiat Chrysler Automobiles). The fifth generation Dodge Viper, styled by Scott Krugger and codenamed the VX, was the final generation of the Dodge Viper and introduced in 2012 as a 2013 model. The Viper was originally sold under the SRT brand as the SRT Viper as part of Chrysler's plan to turn SRT into a separate vehicle brand from 2013 to 2014 before it was reconsolidated under the Dodge brand for the 2015 model year onwards. The Viper is powered by an 8.4L Viper V10, producing 641 horsepower and mated to a 6-speed manual. Production of the Viper ended in 2017, with no replacement planned. 2,427 were produced.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2769_Dodge_Coronet_Superbee">
@@ -310,6 +392,12 @@ header a.back:hover {
         <h3 class="title">´69 DODGE CORONET SUPERBEE</h3>
         <p class="desc">2025 - MUSCLE MANIA - 208/250</p>
       </div>
+   <div class="info-text" hidden>
+
+The Dodge Coronet is an automobile manufactured by the Dodge division of Chrysler Corporation over seven generations; the cars shared the same bodyshell with different levels of equipment installed. The fifth generation, styled by Virgil Exner and Elwood Engel, was introduced after a hiatus in Coronet production since 1959, with the car downsized from full-sized to intermediate-sized and built on the new Chrysler B-Body platform. The Super Bee trim level was introduced in 1968 as a companion model to the Plymouth Road Runner, mainly powered by a 426 ci (7.0L) Hemi V8. The A12 package was introduced in 1968 with a fiberglass hood with large hood scoop and various other decal packages. The Coronet was restyled in 1970 and discontinued the same year. 27,800 were produced for 1969.
+This casting replicates a 1969 Dodge Coronet Super Bee with the A12 package. The 2009 Muscle Mania version has a wider stripe than the 2008 versions.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-20" data-info="https://hotwheels.fandom.com/wiki/%2770_Dodge_Charger_R/T">
@@ -318,6 +406,11 @@ header a.back:hover {
         <h3 class="title">´70 DODGE CHARGER R/T</h3>
         <p class="desc">2025 - FAST & FURIOUS 5-PACK</p>
       </div>
+    <div class="info-text" hidden>
+
+This casting depicts a customized 1970 Dodge Charger R/T with a blown engine sticking out of the hood.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2771_Dodge_Challenger">
@@ -326,6 +419,12 @@ header a.back:hover {
         <h3 class="title">´71 DODGE CHALLENGER</h3>
         <p class="desc">2025 - MUSCLE MANIA - 131/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Dodge Challenger is a pony car produced by the Dodge division of Chrysler starting fall 1969 for the 1970 model year. Designed by Carl Cameron, the Challenger had a longer wheelbase and more spacious interior to compete with the Mercury Cougar and Pontiac Firebird introduced around the same time. Challenger production declined sharply after 1970 and halted midway through 1974 due to declining sales. 165,437 were produced.
+This is a depiction of a 1971 Dodge Challenger with an optional shaker hood and Mopar Go-Wing. The tooling was updated in 2013 for cost-cutting, with the plastic wing now cast into the body.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2768_Dodge_Dart">
@@ -334,6 +433,12 @@ header a.back:hover {
         <h3 class="title">´68 DODGE DART</h3>
         <p class="desc">2025 - COMPACT KINGS - 129/250</p>
       </div>
+    <div class="info-text" hidden>
+
+First known as the Dodge Dart in 2004 Affinity Motor City Muscle Series, then in 2005 Hot Wheels Classics Series 1 the diecast was better known as the 1970 Dodge Dart and in 2006 the name changed again to 1968 Dodge Dart. Then towards the end of 2006 Holiday Rods changed to '68 Dodge Dart.
+The Dodge Dart resembles the actual Dodge Dart owned by Hot Wheels engineer Tom Sneddon.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-19" data-info="https://hotwheels.fandom.com/wiki/%2770_Dodge_Charger_(Tooned)">
@@ -342,6 +447,12 @@ header a.back:hover {
         <h3 class="title">´70 DODGE CHARGER</h3>
         <p class="desc">2024 - TOONED - 161/250</p>
       </div>
+    <div class="info-text" hidden>
+
+This casting depicts a 'Tooned version of the '70 Dodge Charger R/T, featuring squished up & cartoonish proportions.
+The casting's driver side window is wound down.
+
+</div>
     </article>
 
   </main>
@@ -585,5 +696,124 @@ document.addEventListener('click', (e) => {
 </script>
 
 
+<script>
+(function(){
+  const isHoverFine = matchMedia("(hover:hover) and (pointer:fine)").matches;
+
+  let pop = document.getElementById('info-popover');
+  if(!pop){
+    pop = document.createElement('div');
+    pop.id = 'info-popover';
+    pop.innerHTML = `
+      <button class="x" aria-label="Sulge">✕</button>
+      <div class="t"></div>
+      <div class="body"></div>
+      <div class="more" style="margin-top:6px;"><a target="_blank" rel="noopener">Loe veel →</a></div>
+    `;
+    document.body.appendChild(pop);
+  }
+  const titleEl = pop.querySelector('.t');
+  const bodyEl  = pop.querySelector('.body');
+  const moreA   = pop.querySelector('.more a');
+  const closeBtn= pop.querySelector('.x');
+
+  let hideTimer = null;
+  let currentBtn = null;
+
+  function fillFromCard(card){
+    const t = (card.querySelector('.title')?.textContent || 'Info').trim();
+    const custom = (card.querySelector('.info-text')?.innerHTML || '').trim();
+    const url = card.dataset.info || '#';
+    titleEl.textContent = t;
+    bodyEl.innerHTML = custom;
+    moreA.href = url;
+  }
+
+  function placeByButton(btn){
+    const r = btn.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const margin = 8;
+    pop.style.visibility = 'hidden';
+    pop.classList.add('show');
+    pop.classList.remove('arrow-top','arrow-bottom');
+    const pr = pop.getBoundingClientRect();
+    let top  = r.bottom + margin;
+    let left = r.left;
+    if (left + pr.width > vw - margin) left = Math.max(margin, vw - margin - pr.width);
+    if (top + pr.height > vh - margin){
+      top = r.top - margin - pr.height;
+      pop.classList.add('arrow-bottom');
+    } else {
+      pop.classList.add('arrow-top');
+    }
+    if (left < margin) left = margin;
+    if (top  < margin) top  = margin;
+    pop.style.left = left + "px";
+    pop.style.top  = top  + "px";
+    pop.style.visibility = '';
+  }
+
+  function showFor(btn){
+    const card = btn.closest('.card');
+    if(!card) return;
+    currentBtn = btn;
+    fillFromCard(card);
+    placeByButton(btn);
+    pop.classList.add('show');
+  }
+  function hideSoon(delay=100){
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=>{ pop.classList.remove('show'); currentBtn=null; }, delay);
+  }
+  function cancelHide(){ clearTimeout(hideTimer); }
+
+  closeBtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    pop.classList.remove('show');
+    currentBtn = null;
+  });
+
+  document.querySelectorAll('.info-btn').forEach(btn=>{
+    const card = btn.closest('.card');
+    if(!card) return;
+    if(isHoverFine){
+      btn.addEventListener('mouseenter', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      pop.addEventListener('mouseenter', cancelHide);
+      pop.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      btn.addEventListener('focus', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('blur',  ()=>{ hideSoon(120); });
+      btn.addEventListener('click', e=>{ e.stopPropagation(); });
+    } else {
+      btn.addEventListener('click', e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(pop.classList.contains('show') && currentBtn === btn){
+          pop.classList.remove('show'); currentBtn=null;
+        } else {
+          showFor(btn);
+        }
+      });
+      pop.addEventListener('click', e=>e.stopPropagation());
+    }
+  });
+
+  ['scroll','resize'].forEach(ev=>{
+    window.addEventListener(ev, ()=>{
+      if(currentBtn && pop.classList.contains('show')){
+        placeByButton(currentBtn);
+      }
+    }, {passive:true});
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(pop.classList.contains('show')){
+      if(!pop.contains(e.target) && !e.target.closest('.info-btn')){
+        pop.classList.remove('show'); currentBtn=null;
+      }
+    }
+  });
+})();
+</script>
 </body>
 </html>

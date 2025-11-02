@@ -259,6 +259,51 @@ header a.back:hover {
     font-size: 20px !important;
   }
 }
+
+
+/* ——— ÜLE KAARDI ÄÄRE UJUVA INFO-AKNA STIIL ——— */
+#info-popover{
+  position: fixed;           /* ei lõigata kaardi poolt */
+  inset: auto auto auto auto;
+  z-index: 10000;            /* kõige pealmine */
+  display: none;
+  max-width: min(420px, 90vw);
+  background: rgba(255,255,255,.98);
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.24);
+  line-height: 1.25;
+  font-size: 14px;
+}
+#info-popover.show{ display:block; }
+
+#info-popover .x{
+  position:absolute; top:6px; right:8px;
+  background:transparent; border:0; cursor:pointer;
+  font:inherit; line-height:1;
+}
+#info-popover .t{ font-weight:600; margin:0 0 6px; }
+#info-popover .more a{ color:#000; text-decoration: underline; }
+
+/* soovi korral väike “nooleke” nupu poole */
+#info-popover::after{
+  content:"";
+  position: absolute;
+  width: 10px; height: 10px;
+  background: #fff;
+  border-left:1px solid #000;
+  border-top:1px solid #000;
+  transform: rotate(45deg);
+}
+#info-popover.arrow-top::after{
+  top:-6px; left:16px;
+}
+#info-popover.arrow-bottom::after{
+  bottom:-6px; left:16px; transform: rotate(225deg);
+}
+
 </style>
 </head>
 <body>
@@ -561,5 +606,124 @@ document.addEventListener('click', (e) => {
 </script>
 
 
+<script>
+(function(){
+  const isHoverFine = matchMedia("(hover:hover) and (pointer:fine)").matches;
+
+  let pop = document.getElementById('info-popover');
+  if(!pop){
+    pop = document.createElement('div');
+    pop.id = 'info-popover';
+    pop.innerHTML = `
+      <button class="x" aria-label="Sulge">✕</button>
+      <div class="t"></div>
+      <div class="body"></div>
+      <div class="more" style="margin-top:6px;"><a target="_blank" rel="noopener">Loe veel →</a></div>
+    `;
+    document.body.appendChild(pop);
+  }
+  const titleEl = pop.querySelector('.t');
+  const bodyEl  = pop.querySelector('.body');
+  const moreA   = pop.querySelector('.more a');
+  const closeBtn= pop.querySelector('.x');
+
+  let hideTimer = null;
+  let currentBtn = null;
+
+  function fillFromCard(card){
+    const t = (card.querySelector('.title')?.textContent || 'Info').trim();
+    const custom = (card.querySelector('.info-text')?.innerHTML || '').trim();
+    const url = card.dataset.info || '#';
+    titleEl.textContent = t;
+    bodyEl.innerHTML = custom;
+    moreA.href = url;
+  }
+
+  function placeByButton(btn){
+    const r = btn.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const margin = 8;
+    pop.style.visibility = 'hidden';
+    pop.classList.add('show');
+    pop.classList.remove('arrow-top','arrow-bottom');
+    const pr = pop.getBoundingClientRect();
+    let top  = r.bottom + margin;
+    let left = r.left;
+    if (left + pr.width > vw - margin) left = Math.max(margin, vw - margin - pr.width);
+    if (top + pr.height > vh - margin){
+      top = r.top - margin - pr.height;
+      pop.classList.add('arrow-bottom');
+    } else {
+      pop.classList.add('arrow-top');
+    }
+    if (left < margin) left = margin;
+    if (top  < margin) top  = margin;
+    pop.style.left = left + "px";
+    pop.style.top  = top  + "px";
+    pop.style.visibility = '';
+  }
+
+  function showFor(btn){
+    const card = btn.closest('.card');
+    if(!card) return;
+    currentBtn = btn;
+    fillFromCard(card);
+    placeByButton(btn);
+    pop.classList.add('show');
+  }
+  function hideSoon(delay=100){
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=>{ pop.classList.remove('show'); currentBtn=null; }, delay);
+  }
+  function cancelHide(){ clearTimeout(hideTimer); }
+
+  closeBtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    pop.classList.remove('show');
+    currentBtn = null;
+  });
+
+  document.querySelectorAll('.info-btn').forEach(btn=>{
+    const card = btn.closest('.card');
+    if(!card) return;
+    if(isHoverFine){
+      btn.addEventListener('mouseenter', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      pop.addEventListener('mouseenter', cancelHide);
+      pop.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      btn.addEventListener('focus', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('blur',  ()=>{ hideSoon(120); });
+      btn.addEventListener('click', e=>{ e.stopPropagation(); });
+    } else {
+      btn.addEventListener('click', e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(pop.classList.contains('show') && currentBtn === btn){
+          pop.classList.remove('show'); currentBtn=null;
+        } else {
+          showFor(btn);
+        }
+      });
+      pop.addEventListener('click', e=>e.stopPropagation());
+    }
+  });
+
+  ['scroll','resize'].forEach(ev=>{
+    window.addEventListener(ev, ()=>{
+      if(currentBtn && pop.classList.contains('show')){
+        placeByButton(currentBtn);
+      }
+    }, {passive:true});
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(pop.classList.contains('show')){
+      if(!pop.contains(e.target) && !e.target.closest('.info-btn')){
+        pop.classList.remove('show'); currentBtn=null;
+      }
+    }
+  });
+})();
+</script>
 </body>
 </html>

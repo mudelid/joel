@@ -259,6 +259,51 @@ header a.back:hover {
     font-size: 20px !important;
   }
 }
+
+
+/* ——— ÜLE KAARDI ÄÄRE UJUVA INFO-AKNA STIIL ——— */
+#info-popover{
+  position: fixed;           /* ei lõigata kaardi poolt */
+  inset: auto auto auto auto;
+  z-index: 10000;            /* kõige pealmine */
+  display: none;
+  max-width: min(420px, 90vw);
+  background: rgba(255,255,255,.98);
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.24);
+  line-height: 1.25;
+  font-size: 14px;
+}
+#info-popover.show{ display:block; }
+
+#info-popover .x{
+  position:absolute; top:6px; right:8px;
+  background:transparent; border:0; cursor:pointer;
+  font:inherit; line-height:1;
+}
+#info-popover .t{ font-weight:600; margin:0 0 6px; }
+#info-popover .more a{ color:#000; text-decoration: underline; }
+
+/* soovi korral väike “nooleke” nupu poole */
+#info-popover::after{
+  content:"";
+  position: absolute;
+  width: 10px; height: 10px;
+  background: #fff;
+  border-left:1px solid #000;
+  border-top:1px solid #000;
+  transform: rotate(45deg);
+}
+#info-popover.arrow-top::after{
+  top:-6px; left:16px;
+}
+#info-popover.arrow-bottom::after{
+  bottom:-6px; left:16px; transform: rotate(225deg);
+}
+
 </style>
 </head>
 <body>
@@ -278,6 +323,11 @@ header a.back:hover {
         <h3 class="title">Datsun Bluebird Wagon (510)</h3>
         <p class="desc">2023 - HOT WAGONS - 3/5</p>
       </div>
+    <div class="info-text" hidden>
+
+This casting depicts a heavily modified 1971 Datsun Bluebird 510 wagon with a variety of 1970s-style JDM modifications, including fender mounted mirrors. Several releases of the '71 Datsun Bluebird 510 Wagon exist with a variation in the casting where they come with or without a mesh texture in the grille.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/Datsun_240Z">
@@ -286,6 +336,11 @@ header a.back:hover {
         <h3 class="title">Datsun 240Z</h3>
         <p class="desc">2025 - HW ART CARS - 62/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Datsun 240Z is a Hot Wheels casting based on the real car of the same name and was recreated in 1:64 scale by Hot Wheels designer Phil Riehlman. There is also a similar customized version called the Custom Datsun 240Z and other smilier one called the Custom '72 Datsun 240Z (RLC).
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-22" data-info="https://hotwheels.fandom.com/wiki/Datsun_240Z">
@@ -294,6 +349,11 @@ header a.back:hover {
         <h3 class="title">Datsun 240Z</h3>
         <p class="desc">2025 - HW ART CARS - 62/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Datsun 240Z is a Hot Wheels casting based on the real car of the same name and was recreated in 1:64 scale by Hot Wheels designer Phil Riehlman. There is also a similar customized version called the Custom Datsun 240Z and other smilier one called the Custom '72 Datsun 240Z (RLC).
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/1975_Datsun_Sunny_Truck_(B120)">
@@ -302,6 +362,11 @@ header a.back:hover {
         <h3 class="title">1975 Datsun Sunny Truck (B120)</h3>
         <p class="desc">2025 - HW HOT TRUCKS - 93/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The Nissan Sunny Pickup was a light pickup truck introduced in February 1967. This generation of truck was introduced in 1971; none were imported initially into the United States due to the Chicken Tax. The casting features what appears to be an easel and other art supplies in the truck bed; these were added by Mark as a homage to his affinity for painting outdoors.
+
+</div>
     </article>
 
   </main>
@@ -544,5 +609,124 @@ document.addEventListener('click', (e) => {
 </script>
 
 
+<script>
+(function(){
+  const isHoverFine = matchMedia("(hover:hover) and (pointer:fine)").matches;
+
+  let pop = document.getElementById('info-popover');
+  if(!pop){
+    pop = document.createElement('div');
+    pop.id = 'info-popover';
+    pop.innerHTML = `
+      <button class="x" aria-label="Sulge">✕</button>
+      <div class="t"></div>
+      <div class="body"></div>
+      <div class="more" style="margin-top:6px;"><a target="_blank" rel="noopener">Loe veel →</a></div>
+    `;
+    document.body.appendChild(pop);
+  }
+  const titleEl = pop.querySelector('.t');
+  const bodyEl  = pop.querySelector('.body');
+  const moreA   = pop.querySelector('.more a');
+  const closeBtn= pop.querySelector('.x');
+
+  let hideTimer = null;
+  let currentBtn = null;
+
+  function fillFromCard(card){
+    const t = (card.querySelector('.title')?.textContent || 'Info').trim();
+    const custom = (card.querySelector('.info-text')?.innerHTML || '').trim();
+    const url = card.dataset.info || '#';
+    titleEl.textContent = t;
+    bodyEl.innerHTML = custom;
+    moreA.href = url;
+  }
+
+  function placeByButton(btn){
+    const r = btn.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const margin = 8;
+    pop.style.visibility = 'hidden';
+    pop.classList.add('show');
+    pop.classList.remove('arrow-top','arrow-bottom');
+    const pr = pop.getBoundingClientRect();
+    let top  = r.bottom + margin;
+    let left = r.left;
+    if (left + pr.width > vw - margin) left = Math.max(margin, vw - margin - pr.width);
+    if (top + pr.height > vh - margin){
+      top = r.top - margin - pr.height;
+      pop.classList.add('arrow-bottom');
+    } else {
+      pop.classList.add('arrow-top');
+    }
+    if (left < margin) left = margin;
+    if (top  < margin) top  = margin;
+    pop.style.left = left + "px";
+    pop.style.top  = top  + "px";
+    pop.style.visibility = '';
+  }
+
+  function showFor(btn){
+    const card = btn.closest('.card');
+    if(!card) return;
+    currentBtn = btn;
+    fillFromCard(card);
+    placeByButton(btn);
+    pop.classList.add('show');
+  }
+  function hideSoon(delay=100){
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=>{ pop.classList.remove('show'); currentBtn=null; }, delay);
+  }
+  function cancelHide(){ clearTimeout(hideTimer); }
+
+  closeBtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    pop.classList.remove('show');
+    currentBtn = null;
+  });
+
+  document.querySelectorAll('.info-btn').forEach(btn=>{
+    const card = btn.closest('.card');
+    if(!card) return;
+    if(isHoverFine){
+      btn.addEventListener('mouseenter', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      pop.addEventListener('mouseenter', cancelHide);
+      pop.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      btn.addEventListener('focus', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('blur',  ()=>{ hideSoon(120); });
+      btn.addEventListener('click', e=>{ e.stopPropagation(); });
+    } else {
+      btn.addEventListener('click', e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(pop.classList.contains('show') && currentBtn === btn){
+          pop.classList.remove('show'); currentBtn=null;
+        } else {
+          showFor(btn);
+        }
+      });
+      pop.addEventListener('click', e=>e.stopPropagation());
+    }
+  });
+
+  ['scroll','resize'].forEach(ev=>{
+    window.addEventListener(ev, ()=>{
+      if(currentBtn && pop.classList.contains('show')){
+        placeByButton(currentBtn);
+      }
+    }, {passive:true});
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(pop.classList.contains('show')){
+      if(!pop.contains(e.target) && !e.target.closest('.info-btn')){
+        pop.classList.remove('show'); currentBtn=null;
+      }
+    }
+  });
+})();
+</script>
 </body>
 </html>

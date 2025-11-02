@@ -259,6 +259,51 @@ header a.back:hover {
     font-size: 20px !important;
   }
 }
+
+
+/* ——— ÜLE KAARDI ÄÄRE UJUVA INFO-AKNA STIIL ——— */
+#info-popover{
+  position: fixed;           /* ei lõigata kaardi poolt */
+  inset: auto auto auto auto;
+  z-index: 10000;            /* kõige pealmine */
+  display: none;
+  max-width: min(420px, 90vw);
+  background: rgba(255,255,255,.98);
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.24);
+  line-height: 1.25;
+  font-size: 14px;
+}
+#info-popover.show{ display:block; }
+
+#info-popover .x{
+  position:absolute; top:6px; right:8px;
+  background:transparent; border:0; cursor:pointer;
+  font:inherit; line-height:1;
+}
+#info-popover .t{ font-weight:600; margin:0 0 6px; }
+#info-popover .more a{ color:#000; text-decoration: underline; }
+
+/* soovi korral väike “nooleke” nupu poole */
+#info-popover::after{
+  content:"";
+  position: absolute;
+  width: 10px; height: 10px;
+  background: #fff;
+  border-left:1px solid #000;
+  border-top:1px solid #000;
+  transform: rotate(45deg);
+}
+#info-popover.arrow-top::after{
+  top:-6px; left:16px;
+}
+#info-popover.arrow-bottom::after{
+  bottom:-6px; left:16px; transform: rotate(225deg);
+}
+
 </style>
 </head>
 <body>
@@ -272,12 +317,31 @@ header a.back:hover {
 
   <main>
 
+    <article class="card" data-added="2025-11-02" data-info="https://hotwheels.fandom.com/wiki/BMW_M1_Procar">
+      <img class="thumb" src="img/m1procar.jpg" alt="BMW M1 PROCAR">
+      <div class="content">
+        <h3 class="title">BMW M1 PROCAR</h3>
+        <p class="desc">2025 - THE HOT ONES - 8/8</p>
+      </div>
+    <div class="info-text" hidden>
+
+The BMW M1 Procar is a grand touring race car designed and manufactured by BMW Motorsport GmbH as what was essentially was a racing version of the BMW M1 although few components were shared between the road and race cars. Designed for competition in the BMW M1 Procar Championship, the M1 Procar was also designed to meet Group 4 technical regulations. The cars were powered by a 3.5L M88/1 inline-6 and was capable of producing some 470 horsepower. All cars used in the championship were built to identical standards and were built by either BS Fabrications, Project Four Racing or Osella Squadra Corse. BMW ended the Procar Championship after two years to concentrate on their entry into Formula One, with some Procars later competing in Group B at the 24 Hours of Le Mans where they proved competitive, scoring a few class victories. Fifty-four chassis were built.
+
+</div>
+    </article>
+
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/BMW_635_CSi">
       <img class="thumb" src="img/635csi1.jpg" alt="BMW 635 CSI">
       <div class="content">
         <h3 class="title">BMW 635 CSI</h3>
         <p class="desc">2025 - Wild Widebody - 185/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The BMW 635CSi is a high-end version of the BMW E24 6 Series, introduced in 1978. Designed by Paul Bracq, the 635CSi uses a 3.4L M90 inline-6 making 215 horsepower although engines for the vehicle were upgraded over its lifespan. The 635CSi acted as the replacement for the older 633CSi. Production of the 635CSi ended in 1989 along with E24 production. BMW also took the 635CSi racing, homologated for Group A competition and competing in a number of touring car championships around the world from 1981 to 1985; the cars raced in championships such as the DTM, Australian Touring Car Championship and AMSCAR but it was the European Touring Car Championship where they were most well known. A highly successful car, the 635CSi won 16 titles and a number of major race wins. About 50 chassis were produced.
+This casting depicts a racing 635CSi developed for the Australian Touring Car Championship as campaigned by JPS Team BMW.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-26" data-info="https://hotwheels.fandom.com/wiki/BMW_M3_Wagon">
@@ -286,6 +350,12 @@ header a.back:hover {
         <h3 class="title">BMW M3 WAGON</h3>
         <p class="desc">2024 - HW MODIFIED - 138/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The BMW M3 is the high-performance version of the BMW 3 Series, produced since 1986. The first generation, known as the E30, was engineered by Claus Luthe and designed as a homologation special for DTM and Group A touring car rules. They were mainly produced in the coupe body style.
+This casting is a custom 2-door wagon version of an E30 BMW M3; no such version was available from the factory. This casting is a modification of Jun Imai's '92 BMW M3 casting; it features a wound down driver's side window and surfboards in the rear, the latter being used to cover up the rivet post.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/BMW_M3_Wagon">
@@ -294,6 +364,12 @@ header a.back:hover {
         <h3 class="title">BMW M3 WAGON</h3>
         <p class="desc">2025 - WAGONS - 245/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The BMW M3 is the high-performance version of the BMW 3 Series, produced since 1986. The first generation, known as the E30, was engineered by Claus Luthe and designed as a homologation special for DTM and Group A touring car rules. They were mainly produced in the coupe body style.
+This casting is a custom 2-door wagon version of an E30 BMW M3; no such version was available from the factory. This casting is a modification of Jun Imai's '92 BMW M3 casting; it features a wound down driver's side window and surfboards in the rear, the latter being used to cover up the rivet post.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-19" data-info="https://hotwheels.fandom.com/wiki/BMW_2002">
@@ -302,6 +378,11 @@ header a.back:hover {
         <h3 class="title">BMW 2002</h3>
         <p class="desc">2025 - HW: ´70S VS. ´90S - 77/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The BMW 2002 is a design by Jun Imai that first debuted in 2012. It depicts a heavily customized United States specification 1968 BMW 2002 E10. Several stock BMW 2002 were featured as driverless “Ghost” vehicles and Silencerz disguises in the Hot Wheels: AcceleRacers film series seven years before the debut of this casting. No graphic has been released to represent this appearance.
+
+</div>
     </article>
 
     <article class="card" data-added="2025-10-26" data-info="https://hotwheels.fandom.com/wiki/BMW_2002">
@@ -310,6 +391,11 @@ header a.back:hover {
         <h3 class="title">BMW 2002</h3>
         <p class="desc">2025 - HW: ´70S VS. ´90S - 77/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The BMW 2002 is a design by Jun Imai that first debuted in 2012. It depicts a heavily customized United States specification 1968 BMW 2002 E10. Several stock BMW 2002 were featured as driverless “Ghost” vehicles and Silencerz disguises in the Hot Wheels: AcceleRacers film series seven years before the debut of this casting. No graphic has been released to represent this appearance.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/BMW_2002">
@@ -318,6 +404,11 @@ header a.back:hover {
         <h3 class="title">BMW 2002</h3>
         <p class="desc">2025 - NEON SPEEDERS - 8/8</p>
       </div>
+    <div class="info-text" hidden>
+
+The BMW 2002 is a design by Jun Imai that first debuted in 2012. It depicts a heavily customized United States specification 1968 BMW 2002 E10. Several stock BMW 2002 were featured as driverless “Ghost” vehicles and Silencerz disguises in the Hot Wheels: AcceleRacers film series seven years before the debut of this casting. No graphic has been released to represent this appearance.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/BMW_507">
@@ -326,6 +417,11 @@ header a.back:hover {
         <h3 class="title">BMW 507</h3>
         <p class="desc">2023 - Factory Fresh - 185/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The BMW 507 is a two-seat convertible produced by BMW from 1956 to 1959. Designed by Count Albrecht von Goertz, the 507 was conceived by American BMW importer Max Hoffman as a roadster version of the 501 and 502 models. Initially intended to be exported to the United States at a rate of thousands per year, the 507 was a massive failure for BMW, with the company losing money with every 507 built; this got so bad that BMW was on the verge of bankruptcy, having lost DM 15 million by the end of production in 1959. 252 were produced.
+
+</div>
     </article>
 
     <article class="card" data-info="https://hotwheels.fandom.com/wiki/BMW_507">
@@ -334,6 +430,11 @@ header a.back:hover {
         <h3 class="title">BMW 507</h3>
         <p class="desc">2023 - Factory Fresh - 120/250</p>
       </div>
+    <div class="info-text" hidden>
+
+The BMW 507 is a two-seat convertible produced by BMW from 1956 to 1959. Designed by Count Albrecht von Goertz, the 507 was conceived by American BMW importer Max Hoffman as a roadster version of the 501 and 502 models. Initially intended to be exported to the United States at a rate of thousands per year, the 507 was a massive failure for BMW, with the company losing money with every 507 built; this got so bad that BMW was on the verge of bankruptcy, having lost DM 15 million by the end of production in 1959. 252 were produced.
+
+</div>
     </article>
 
   </main>
@@ -577,5 +678,124 @@ document.addEventListener('click', (e) => {
 </script>
 
 
+<script>
+(function(){
+  const isHoverFine = matchMedia("(hover:hover) and (pointer:fine)").matches;
+
+  let pop = document.getElementById('info-popover');
+  if(!pop){
+    pop = document.createElement('div');
+    pop.id = 'info-popover';
+    pop.innerHTML = `
+      <button class="x" aria-label="Sulge">✕</button>
+      <div class="t"></div>
+      <div class="body"></div>
+      <div class="more" style="margin-top:6px;"><a target="_blank" rel="noopener">Loe veel →</a></div>
+    `;
+    document.body.appendChild(pop);
+  }
+  const titleEl = pop.querySelector('.t');
+  const bodyEl  = pop.querySelector('.body');
+  const moreA   = pop.querySelector('.more a');
+  const closeBtn= pop.querySelector('.x');
+
+  let hideTimer = null;
+  let currentBtn = null;
+
+  function fillFromCard(card){
+    const t = (card.querySelector('.title')?.textContent || 'Info').trim();
+    const custom = (card.querySelector('.info-text')?.innerHTML || '').trim();
+    const url = card.dataset.info || '#';
+    titleEl.textContent = t;
+    bodyEl.innerHTML = custom;
+    moreA.href = url;
+  }
+
+  function placeByButton(btn){
+    const r = btn.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const margin = 8;
+    pop.style.visibility = 'hidden';
+    pop.classList.add('show');
+    pop.classList.remove('arrow-top','arrow-bottom');
+    const pr = pop.getBoundingClientRect();
+    let top  = r.bottom + margin;
+    let left = r.left;
+    if (left + pr.width > vw - margin) left = Math.max(margin, vw - margin - pr.width);
+    if (top + pr.height > vh - margin){
+      top = r.top - margin - pr.height;
+      pop.classList.add('arrow-bottom');
+    } else {
+      pop.classList.add('arrow-top');
+    }
+    if (left < margin) left = margin;
+    if (top  < margin) top  = margin;
+    pop.style.left = left + "px";
+    pop.style.top  = top  + "px";
+    pop.style.visibility = '';
+  }
+
+  function showFor(btn){
+    const card = btn.closest('.card');
+    if(!card) return;
+    currentBtn = btn;
+    fillFromCard(card);
+    placeByButton(btn);
+    pop.classList.add('show');
+  }
+  function hideSoon(delay=100){
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=>{ pop.classList.remove('show'); currentBtn=null; }, delay);
+  }
+  function cancelHide(){ clearTimeout(hideTimer); }
+
+  closeBtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    pop.classList.remove('show');
+    currentBtn = null;
+  });
+
+  document.querySelectorAll('.info-btn').forEach(btn=>{
+    const card = btn.closest('.card');
+    if(!card) return;
+    if(isHoverFine){
+      btn.addEventListener('mouseenter', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      pop.addEventListener('mouseenter', cancelHide);
+      pop.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      btn.addEventListener('focus', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('blur',  ()=>{ hideSoon(120); });
+      btn.addEventListener('click', e=>{ e.stopPropagation(); });
+    } else {
+      btn.addEventListener('click', e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(pop.classList.contains('show') && currentBtn === btn){
+          pop.classList.remove('show'); currentBtn=null;
+        } else {
+          showFor(btn);
+        }
+      });
+      pop.addEventListener('click', e=>e.stopPropagation());
+    }
+  });
+
+  ['scroll','resize'].forEach(ev=>{
+    window.addEventListener(ev, ()=>{
+      if(currentBtn && pop.classList.contains('show')){
+        placeByButton(currentBtn);
+      }
+    }, {passive:true});
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(pop.classList.contains('show')){
+      if(!pop.contains(e.target) && !e.target.closest('.info-btn')){
+        pop.classList.remove('show'); currentBtn=null;
+      }
+    }
+  });
+})();
+</script>
 </body>
 </html>
