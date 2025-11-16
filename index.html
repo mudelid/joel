@@ -260,6 +260,26 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
   cursor:pointer;
 }
 #info-popover .x:hover{ background:#f2f2f2; }
+
+.recent-wrap{max-width:1200px;margin:12px auto 24px;padding:0 16px; display:none;}
+.recent-wrap.open{ display:block; }
+
+.recent-grid{
+  display:grid; gap:8px;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+}
+.recent-card{
+  background:#fff;border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;text-decoration:none;color:var(--text);
+}
+.recent-card .thumb{aspect-ratio:4/3;width:100%;object-fit:cover;display:block;background:#222;}
+.recent-card .meta{padding:6px 8px;font-size:18px;line-height:1.2;text-align:center;}
+.recent-card .brand{font-size:12px;opacity:.7;}
+@media (max-width:600px){
+  .recent-grid{ gap:6px; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); }
+  .recent-card .meta{ font-size:16px; }
+}
+
 </style>
 </head>
 
@@ -276,10 +296,17 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
 
 </header>
 
-<section id="recent" class="recent-wrap">
-  <h3>Hiljuti lisatud</h3>
+<div class="cta-wrap">
+  <button id="recentToggle" class="cta-btn" aria-expanded="false" aria-controls="recentWrap">
+    HILJUTI LISATUD
+  </button>
+</div>
+
+
+<section id="recentWrap" class="recent-wrap" aria-hidden="true">
   <div class="recent-grid" id="recentGrid"></div>
 </section>
+
 
 <div class="cta-wrap">
   <a href="mudelid.html" class="cta-btn">KÕIK MUDELID</a>
@@ -327,45 +354,96 @@ list.innerHTML=top.map(x=>`
 })();
 </script>
 
-<!-- Hiljuti lisatud mudelid mudelid.html-ist -->
 <script>
-(async()=>{
-const grid=document.getElementById('recentGrid');
-if(!grid||location.protocol==='file:')return;
-let html='';
-try{const r=await fetch('mudelid.html',{cache:'no-store'});
-if(!r.ok)throw 0;html=await r.text();}catch{
-grid.innerHTML='<div style="opacity:.7">Ei saanud mudelid.html lugeda.</div>';return;}
-const doc=new DOMParser().parseFromString(html,'text/html');
-const base=new URL(location.href);
-const brands=[...doc.querySelectorAll('.brand-card[href]')].map(a=>({
-href:new URL(a.getAttribute('href'),base).href,
-name:(a.querySelector('.brand-name')?.textContent||'').trim()
-}));
-const items=[];
-await Promise.all(brands.map(async({href,name:brandName})=>{
-try{
-const r=await fetch(href,{cache:'no-store'});if(!r.ok)return;
-const h=await r.text();const d=new DOMParser().parseFromString(h,'text/html');
-const brand=d.querySelector('meta[name="brand"]')?.content?.trim()||brandName;
-d.querySelectorAll('.card[data-added]').forEach(c=>{
-const t=(c.querySelector('.title')?.textContent||'').trim();
-const img=c.querySelector('.thumb')?.getAttribute('src')||'';
-const a=c.getAttribute('data-added')||'';const ad=Date.parse(a);
-if(!t||!img||isNaN(ad))return;
-const full=new URL(img,href).href;
-const u=new URL(href,base);u.searchParams.set('m',t);
-items.push({brand,title:t,img:full,url:u.pathname+u.search,added:ad});
-});}catch{} }));
-if(!items.length){grid.innerHTML='<div style="opacity:.7">Hiljuti lisatud mudeleid ei leitud.</div>';return;}
-items.sort((a,b)=>b.added-a.added);
-const N=14;const recent=items.slice(0,N);
-grid.innerHTML=recent.map(it=>`
-<a class="recent-card" href="${it.url}">
-<img class="thumb" src="${it.img}" alt="${it.title}" loading="lazy" decoding="async">
-<div class="meta"><div class="title">${it.title}</div>
-<div class="brand">${it.brand} • ${new Date(it.added).toLocaleDateString()}</div>
-</div></a>`).join('');
+(function(){
+  const wrap  = document.getElementById('recentWrap');
+  const grid  = document.getElementById('recentGrid');
+  const btn   = document.getElementById('recentToggle');
+  let loaded  = false;   // lae üks kord
+  const N     = 30;      // mitu viimast näitame
+
+  function setOpen(open){
+    wrap.classList.toggle('open', open);
+    wrap.setAttribute('aria-hidden', String(!open));
+    btn.setAttribute('aria-expanded', String(open));
+    btn.textContent = open ? 'PEIDA HILJUTI LISATUD' : 'NÄITA HILJUTI LISATUD';
+  }
+
+  async function loadOnce(){
+    if (loaded) return;
+    loaded = true;
+
+    if (location.protocol === 'file:'){
+      grid.innerHTML = '<div style="opacity:.7">Ava leht serveris (GitHub Pages vms).</div>';
+      return;
+    }
+
+    // loe mudelid.html, et saada brändide lingid
+    let html='';
+    try{
+      const r = await fetch('mudelid.html',{cache:'no-store'});
+      if(!r.ok) throw 0;
+      html = await r.text();
+    }catch{
+      grid.innerHTML = '<div style="opacity:.7">Ei saanud mudelid.html lugeda.</div>';
+      return;
+    }
+
+    const doc  = new DOMParser().parseFromString(html,'text/html');
+    const base = new URL(location.href);
+    const brands = [...doc.querySelectorAll('.brand-card[href]')].map(a=>({
+      href : new URL(a.getAttribute('href'), base).href,
+      name : (a.querySelector('.brand-name')?.textContent || '').trim()
+    }));
+
+    const items = [];
+    await Promise.all(brands.map(async ({href,name})=>{
+      try{
+        const r = await fetch(href,{cache:'no-store'});
+        if(!r.ok) return;
+        const h = await r.text();
+        const d = new DOMParser().parseFromString(h,'text/html');
+        const brand = d.querySelector('meta[name="brand"]')?.content?.trim() || name;
+
+        d.querySelectorAll('.card[data-added]').forEach(c=>{
+          const title = (c.querySelector('.title')?.textContent || '').trim();
+          const img   = c.querySelector('.thumb')?.getAttribute('src') || '';
+          const a     = c.getAttribute('data-added') || '';
+          const ts    = Date.parse(a);
+          if(!title || !img || isNaN(ts)) return;
+          const full  = new URL(img, href).href;
+
+          const u = new URL(href, base);
+          u.searchParams.set('m', title);
+          items.push({brand, title, img: full, url: u.pathname + u.search, added: ts});
+        });
+      }catch{}
+    }));
+
+    if(!items.length){
+      grid.innerHTML = '<div style="opacity:.7">Hiljuti lisatud mudeleid ei leitud.</div>';
+      return;
+    }
+
+    items.sort((a,b)=> b.added - a.added);
+    const recent = items.slice(0, N);
+    grid.innerHTML = recent.map(it=>`
+      <a class="recent-card" href="${it.url}">
+        <img class="thumb" src="${it.img}" alt="${it.title}" loading="lazy" decoding="async">
+        <div class="meta">
+          <div class="title">${it.title}</div>
+          <div class="brand">${it.brand} • ${new Date(it.added).toLocaleDateString()}</div>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  // nupp: toggle + laadi vajadusel
+  btn.addEventListener('click', async ()=>{
+    const nowOpen = !wrap.classList.contains('open');
+    if (nowOpen) await loadOnce();
+    setOpen(nowOpen);
+  });
 })();
 </script>
 
@@ -488,5 +566,7 @@ grid.innerHTML=recent.map(it=>`
   });
 })();
 </script>
+
 </body>
+
 </html>
