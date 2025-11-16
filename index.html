@@ -234,6 +234,33 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
 
   </style>
 
+<style>
+#info-popover{
+  position: fixed;
+  left: 0; top: 0;
+  display: none;
+  z-index: 10000;
+  background: rgba(255,255,255,.98);
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 10px 12px 12px;
+  width: clamp(220px, 50vw, 360px);
+  box-shadow: 0 8px 28px rgba(0,0,0,.25);
+  color: #000;
+  line-height: 1.3;
+}
+#info-popover.show{ display:block; }
+#info-popover .t{ font-weight:600; margin:0 0 6px; }
+#info-popover .body{ font-size:14px; }
+#info-popover .more a{ color:#000; text-decoration:underline; }
+#info-popover .x{
+  position:absolute; right:8px; top:6px;
+  background:#fff; border:1px solid #000;
+  border-radius:6px; padding:0 6px; line-height:22px; height:22px;
+  cursor:pointer;
+}
+#info-popover .x:hover{ background:#f2f2f2; }
+</style>
 </head>
 
 <body>
