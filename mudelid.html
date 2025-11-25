@@ -60,7 +60,15 @@
 
 
     .hint{color:#000000; font-size:20px}
-    footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:22px}
+
+footer{
+  max-width: 1200px;      /* enne: var(--maxw) */
+  margin: 0 auto 40px;
+  padding: 0 16px;
+  color: var(--muted);
+  font-size: 22px;
+  text-align: center;
+}
 
 @media (max-width:600px){
   .logo{
@@ -78,7 +86,8 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   max-width: 1200px;
-  margin: 18px auto 60px;
+  /* rohkem ruumi all servas, et tähestik ja logod ei jookseks vastu ääre */
+  margin: 18px auto 100px;
   padding: 0 16px;
 }
 
@@ -226,6 +235,75 @@ a.back:hover {
   }
 }
 
+/* Kaheveeruline paigutus: vasakul tähed, paremal grid */
+.brands-layout{
+  max-width: 1200px;
+  margin: 18px auto 80px;   /* 80px annab all rohkem õhku */
+  padding: 0 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* vasak tähestiku riba */
+.alpha-nav{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 16px;
+  position: sticky;
+  top: 80px;            /* jääb kerimisel mõnusalt paika */
+}
+
+/* üks täht */
+.alpha-btn{
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.9);
+  color: #000;
+  cursor: pointer;
+  font-family: 'BebasKai', sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  text-align: center;
+  min-width: 36px;
+  transition: background .15s, transform .15s;
+}
+.alpha-btn:hover{
+  background:#f2f2f2;
+  transform: translateY(-1px);
+}
+
+/* aktiivne täht (viimane, mida klikkisid) */
+.alpha-btn.active{
+  background:#000;
+  color:#fff;
+}
+
+/* parempoolne grid täidab ülejäänud ruumi */
+.brand-grid{
+  flex: 1;
+  margin: 0;                 /* enne oli margin:18px auto 60px; */
+  padding: 0;
+}
+
+/* Mobiilis: peida tähestiku riba, jäta ainult grid */
+@media (max-width: 700px){
+  .brands-layout{
+    display:block;
+    max-width: 1200px;
+    margin: 18px auto 60px;
+    padding: 0 16px;
+  }
+  .alpha-nav{
+    display:none;
+  }
+  .brand-grid{
+    margin-top: 10px;
+  }
+}
+
   </style>
 
 </head>
@@ -246,7 +324,38 @@ a.back:hover {
 
 <!-- NB! Siin EI ole "Hiljuti lisatud" ega TOP-külgriba -->
 
-<main class="brand-grid">
+<div class="brands-layout">
+  <nav class="alpha-nav" aria-label="Tootja algustäht">
+    <button type="button" class="alpha-btn active" data-letter="">KÕIK</button>
+    <button type="button" class="alpha-btn" data-letter="A">A</button>
+    <button type="button" class="alpha-btn" data-letter="B">B</button>
+    <button type="button" class="alpha-btn" data-letter="C">C</button>
+    <button type="button" class="alpha-btn" data-letter="D">D</button>
+    <button type="button" class="alpha-btn" data-letter="E">E</button>
+    <button type="button" class="alpha-btn" data-letter="F">F</button>
+    <button type="button" class="alpha-btn" data-letter="G">G</button>
+    <button type="button" class="alpha-btn" data-letter="H">H</button>
+    <button type="button" class="alpha-btn" data-letter="I">I</button>
+    <button type="button" class="alpha-btn" data-letter="J">J</button>
+    <button type="button" class="alpha-btn" data-letter="K">K</button>
+    <button type="button" class="alpha-btn" data-letter="L">L</button>
+    <button type="button" class="alpha-btn" data-letter="M">M</button>
+    <button type="button" class="alpha-btn" data-letter="N">N</button>
+    <button type="button" class="alpha-btn" data-letter="O">O</button>
+    <button type="button" class="alpha-btn" data-letter="P">P</button>
+    <button type="button" class="alpha-btn" data-letter="Q">Q</button>
+    <button type="button" class="alpha-btn" data-letter="R">R</button>
+    <button type="button" class="alpha-btn" data-letter="S">S</button>
+    <button type="button" class="alpha-btn" data-letter="T">T</button>
+    <button type="button" class="alpha-btn" data-letter="U">U</button>
+    <button type="button" class="alpha-btn" data-letter="V">V</button>
+    <button type="button" class="alpha-btn" data-letter="W">W</button>
+    <button type="button" class="alpha-btn" data-letter="X">X</button>
+    <button type="button" class="alpha-btn" data-letter="Y">Y</button>
+    <button type="button" class="alpha-btn" data-letter="Z">Z</button>
+  </nav>
+
+  <main class="brand-grid">
 
   <a class="brand-card" href="acura/index.html">
     <img src="img/logod/acura.png" alt="Acura logo" class="brand-logo">
@@ -554,7 +663,9 @@ a.back:hover {
     <span class="hint"></span>
   </a>
 
-</main>
+ </main>
+
+</div>
 
   <footer>© JOEL-MARK STOMMA <span id="year"></span></footer>
 
@@ -628,6 +739,25 @@ a.back:hover {
   const params = new URLSearchParams(location.search);
   const q = params.get('q');
   if (q){ input.value = q; applyFilter(); }
+
+  // 🔤 Tähestiku nupud vasakul
+  const alphaNav = document.querySelector('.alpha-nav');
+  if (alphaNav){
+    const buttons = alphaNav.querySelectorAll('.alpha-btn');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // märgi aktiivne
+        buttons.forEach(b => b.classList.toggle('active', b === btn));
+
+        const letter = (btn.dataset.letter || '').trim();
+
+        // tühjenda või pane otsingusse see täht
+        input.value = letter;
+        applyFilter();
+      });
+    });
+  }
 })();
 </script>
 
