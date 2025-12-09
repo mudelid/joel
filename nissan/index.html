@@ -898,5 +898,139 @@ document.addEventListener('click', (e) => {
   });
 })();
 </script>
+
+<script>
+(() => {
+  // Ära tee midagi, kui failis juba brändi-nooled olemas
+  // (see kontroll on tegelikult Pythonis, aga lisame siia ka turvaks)
+  if (document.querySelector('.brand-nav-arrow')) return;
+
+  if (location.protocol === 'file:') {
+    // fetch ei tööta korralikult file:// pealt
+    return;
+  }
+
+  // Loo stiil
+  const style = document.createElement('style');
+  style.textContent = `
+    .brand-nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 44px;
+      color: #fff;
+      padding: 8px 14px;
+      cursor: pointer;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.30);
+      border: 1px solid rgba(255,255,255,0.35);
+      user-select: none;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s;
+      z-index: 9000;
+    }
+    .brand-nav-arrow:hover {
+      background: rgba(255,255,255,0.20);
+    }
+    #brandPrev { left: 16px; }
+    #brandNext { right: 16px; }
+
+    @media (max-width: 700px){
+      .brand-nav-arrow {
+        display: none;
+      }
+      .brand-nav-mobile {
+        position: fixed;
+        left: 50%;
+        bottom: 16px;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        background: rgba(0,0,0,0.30);
+        border: 1px solid rgba(255,255,255,0.35);
+        padding: 8px 14px;
+        border-radius: 999px;
+        backdrop-filter: blur(4px);
+        z-index: 9000;
+      }
+      .brand-nav-mobile a {
+        color: #fff;
+        font-size: 26px;
+        text-decoration: none;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Loo nooled (desktop)
+  const prevBox = document.createElement('div');
+  const nextBox = document.createElement('div');
+  prevBox.className = 'brand-nav-arrow';
+  nextBox.className = 'brand-nav-arrow';
+  prevBox.id = 'brandPrev';
+  nextBox.id = 'brandNext';
+  prevBox.textContent = '‹';
+  nextBox.textContent = '›';
+  document.body.appendChild(prevBox);
+  document.body.appendChild(nextBox);
+
+  // Leia praeguse tootja slug kausta nimest
+  const currentPath = location.pathname.replace(/\/index\.html$/, '');
+  const currentSlug = currentPath.split('/').filter(Boolean).pop();
+
+  // Kasutame mudelid.html-i, sest seal on .brand-card järjekord
+  const base = new URL('../mudelid.html', location.href);
+
+  fetch(base.href, { cache: 'no-store' })
+    .then(r => r.text())
+    .then(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const rows = [...doc.querySelectorAll('.brand-card[href]')];
+
+      const list = rows.map(row => {
+        const href = row.getAttribute('href');
+        const url  = new URL(href, base);
+        const slug = url.pathname
+          .replace(/\/index\.html$/, '')
+          .split('/')
+          .filter(Boolean)
+          .pop();
+        return { href: url.pathname, slug };
+      }).filter(x => !!x.slug);
+
+      if (!list.length) return;
+
+      let i = list.findIndex(x => x.slug === currentSlug);
+      if (i === -1) return;
+
+      const prev = list[(i - 1 + list.length) % list.length];
+      const next = list[(i + 1) % list.length];
+
+      // Desktop nooled
+      prevBox.addEventListener('click', () => { location.href = prev.href; });
+      nextBox.addEventListener('click', () => { location.href = next.href; });
+
+      // Klaviatuur (← / →)
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') location.href = prev.href;
+        if (e.key === 'ArrowRight') location.href = next.href;
+      });
+
+      // Mobiiliriba
+      const bar = document.createElement('div');
+      bar.className = 'brand-nav-mobile';
+      bar.innerHTML = `
+        <a href="${prev.href}" aria-label="Eelmine tootja">‹</a>
+        <a href="${next.href}" aria-label="Järgmine tootja">›</a>
+      `;
+      document.body.appendChild(bar);
+    })
+    .catch(() => {
+      // vaikne error – kui mudelid.html ei lae, siis lihtsalt pole nooli
+    });
+})();
+</script>
+
+
 </body>
 </html>
