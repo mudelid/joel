@@ -331,6 +331,15 @@ body { overscroll-behavior-x: none; touch-action: pan-y; }
 }
 /* === /FIX: brand arrows link colors === */
 
+
+/* === FIX: remove bottom brand arrows === */
+/* Peida alumised brändi-nooled/riba (mobiil) */
+.brand-bar,
+.brand-nav-mobile {
+  display: none !important;
+}
+/* === /FIX: remove bottom brand arrows === */
+
 </style>
 </head>
 <body>
@@ -1010,6 +1019,17 @@ document.addEventListener('click', (e) => {
 })();
 </script>
 
+
+
+
+<!-- === FIX: remove bottom brand arrows (js) === -->
+<script>
+(() => {
+  // Kui mingi skript lisas alumise riba/nupud, eemalda need
+  document.querySelectorAll('.brand-bar, .brand-nav-mobile').forEach(el => el.remove());
+})();
+</script>
+<!-- === /FIX: remove bottom brand arrows (js) === -->
 
 </body>
 </html>
