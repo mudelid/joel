@@ -308,6 +308,28 @@ header a.back:hover {
 html, body { overflow-x: hidden; }
 body { overscroll-behavior-x: none; touch-action: pan-y; }
 
+
+/* === FIX: brand arrows link colors (no purple visited) === */
+.brand-nav a,
+.brand-nav a:visited,
+.brand-nav a:hover,
+.brand-nav a:active,
+.brand-nav a:focus,
+.brand-bar a,
+.brand-bar a:visited,
+.brand-bar a:hover,
+.brand-bar a:active,
+.brand-bar a:focus,
+.brand-nav-mobile a,
+.brand-nav-mobile a:visited,
+.brand-nav-mobile a:hover,
+.brand-nav-mobile a:active,
+.brand-nav-mobile a:focus {
+  color: #fff !important;
+  text-decoration: none !important;
+}
+/* === /FIX: brand arrows link colors === */
+
 </style>
 </head>
 <body>

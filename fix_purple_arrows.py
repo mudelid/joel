@@ -1,56 +1,83 @@
-import os
+#!/usr/bin/env python3
+from pathlib import Path
 
-ROOT = os.getcwd()
+MARKER_START = "/* === FIX: brand arrows link colors (no purple visited) === */"
+MARKER_END   = "/* === /FIX: brand arrows link colors === */"
 
-CSS_FIX = """
-/* --- FIX: disable mobile purple swipe arrows --- */
-html, body { overflow-x: hidden; }
-body { overscroll-behavior-x: none; touch-action: pan-y; }
+CSS_BLOCK = f"""
+{MARKER_START}
+.brand-nav a,
+.brand-nav a:visited,
+.brand-nav a:hover,
+.brand-nav a:active,
+.brand-nav a:focus,
+.brand-bar a,
+.brand-bar a:visited,
+.brand-bar a:hover,
+.brand-bar a:active,
+.brand-bar a:focus,
+.brand-nav-mobile a,
+.brand-nav-mobile a:visited,
+.brand-nav-mobile a:hover,
+.brand-nav-mobile a:active,
+.brand-nav-mobile a:focus {{
+  color: #fff !important;
+  text-decoration: none !important;
+}}
+{MARKER_END}
 """
 
-def is_root_index(path: str) -> bool:
-    return os.path.abspath(path) == os.path.abspath(os.path.join(ROOT, "index.html"))
-
-def should_process(path: str) -> bool:
-    base = os.path.basename(path).lower()
-    if base == "mudelid.html":
+def should_process(path: Path) -> bool:
+    # ainult /<brand>/index.html (st mitte root index.html)
+    if path.name != "index.html":
         return False
-    if base != "index.html":
+    if path.parent == path.anchor:  # väga ebatõenäoline
         return False
-    if is_root_index(path):
-        return False  # ära puutu avalehte
+    if path.parent == Path("."):
+        return False
+    # välista juurkausta index.html
+    if path.resolve() == Path("index.html").resolve():
+        return False
     return True
 
-def process_file(path: str) -> bool:
-    with open(path, "r", encoding="utf-8") as f:
-        html = f.read()
+def inject_css(html: str) -> tuple[str, bool]:
+    if MARKER_START in html:
+        return html, False
 
-    if "overscroll-behavior-x" in html and "touch-action: pan-y" in html:
-        return False  # juba olemas
+    # lisa esimese </style> ette (enamikel su lehtedel on <style> ... </style>)
+    i = html.find("</style>")
+    if i == -1:
+        # fallback: lisa </head> ette eraldi <style>
+        j = html.lower().find("</head>")
+        if j == -1:
+            return html, False
+        return html[:j] + f"<style>\n{CSS_BLOCK}\n</style>\n" + html[j:], True
 
-    if "</style>" in html:
-        html = html.replace("</style>", CSS_FIX + "\n</style>", 1)
-    elif "</head>" in html:
-        html = html.replace("</head>", f"<style>{CSS_FIX}</style>\n</head>", 1)
-    else:
-        return False
+    return html[:i] + CSS_BLOCK + "\n" + html[i:], True
 
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(html)
-    return True
+def main():
+    root = Path(".")
+    changed = 0
+    scanned = 0
 
-changed = 0
-scanned = 0
-
-for root, _, files in os.walk(ROOT):
-    for file in files:
-        if file.lower() not in ("index.html", "mudelid.html"):
+    for p in root.rglob("index.html"):
+        # välista root index.html
+        if p.resolve() == Path("index.html").resolve():
             continue
-        full = os.path.join(root, file)
-        if should_process(full):
-            scanned += 1
-            if process_file(full):
-                changed += 1
+        # välista igasugused build/hidden kaustad soovi korral (siin jätame lihtsaks)
 
-print(f"Leitud tootjalehti: {scanned}")
-print(f"Muudetud faile: {changed}")
+        scanned += 1
+        if not should_process(p):
+            continue
+
+        text = p.read_text(encoding="utf-8", errors="ignore")
+        new_text, ok = inject_css(text)
+        if ok and new_text != text:
+            p.write_text(new_text, encoding="utf-8")
+            changed += 1
+
+    print(f"Skaneeritud index.html faile: {scanned}")
+    print(f"Muudetud tootjalehti: {changed}")
+
+if __name__ == "__main__":
+    main()
