@@ -358,6 +358,39 @@ body { overscroll-behavior-x: none; touch-action: pan-y; }
   }
 }
 
+
+/* === AUTO: Lightbox back-to-recent button === */
+#lb-back-recent{
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 10001;
+
+  background: rgba(255,255,255,.95);
+  border: 2px solid #fff;
+  color: #fff;
+
+  /* sama “stiil” nagu su lightboxi nupud, aga tekstiga */
+  border-radius: 12px;
+  padding: 8px 12px;
+
+  font-family: 'BebasKai', sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.5);
+  backdrop-filter: blur(4px);
+}
+#lb-back-recent:hover{
+  background: rgba(255,255,255,.25);
+}
+@media (max-width: 600px){
+  #lb-back-recent{ font-size: 16px; padding: 6px 10px; }
+}
+
 </style>
 
 <style>
@@ -689,6 +722,7 @@ This casting is based on a heavily modified short wheelbase Y60 Nissan Patrol me
   const overlay = document.createElement('div'); overlay.id = 'lb-overlay';
   overlay.innerHTML = `
     <button id="lb-close" aria-label="Sulge">✕</button>
+    <button id="lb-back-recent" aria-label="Tagasi hiljuti lisatud juurde">← Tagasi</button>
     <button class="lb-arrow" id="lb-prev" aria-label="Eelmine">‹</button>
     <img id="lb-img" alt="">
     <button class="lb-arrow" id="lb-next" aria-label="Järgmine">›</button>
@@ -701,6 +735,14 @@ This casting is based on a heavily modified short wheelbase Y60 Nissan Patrol me
   const btnPrev = overlay.querySelector('#lb-prev');
   const btnNext = overlay.querySelector('#lb-next');
   const btnClose = overlay.querySelector('#lb-close');
+  const btnBackRecent = overlay.querySelector('#lb-back-recent');
+  if (btnBackRecent) {
+    btnBackRecent.addEventListener('click', () => {
+      // mine avalehele ja ava “Hiljuti lisatud”
+      location.href = '../index.html#recent';
+    });
+  }
+
 
   // --- KOGU SAMA LEHE (sama tootja) mudelipildid ---
   // Muuda SELECTOR vajadusel, kui sinu .card struktuur erineb

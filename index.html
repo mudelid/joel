@@ -567,6 +567,22 @@ list.innerHTML=top.map(x=>`
 })();
 </script>
 
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  if (location.hash === "#recent") {
+    const btn = document.getElementById("recentToggle");
+    if (btn) {
+      // kui su nupp on button ja avamine toimub clickiga
+      if (btn.getAttribute("aria-expanded") === "false") btn.click();
+      // kerime igaks juhuks plokini
+      const wrap = document.getElementById("recentWrap");
+      if (wrap) wrap.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+  }
+});
+</script>
+
 </body>
 
 </html>
