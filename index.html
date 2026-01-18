@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JOELI KOLLEKTSIOON</title>
+  <style>
+@font-face {
+  font-family: 'BebasKai';
+  src: url('fonts/bebaskai.woff2') format('woff2'),
+       url('fonts/bebaskai.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+:root{
+  --bg:#FFFFFF; --panel:#FFFFFF; --text:#000000; --muted:#000000;
+  --border:#000000; --link:#000000; --maxw:500px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:url("img/taust3.jpg?v=2") no-repeat center center fixed;
+  background-size:cover;
+  color:var(--text);
+  font-family:'BebasKai',sans-serif;
+  font-size:30px;
+}
+
+/* link (kest) – fikseeritud positsioon ja mõõdud */
+.logo{
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: 100px;
+  height: 100px;
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: #fff;
+  z-index: 1000;        /* jääb kaartidest ettepoole */
+  text-decoration: none;
+}
+/* pilt sees – täidab kesta ilusti */
+.logo img{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;    /* parandus: object-fit (mitte object-fill) */
+  border-radius: 7px;
+}
+
+/* --- PÄEVA MUDELID vasakul --- */
+
+.daily-wrap{
+  max-width: 420px;
+  margin: 24px auto 24px;
+  padding: 0 16px;
+}
+
+.daily-wrap h3{
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+/* kolm kaarti vertikaalis */
+.daily-grid{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* üks päeva mudeli kaart */
+.daily-card{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  text-decoration: none;
+  color: var(--text);
+
+  background: rgba(255,255,255,0.92);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 6px 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.daily-card .thumb{
+  width: 120px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.daily-card .meta{
+  flex: 1;
+  min-width: 0;
+}
+
+.daily-card .meta .title{
+  font-size: 18px;
+  margin: 0 0 4px;
+}
+
+.daily-card .meta .brand{
+  font-size: 14px;
+  opacity: .75;
+}
+
+/* Mobiilis natuke kompaktsem */
+@media (max-width: 600px){
+  .daily-wrap{
+    max-width: 500px;
+    margin-top: 16px;
+  }
+  .daily-card .thumb{
+    width: 100px;
+  }
+  .daily-card .meta .title{
+    font-size: 16px;
+  }
+}
+
+/* Kui hiljem teeme 3-tulbalise layouti, saab .daily-wrap-i vasakusse tulpa tõsta
+   – vajadusel saab sellele lisada nt .home-left klassi ja gridiga paika panna. */
+
+header{max-width:var(--maxw);margin:60px auto 10px;padding:0 16px}
+h1{margin:0 0 6px;font-size:50px;}
+p.lead{margin:0;color:var(--muted)}
+footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
+  color:var(--muted);font-size:22px}
+
+@media (max-width:600px){
+  .logo{
+    width: 40px;
+    height: 40px;
+    margin: 8px 0 0 8px;
+  }
+  /* pildi reegleid muutma ei pea */
+
+  header{
+    margin-top:12px;
+  }
+  h1{
+    font-size:28px;
+  }
+  .lead{
+    font-size:14px;
+  }
+}
+
+/* otsing */
+.search{max-width:var(--maxw);margin:10px auto 0;padding:0 16px;}
+.search input{
+  width:90%;font:16px/1.3 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  padding:10px 12px;border:1px solid var(--border);border-radius:10px;
+}
+
+/* KÕIK MUDELID nupp — lai, valge taust, hall tekst */
+.cta-wrap{
+  max-width:1200px;
+  margin:24px auto 24px;
+  padding:0 16px;
+  text-align:center;
+}
+.cta-btn{
+  display:inline-block;
+  width:100%;
+  max-width:500px;       /* piiratud, et mobiilis ei oleks liiga lai */
+  padding:16px 24px;
+  border-radius:14px;
+  background:#ffffff;
+  color:#000000;
+  font-family:'BebasKai', sans-serif;
+  font-size:28px;
+  letter-spacing:0.5px;
+  text-decoration:none;
+  border:1px solid var(--border);
+  transition:background .2s, transform .2s;
+}
+.cta-btn:hover{
+  background:#f2f2f2;
+  transform:translateY(-2px);
+}
+
+/* mobiilivaates veidi väiksem */
+@media (max-width:600px){
+  .cta-btn{
+    font-size:22px;
+    padding:14px 18px;
+    border-radius:10px;
+  }
+}
+
+
+/* Hiljuti lisatud kaardid */
+.recent-wrap{max-width:1200px;margin:12px auto 24px;padding:0 16px;}
+.recent-wrap h3{margin:0 0 8px;font-size:22px;}
+.recent-grid{
+  display:grid;gap:12px;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+}
+.recent-card{
+  background:#fff;border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;text-decoration:none;color:var(--text);
+}
+.recent-card .thumb{aspect-ratio:4/3;width:100%;object-fit:cover;display:block;background:#222;}
+.recent-card .meta{padding:8px 10px;font-size:18px;line-height:1.2;}
+.recent-card .meta .brand{opacity:.7;font-size:12px;}
+
+/* TOP külgriba */
+.sidebar-standalone{
+  max-width:var(--maxw);margin:12px auto 24px;
+  background:#ffffffcc;backdrop-filter:blur(6px);
+  border:1px solid var(--border);border-radius:16px;
+  padding:12px 14px;box-shadow:0 2px 10px rgba(0,0,0,.08);
+  font-size:18px;line-height:1.25;
+}
+.sidebar-standalone h3{margin:0 0 8px;font-size:22px;}
+.sidebar-standalone ol{list-style:none;margin:8px 0 0;padding:0;}
+.sidebar-standalone li{
+  display:flex;justify-content:space-between;gap:10px;align-items:baseline;
+  padding:6px 0;border-bottom:1px solid var(--border);
+}
+.sidebar-standalone li:last-child{border-bottom:0;}
+.sidebar-standalone .names a{color:var(--link);text-decoration:none;}
+.sidebar-standalone .names a:hover{text-decoration:underline;}
+.sidebar-standalone .count{opacity:.7;}
+
+/* Täielik tootjate edetabel – natuke suurem font, mugav vajutada */
+.sidebar-standalone h3{
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.sidebar-standalone .names a{
+  font-size: 22px;       /* varem väiksem – nüüd pöidlale mugav */
+  text-decoration: none;
+}
+
+.sidebar-standalone .names a:hover{
+  text-decoration: underline;
+}
+
+.sidebar-standalone .count{
+  font-size: 16px;
+  opacity: .7;
+}
+
+/* Kui tootjaid väga palju, tee kast keritavaks (vajadusel) */
+/*
+.sidebar-standalone{
+  max-height: 70vh;
+  overflow-y: auto;
+}
+*/
+
+/* STATISTIKA kast (TOP 10 asemel) */
+#stats-card {
+  /* kasutab sidebar-standalone baasi, siia võid lisada pisimuudatusi */
+}
+
+/* ruudustik numbrite jaoks */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px 10px;
+  margin-top: 8px;
+}
+
+/* üks “kastike” – silt + number */
+.stats-bar .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+
+/* ülemine väiksem tekst */
+.stats-bar .stat .label {
+  font-size: 14px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  opacity: .7;
+  line-height: 1.1;
+}
+
+/* suur number */
+.stats-bar .stat .value {
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+/* kitsamal ekraanil 2x2 ruudustik */
+@media (max-width: 600px) {
+  .stats-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 8px;
+  }
+  .stats-bar .stat .value {
+    font-size: 24px;
+  }
+}
+
+/* 🔹 Kompaktsemad "Hiljuti lisatud" kaardid avalehel */
+.recent-grid {
+  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* väiksemad kaardid */
+}
+
+.recent-card {
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.recent-card .thumb {
+  aspect-ratio: 4/3;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  background: #222;
+  transform: scale(0.95);          /* pilt visuaalselt väiksem */
+  border-radius: 6px;
+  transition: transform .2s ease;
+}
+
+.recent-card:hover .thumb {
+  transform: scale(0.98);
+}
+
+.recent-card .meta {
+  padding: 6px 8px;                /* vähem paddingut */
+  font-size: 18px;                 /* sama suur tekst */
+  line-height: 1.2;
+}
+
+.recent-card .meta .brand {
+  font-size: 12px;
+  opacity: .7;
+}
+
+/* 🔸 mobiilis veel veidi tihedam */
+@media (max-width: 600px) {
+  .recent-grid {
+    gap: 6px;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  }
+  .recent-card .meta {
+    padding: 5px 6px;
+    font-size: 16px;
+  }
+}
+
+/* ===========================
+   Suurem pealkiri ja lead tekst
+   =========================== */
+
+/* Desktop ja suuremad ekraanid */
+@media (min-width: 601px) {
+  h1 {
+    font-size: 60px !important;  /* enne 50px, nüüd selgelt suurem */
+    margin-bottom: 8px;
+  }
+
+  .lead {
+    font-size: 26px !important;  /* enne ~20–22px */
+    margin-top: 0;
+  }
+}
+
+/* Väikesed ekraanid (nutitelefonid) – jätame kompaktseks */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 32px !important;
+  }
+
+  .lead {
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  header {
+    margin-top: 80px !important;
+  }
+}
+
+/* --- Avalehe 3-tulbaline layout --- */
+.home-layout{
+  max-width: 1400px;
+  margin: 0 auto 40px;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: 1.1fr 1.3fr 1.1fr;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* keskmine tulp – lapsed vahedega */
+.home-center > *{
+  margin-bottom: 24px;
+}
+
+/* gridis olekult ära topi lisamargineid */
+.home-layout .daily-wrap,
+.home-layout .sidebar-standalone{
+  max-width: none;
+  margin: 0;
+}
+
+/* mobiilis / kitsal ekraanil kõik jälle üksteise all */
+@media (max-width: 900px){
+  .home-layout{
+    display: block;
+    max-width: 700px;
+  }
+  .home-layout .daily-wrap,
+  .home-layout .sidebar-standalone{
+    margin: 16px auto;
+  }
+}
+
+/* “VAATA KÕIKI” rida TOP all */
+.sidebar-standalone li.more-row{
+  border-bottom: 0;
+  padding-top: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sidebar-standalone li.more-row button{
+  font-family: 'BebasKai', sans-serif;
+  font-size: 18px;
+  letter-spacing: .5px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  cursor: pointer;
+}
+
+.sidebar-standalone li.more-row button:hover{
+  background:#f2f2f2;
+}
+
+/* RESET mobile button appearance */
+.sidebar-standalone li.more-row button{
+  -webkit-appearance: none;
+  appearance: none;
+  background: #fff;
+  color: #000;
+  font-family: 'BebasKai', sans-serif;
+  font-size: 18px;
+  letter-spacing: .5px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.sidebar-standalone li.more-row{
+  border-bottom: 0;
+  padding-top: 8px;
+  text-align: center;
+}
+
+.sidebar-standalone li.more-row button {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #fff;
+  color: #000;
+  font-family:'BebasKai',sans-serif;
+  font-size:18px;
+  padding:6px 14px;
+  border-radius:999px;
+  border:1px solid #000;
+  cursor:pointer;
+}
+.sidebar-standalone li.more-row button:hover{
+  background:#f2f2f2;
+}
+
+@media (max-width:600px){
+  .sidebar-standalone li.more-row button{
+    font-size:16px;
+    padding:6px 12px;
+  }
+}
+
+/* HILJUTI LISATUD – kuupäevade list + päeva vaade */
+
+.recent-wrap{
+  max-width: 900px;
+  margin: 12px auto 24px;
+  padding: 0 16px;
+}
+
+/* Kuupäevade vertikaalne list */
+.recent-date-list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recent-date-list li{
+  margin: 0;
+}
+
+/* Kuupäevanupud */
+.recent-date-btn{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+
+  background: rgba(255,255,255,0.92);
+  color: var(--text);
+
+  font-family: 'BebasKai', sans-serif;
+  font-size: 18px;
+  letter-spacing: .3px;
+
+  cursor: pointer;
+  text-align: left;
+}
+
+.recent-date-btn:hover{
+  background: #f2f2f2;
+}
+
+.recent-date-btn .d-label{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-date-btn .d-count{
+  font-size: 14px;
+  opacity: .7;
+}
+
+/* Valitud päeva blokk */
+#recentDay{
+  margin-top: 14px;
+}
+
+/* Päeva pealkiri */
+#recentDay h4{
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+/* Kasutan olemasolevat .recent-grid stiili kaartide jaoks – kui see on sul juba, pole hullu */
+#recentDay .recent-grid{
+  margin-top: 4px;
+}
+
+  </style>
+
+<style>
+#info-popover{
+  position: fixed;
+  left: 0; top: 0;
+  display: none;
+  z-index: 10000;
+  background: rgba(255,255,255,.98);
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 10px 12px 12px;
+  width: clamp(220px, 50vw, 360px);
+  box-shadow: 0 8px 28px rgba(0,0,0,.25);
+  color: #000;
+  line-height: 1.3;
+}
+#info-popover.show{ display:block; }
+#info-popover .t{ font-weight:600; margin:0 0 6px; }
+#info-popover .body{ font-size:14px; }
+#info-popover .more a{ color:#000; text-decoration:underline; }
+#info-popover .x{
+  position:absolute; right:8px; top:6px;
+  background:#fff; border:1px solid #000;
+  border-radius:6px; padding:0 6px; line-height:22px; height:22px;
+  cursor:pointer;
+}
+#info-popover .x:hover{ background:#f2f2f2; }
+
+.recent-wrap{max-width:1200px;margin:12px auto 24px;padding:0 16px; display:none;}
+.recent-wrap.open{ display:block; }
+
+.recent-grid{
+  display:grid; gap:8px;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+}
+.recent-card{
+  background:#fff;border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;text-decoration:none;color:var(--text);
+}
+.recent-card .thumb{aspect-ratio:4/3;width:100%;object-fit:cover;display:block;background:#222;}
+.recent-card .meta{padding:6px 8px;font-size:18px;line-height:1.2;text-align:center;}
+.recent-card .brand{font-size:12px;opacity:.7;text-align:center;display:block;}
+@media (max-width:600px){
+  .recent-grid{ gap:6px; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); }
+  .recent-card .meta{ font-size:16px; }
+}
+
+</style>
+</head>
+
+<body>
+
+  <a href="index.html" class="logo" aria-label="Avaleht">
+  <img src="img/logo2.png" alt="Logo" onerror="this.parentElement.remove()">
+</a>
+
+<header>
+
+  <h1>JOELI MUDELIKOLLEKTSIOON</h1>
+  <p class="lead">KOKKU ERINEVAID MUDELEID: <span id="count">0</span></p>
+
+</header>
+
+<div class="home-layout">
+  <!-- VASAK TULP – PÄEVA MUDELID -->
+  <section id="dailyWrap" class="daily-wrap">
+    <h3>PÄEVA MUDELID</h3>
+    <div class="daily-grid" id="dailyGrid"></div>
+  </section>
+
+  <!-- KESKMINE TULP – hiljuti, kõik mudelid, statistika -->
+  <div class="home-center">
+   <div class="cta-wrap">
+  <a href="hiljutised.html" class="cta-btn">
+    HILJUTI LISATUD
+  </a>
+</div>
+
+    <div class="cta-wrap">
+      <a href="mudelid.html" class="cta-btn">KÕIK MUDELID</a>
+    </div>
+
+    <!-- STATISTIKA kast -->
+    <aside id="stats-card" class="sidebar-standalone">
+      <h3>STATISTIKA</h3>
+      <div class="stats-bar">
+        <div class="stat">
+          <span class="label">Mudeleid</span>
+          <span class="value" id="stat-total">–</span>
+        </div>
+        <div class="stat">
+          <span class="label">Automarke</span>
+          <span class="value" id="stat-brands">–</span>
+        </div>
+        <div class="stat">
+          <span class="label">TH</span>
+          <span class="value" id="stat-th">–</span>
+        </div>
+        <div class="stat">
+          <span class="label">STH</span>
+          <span class="value" id="stat-sth">–</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- PAREM TULP – KÕIK TOOTJAD -->
+  <aside id="top-brands-sidebar" class="sidebar-standalone"></aside>
+</div>
+
+<footer>© JOEL-MARK STOMMA <span id="year"></span></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+
+
+<!-- KÕIK TOOTJAD – algul TOP 15 + VAATA KÕIKI -->
+<script>
+(async()=>{
+  const sb = document.getElementById('top-brands-sidebar');
+  if (!sb) return;
+
+  sb.innerHTML = `<h3>EDETABEL</h3><ol id="top-list"></ol>`;
+  const list = document.getElementById('top-list');
+
+  const countSpan = document.getElementById('count'); // KOKKU ERINEVAID MUDELEID
+  let total = 0;
+  const brands = [];
+
+  if (location.protocol === 'file:'){
+    list.innerHTML = '<li><span class="names">Ava leht serveris</span></li>';
+    return;
+  }
+
+  let html = '';
+  try{
+    const r = await fetch('mudelid.html', { cache:'no-store' });
+    if (!r.ok) throw 0;
+    html = await r.text();
+  }catch(e){
+    list.innerHTML = '<li><span>Ei saanud mudelid.html lugeda</span></li>';
+    return;
+  }
+
+  const doc   = new DOMParser().parseFromString(html,'text/html');
+  const cards = [...doc.querySelectorAll('.brand-card')];
+
+  async function countModels(url){
+    try{
+      const r = await fetch(url, { cache:'no-store' });
+      if (!r.ok) return 0;
+      const h = await r.text();
+      const d = new DOMParser().parseFromString(h,'text/html');
+
+      let n = d.querySelectorAll('.card').length;
+      if (!n){
+        const m = d.querySelector('meta[name="models-count"]');
+        if (m) n = parseInt(m.content) || 0;
+      }
+      return n;
+    }catch{ return 0; }
+  }
+
+  await Promise.all(cards.map(async c=>{
+    const href = c.getAttribute('href');
+    const name = (c.querySelector('.brand-name')?.textContent || '').trim();
+    if (!href || !name) return;
+
+    const n = await countModels(href);
+    if (!n) return;
+
+    total += n;
+    brands.push({ name, href, count:n });
+  }));
+
+  if (!brands.length){
+    list.innerHTML = '<li><span>Andmeid ei leitud</span></li>';
+    return;
+  }
+
+  // sort suurimad enne
+  brands.sort((a,b)=>(b.count-a.count)||a.name.localeCompare(b.name));
+
+  // uuenda üldarv pealkirja all
+  if (countSpan) countSpan.textContent = total;
+
+  const LIMIT = 10;
+  let expanded = false;
+
+  function render(){
+    const visible = expanded ? brands : brands.slice(0, LIMIT);
+    list.innerHTML = visible.map((x,idx)=>`
+      <li>
+        <span class="names">
+          <a href="${x.href}">${idx+1}. ${x.name}</a>
+        </span>
+        <span class="count">${x.count}</span>
+      </li>
+    `).join('');
+
+    if (!expanded && brands.length > LIMIT){
+      list.insertAdjacentHTML('beforeend', `
+        <li class="more-row">
+          <button type="button" id="showAllBrands">VAATA KÕIKI (${brands.length})</button>
+        </li>
+      `);
+      document.getElementById('showAllBrands').addEventListener('click',()=>{
+        expanded = true;
+        render();
+      });
+    }
+  }
+
+  render();
+})();
+</script>
+
+
+<script>
+(function(){
+  const wrap  = document.getElementById('recentWrap');
+  const grid  = document.getElementById('recentGrid');
+  const btn   = document.getElementById('recentToggle');
+  let loaded  = false;   // lae üks kord
+  const N     = 35;      // mitu viimast näitame
+
+  function setOpen(open){
+    wrap.classList.toggle('open', open);
+    wrap.setAttribute('aria-hidden', String(!open));
+    btn.setAttribute('aria-expanded', String(open));
+    btn.textContent = open ? 'PEIDA HILJUTI LISATUD' : 'NÄITA HILJUTI LISATUD';
+  }
+
+  async function loadOnce(){
+    if (loaded) return;
+    loaded = true;
+
+    if (location.protocol === 'file:'){
+      grid.innerHTML = '<div style="opacity:.7">Ava leht serveris (GitHub Pages vms).</div>';
+      return;
+    }
+
+    // loe mudelid.html, et saada brändide lingid
+    let html='';
+    try{
+      const r = await fetch('mudelid.html',{cache:'no-store'});
+      if(!r.ok) throw 0;
+      html = await r.text();
+    }catch{
+      grid.innerHTML = '<div style="opacity:.7">Ei saanud mudelid.html lugeda.</div>';
+      return;
+    }
+
+    const doc  = new DOMParser().parseFromString(html,'text/html');
+    const base = new URL(location.href);
+    const brands = [...doc.querySelectorAll('.brand-card[href]')].map(a=>({
+      href : new URL(a.getAttribute('href'), base).href,
+      name : (a.querySelector('.brand-name')?.textContent || '').trim()
+    }));
+
+    const items = [];
+    await Promise.all(brands.map(async ({href,name})=>{
+      try{
+        const r = await fetch(href,{cache:'no-store'});
+        if(!r.ok) return;
+        const h = await r.text();
+        const d = new DOMParser().parseFromString(h,'text/html');
+        const brand = d.querySelector('meta[name="brand"]')?.content?.trim() || name;
+
+        d.querySelectorAll('.card[data-added]').forEach(c=>{
+          const title = (c.querySelector('.title')?.textContent || '').trim();
+          const img   = c.querySelector('.thumb')?.getAttribute('src') || '';
+          const a     = c.getAttribute('data-added') || '';
+          const ts    = Date.parse(a);
+          if(!title || !img || isNaN(ts)) return;
+          const full  = new URL(img, href).href;
+
+          const u = new URL(href, base);
+          u.searchParams.set('m', title);
+          items.push({brand, title, img: full, url: u.pathname + u.search, added: ts});
+        });
+      }catch{}
+    }));
+
+    if(!items.length){
+      grid.innerHTML = '<div style="opacity:.7">Hiljuti lisatud mudeleid ei leitud.</div>';
+      return;
+    }
+
+    items.sort((a,b)=> b.added - a.added);
+    const recent = items.slice(0, N);
+    grid.innerHTML = recent.map(it=>`
+      <a class="recent-card" href="${it.url}">
+        <img class="thumb" src="${it.img}" alt="${it.title}" loading="lazy" decoding="async">
+        <div class="meta">
+          <div class="title">${it.title}</div>
+          <div class="brand">${it.brand} • ${new Date(it.added).toLocaleDateString()}</div>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  // nupp: toggle + laadi vajadusel
+  btn.addEventListener('click', async ()=>{
+    const nowOpen = !wrap.classList.contains('open');
+    if (nowOpen) await loadOnce();
+    setOpen(nowOpen);
+  });
+})();
+</script>
+
+<script>
+(function(){
+  const wrap = document.getElementById('dailyWrap');
+  const grid = document.getElementById('dailyGrid');
+  if (!wrap || !grid) return;
+
+  // failis (file://) ei hakka midagi tegema
+  if (location.protocol === 'file:'){
+    grid.innerHTML = '<div style="opacity:.7">Ava leht serveris (GitHub Pages vms).</div>';
+    return;
+  }
+
+  const base = new URL(location.href);
+
+  // 1) loeme mudelid.html, et saada kõik tootjalehed
+  fetch('mudelid.html', { cache:'no-store' })
+    .then(r => r.ok ? r.text() : Promise.reject())
+    .then(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const brandLinks = [...doc.querySelectorAll('.brand-card[href]')].map(a => ({
+        href: new URL(a.getAttribute('href'), base).href,
+        name: (a.querySelector('.brand-name')?.textContent || '').trim()
+      }));
+
+      const items = [];
+
+      // 2) loeme KÕIK tootjalehed ja kõik .card elemendid
+      return Promise.all(brandLinks.map(b => {
+        return fetch(b.href, { cache:'no-store' })
+          .then(r => r.ok ? r.text() : null)
+          .then(h => {
+            if (!h) return;
+            const d = new DOMParser().parseFromString(h, 'text/html');
+            const brandName = d.querySelector('meta[name="brand"]')?.content?.trim() || b.name;
+
+            d.querySelectorAll('.card').forEach(card => {
+              const title = (card.querySelector('.title')?.textContent || '').trim();
+              const img   = card.querySelector('.thumb')?.getAttribute('src') || '';
+              if (!title || !img) return;
+
+              const fullImg = new URL(img, b.href).href;
+
+              const url = new URL(b.href, base);
+              url.searchParams.set('m', title);   // et tootjaleht avaks kohe selle pildi
+
+              items.push({
+                brand: brandName,
+                title,
+                img: fullImg,
+                url:  url.pathname + url.search
+              });
+            });
+          })
+          .catch(() => {});
+      })).then(() => items);
+    })
+    .then(items => {
+      if (!items.length){
+        grid.innerHTML = '<div style="opacity:.7">Ei leitud ühtegi mudelit.</div>';
+        return;
+      }
+
+      // --- 3) “päeva” valik – deterministlik 3 mudelit päevas ---
+      const today = new Date();
+      const dayOfYear = Math.floor(
+        (today - new Date(today.getFullYear(), 0, 0)) / 86400000
+      );
+
+      // et tulemus oleks stabiilne, sorteerime esmalt
+      items.sort((a,b) =>
+        (a.brand + ' ' + a.title).localeCompare(b.brand + ' ' + b.title)
+      );
+
+      const picked = [];
+      const used = new Set();
+      const len = items.length;
+
+      for (let k = 0; k < 3 && k < len; k++){
+        const idx = (dayOfYear * 7 + k * 97) % len;  // “pseudo-seemne” valem
+        const it = items[idx];
+        const key = it.brand + '|' + it.title;
+        if (used.has(key)) continue;
+        used.add(key);
+        picked.push(it);
+      }
+
+      grid.innerHTML = picked.map(it => `
+        <a class="daily-card" href="${it.url}">
+          <img class="thumb" src="${it.img}" alt="${it.title}" loading="lazy" decoding="async">
+          <div class="meta">
+            <div class="title">${it.title}</div>
+            <div class="brand">${it.brand}</div>
+          </div>
+        </a>
+      `).join('');
+    })
+    .catch(() => {
+      grid.innerHTML = '<div style="opacity:.7">Viga “päeva mudelite” laadimisel.</div>';
+    });
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  if (location.hash === "#recent") {
+    const btn = document.getElementById("recentToggle");
+    if (btn) {
+      // kui su nupp on button ja avamine toimub clickiga
+      if (btn.getAttribute("aria-expanded") === "false") btn.click();
+      // kerime igaks juhuks plokini
+      const wrap = document.getElementById("recentWrap");
+      if (wrap) wrap.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+  }
+});
+</script>
+
+</body>
+
+</html>

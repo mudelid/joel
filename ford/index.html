@@ -1,0 +1,1563 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FORD</title>
+  <style>
+@font-face {
+  font-family: 'BebasKai';
+  src: url('../fonts/bebaskai.woff2') format('woff2'),
+       url('../fonts/bebaskai.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+    :root{
+      --bg:#FFFFFF; --panel:#FFFFFF; --text:#000000; --muted:#000000; --border:#000000; --link:#000000;
+      --maxw:900px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: var(--bg) url("../img/taust3.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text);
+      font-family: 'BebasKai', sans-serif;
+      font-size: 30px;
+    }
+    .logo{position:fixed; top:12px; left:12px; width:60px; height:60px; border-radius:7px; object-fit:cover; border:1px solid var(--border); background:#FFFFFF}
+    header{max-width:var(--maxw); margin:60px auto 10px; padding:0 16px}
+    a.back{color:var(--link); text-decoration:none}
+    h1{margin:6px 0 0; font-size:70px;}
+    p.lead{margin:0; color:var(--muted)}
+    main{
+      max-width:var(--maxw); margin:18px auto 60px; padding:0 16px;
+      display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(220px,1fr))
+    }
+    .card{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
+    .thumb{aspect-ratio:4/3; width:100%; object-fit:cover; display:block; background:#222}
+    .content{padding:10px 12px}
+    .title{margin:0 0 6px; font-size:20px}
+    .desc{margin:0; color:var(--muted); font-size:10px}
+    footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:18px}
+
+/* Lightbox (täisekraanil pildi vaatamine) */
+#lb-overlay{
+  position: fixed; inset: 0; z-index: 9999;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.85);
+}
+#lb-overlay.open{ display: flex; }
+
+#lb-img{
+  max-width: 90vw; max-height: 85vh;
+  box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  border-radius: 12px;
+}
+
+/* Ülanurga sulgemisnupp */
+#lb-close{
+  position: fixed; top: 16px; right: 16px; z-index: 10000;
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.5);
+  color: #fff; font-size: 20px; border-radius: 10px; padding: 8px 12px; cursor: pointer;
+}
+
+/* Vasak/parem nooled */
+.lb-arrow{
+  position: fixed; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.5);
+  color: #fff; font-size: 28px; border-radius: 12px; padding: 10px 14px; cursor: pointer;
+  user-select: none;
+}
+#lb-prev{ left: 16px; }
+#lb-next{ right: 16px; }
+
+/* All pealkiri (mudeli nimi) */
+#lb-cap{
+  position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+  color: #fff; font-size: 16px; text-align: center; opacity: .9;
+  max-width: 90vw;
+}
+
+/* Taustakerimise keelamine kui lightbox on avatud */
+body.lb-open{ overflow: hidden; }
+
+/* Väiksel ekraanil veidi väiksemad nupud */
+@media (max-width: 600px){
+  .lb-arrow{ font-size: 24px; padding: 8px 12px; }
+  #lb-close{ font-size: 18px; padding: 6px 10px; }
+}
+/* Küljenooled (desktop) */
+.brand-nav{
+  position: fixed; top: 50%; transform: translateY(-50%);
+  z-index: 9000;
+}
+#brand-prev{ left: 12px; }
+#brand-next{ right: 12px; }
+.brand-nav a{
+  display:flex; align-items:center; justify-content:center;
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(0,0,0,.35); color: #fff;
+  border: 1px solid rgba(255,255,255,.4);
+  text-decoration: none; font-size: 28px; user-select: none;
+  backdrop-filter: blur(4px);
+}
+.brand-nav a:hover{ background: rgba(0,0,0,.5); }
+.brand-nav a:focus{ outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Mobiili alumine nav-pill */
+.brand-bar{
+  position: fixed;
+  left: 50%;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 9000;
+  display: none; /* näitame vaid mobiilis */
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.4);
+  backdrop-filter: blur(6px);
+}
+.brand-bar a{
+  display:inline-flex; align-items:center; justify-content:center;
+  width: 38px; height: 38px; font-size: 22px; color:#fff; text-decoration:none;
+}
+.brand-bar a:focus{ outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Kui lightbox on avatud, peida brändi-nav */
+body.lb-open .brand-nav,
+body.lb-open .brand-bar{ display: none !important; }
+
+/* Mobiilis: peida küljenooled, näita alumist riba */
+@media (max-width: 700px){
+  .brand-nav{ display: none; }
+  .brand-bar{ display: flex; }
+}
+
+/* Nupu paigutus ja stiil */
+.card{ position: relative; }
+.card .content{ padding-right: 94px; }  /* ruum nupule paremal */
+
+.info-btn{
+  position: absolute; right: 12px; bottom: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px;
+  border: 2px solid #000000;   /* must rõngas */
+  border-radius: 999px;
+  background: #fff;
+  color: #000000;
+  text-decoration: none;
+  font-size: 14px; line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.info-btn:hover{ background:#D3D3D3; }
+.info-btn:focus{ outline: 2px solid #000; outline-offset: 2px; }
+
+@media (max-width:600px){
+  .info-btn{ padding: 5px 10px; font-size: 13px; right: 10px; bottom: 10px; }
+  .card .content{ padding-right: 86px; }
+}
+
+  /* ← TAGASI nupu stiil (täpsem selektor, et ületada olemasolevad lühemad reeglid) */
+header a.back {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 24px;
+  color: var(--link);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+header a.back:hover {
+  background: #f0f0f0;
+}
+
+/* Extra top space so fixed logo doesn't overlap */
+@media (max-width: 1000px){
+  header{ margin-top: 110px !important; }
+}
+
+/* PATCH: info-btn top-left + centered content */
+.card { position: relative; } /* kindlalt ankur nuppu jaoks */
+
+.card .content {
+  padding: 10px 12px;           /* eemaldame vana padding-right hack'i */
+  text-align: center;           /* pealkiri ja alamrida keskele */
+}
+
+.card .title {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.card .desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+/* LISAINFO – ujuv pildi ülemises vasakus nurgas */
+.card .info-btn {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  left: 8px;
+  right: auto;                  /* tühistame varasema "parem alumine" */
+  bottom: auto;
+
+  /* nupp väiksem, aga sama 14px tekst */
+  padding: 5px 10px;
+  border: 1px solid #000;       /* õhem raam */
+  border-radius: 999px;
+  background: rgba(255,255,255,.95);
+  color: #000;
+  text-decoration: none;
+
+  font-size: 14px;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+@media (hover:hover){
+  .card .info-btn:hover { background: #D3D3D3; }
+}
+.card .info-btn:focus { outline: 2px solid #000; outline-offset: 2px; }
+
+/* mobiilis veidi kompaktsem */
+@media (max-width:600px){
+  .card .info-btn{ top:6px; left:6px; padding:4px 8px; }
+  .card .content{ padding:8px 10px; }
+}
+
+/* PATCH: info-btn transparent default + white on hover */
+/* Vaikimisi läbipaistev taust, must tekst; hoveril valge taust */
+.card .info-btn {
+  background: transparent !important;
+  color: #000 !important;
+  border-color: #000 !important;   /* ei muuda paksust, ainult värvi */
+  transition: background .25s ease, color .25s ease;
+}
+@media (hover:hover) {
+  .card .info-btn:hover {
+    background: #fff !important;
+  }
+}
+
+/* PATCH: larger #lb-cap font-size */
+/* Suurem lightboxi pealdis */
+#lb-cap {
+  font-size: 30px !important;
+}
+@media (max-width:600px) {
+  #lb-cap {
+    font-size: 20px !important;
+  }
+}
+
+
+/* ——— ÜLE KAARDI ÄÄRE UJUVA INFO-AKNA STIIL ——— */
+#info-popover{
+  position: fixed;           /* ei lõigata kaardi poolt */
+  inset: auto auto auto auto;
+  z-index: 10000;            /* kõige pealmine */
+  display: none;
+  max-width: min(420px, 90vw);
+  background: rgba(255,255,255,.98);
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.24);
+  line-height: 1.25;
+  font-size: 14px;
+}
+#info-popover.show{ display:block; }
+
+#info-popover .x{
+  position:absolute; top:6px; right:8px;
+  background:transparent; border:0; cursor:pointer;
+  font:inherit; line-height:1;
+}
+#info-popover .t{ font-weight:600; margin:0 0 6px; }
+#info-popover .more a{ color:#000; text-decoration: underline; }
+
+/* soovi korral väike “nooleke” nupu poole */
+#info-popover::after{
+  content:"";
+  position: absolute;
+  width: 10px; height: 10px;
+  background: #fff;
+  border-left:1px solid #000;
+  border-top:1px solid #000;
+  transform: rotate(45deg);
+}
+#info-popover.arrow-top::after{
+  top:-6px; left:16px;
+}
+#info-popover.arrow-bottom::after{
+  bottom:-6px; left:16px; transform: rotate(225deg);
+}
+
+
+/* --- FIX: disable mobile purple swipe arrows --- */
+html, body { overflow-x: hidden; }
+body { overscroll-behavior-x: none; touch-action: pan-y; }
+
+
+/* === FIX: brand arrows link colors (no purple visited) === */
+.brand-nav a,
+.brand-nav a:visited,
+.brand-nav a:hover,
+.brand-nav a:active,
+.brand-nav a:focus,
+.brand-bar a,
+.brand-bar a:visited,
+.brand-bar a:hover,
+.brand-bar a:active,
+.brand-bar a:focus,
+.brand-nav-mobile a,
+.brand-nav-mobile a:visited,
+.brand-nav-mobile a:hover,
+.brand-nav-mobile a:active,
+.brand-nav-mobile a:focus {
+  color: #fff !important;
+  text-decoration: none !important;
+}
+/* === /FIX: brand arrows link colors === */
+
+
+/* === FIX: remove bottom brand arrows === */
+/* Peida alumised brändi-nooled/riba (mobiil) */
+.brand-bar,
+.brand-nav-mobile {
+  display: none !important;
+}
+/* === /FIX: remove bottom brand arrows === */
+
+
+/* JOEL: swipe-fix (desktop no browser arrows, mobile ok) */
+/* --- DESKTOP: keela browser swipe / (lillad nooled) --- */
+@media (hover:hover) and (pointer:fine) {
+  html, body {
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
+  }
+}
+
+/* --- MOBIIL: luba swipe --- */
+@media (hover:none) and (pointer:coarse) {
+  html, body {
+    overscroll-behavior-x: auto;
+    touch-action: pan-x pan-y;
+  }
+}
+
+
+/* === AUTO: Lightbox back-to-recent button === */
+#lb-back-recent{
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 10001;
+
+  background: rgba(255,255,255,.95);
+  border: 2px solid #fff;
+  color: #fff;
+
+  /* sama “stiil” nagu su lightboxi nupud, aga tekstiga */
+  border-radius: 12px;
+  padding: 8px 12px;
+
+  font-family: 'BebasKai', sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.5);
+  backdrop-filter: blur(4px);
+}
+#lb-back-recent:hover{
+  background: rgba(255,255,255,.25);
+}
+@media (max-width: 600px){
+  #lb-back-recent{ font-size: 16px; padding: 6px 10px; }
+}
+
+/* === JOEL BRAND PILL v3 START === */
+/* Mobiili pill: eelmine + järgmine tootja nimega + keskel eraldusjoon */
+.joel-brand-pill {
+  position: fixed;
+  left: 50%;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 9999;
+
+  display: none;
+  width: min(92vw, 560px);
+  padding: 8px 10px;         /* madalam */
+  border-radius: 999px;
+
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.40);
+  backdrop-filter: blur(6px);
+
+  align-items: stretch;
+  gap: 8px;
+}
+
+.joel-brand-pill a {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  text-decoration: none !important;
+  color: #fff !important;
+  min-width: 0;
+}
+
+.joel-brand-pill .left { justify-content: flex-start; }
+.joel-brand-pill .right{ justify-content: flex-end; }
+
+.joel-brand-pill .arr {
+  font-size: 26px;
+  line-height: 1;
+  opacity: .95;
+  user-select: none;
+}
+
+.joel-brand-pill .name {
+  font-size: 16px;
+  line-height: 1.05;
+  text-transform: uppercase;
+  max-width: 100%;
+  min-width: 0;
+
+  /* lubab 2 rida */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.joel-brand-pill .right .name{ text-align: right; }
+.joel-brand-pill .left  .name{ text-align: left; }
+
+/* Keskmine eraldusjoon */
+.joel-brand-pill .sep {
+  width: 1px;
+  align-self: stretch;
+  margin: 2px 2px;
+  background: rgba(255,255,255,.45);
+  border-radius: 999px;
+  flex: 0 0 1px;
+}
+
+/* Näita ainult mobiilis */
+@media (max-width: 800px){
+  .joel-brand-pill{ display: flex; }
+}
+/* === JOEL BRAND PILL v3 END === */
+
+</style>
+
+<style>
+/* JOEL: mobile-brand-arrows v1 */
+/* Brauseri back/forward swipe-indikaatorite vältimine desktopis */
+@media (hover:hover) and (pointer:fine) {
+  html, body {
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
+    overflow-x: hidden;
+  }
+}
+
+/* Mobiilis lubame swipe'i (kui sinu lehel on muu swipe) */
+@media (hover:none) and (pointer:coarse) {
+  html, body {
+    overscroll-behavior-x: auto;
+    touch-action: pan-x pan-y;
+  }
+}
+
+/* Mobiili alumine nav-pill */
+.joel-brand-bar {
+  position: fixed;
+  left: 50%;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: none;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+}
+
+.joel-brand-bar a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-size: 44px;          /* umbes 2x lightbox nooltest */
+  line-height: 1;
+  color: #fff;
+  text-decoration: none;
+  user-select: none;
+}
+
+@media (max-width: 800px) {
+  .joel-brand-bar { display: flex; }
+}
+</style>
+
+</head>
+<body>
+  <a href="../index.html"><img class="logo" src="../img/logo2.png" alt="Logo" onerror="this.remove()"/></a>
+
+  <header>
+    <a class="back" href="../mudelid.html">← KÕIK MUDELID</a>
+    <h1>FORD</h1>
+    <p class="lead">VAJUTA PILDILE, ET NÄHA SUURELT</p>
+  </header>
+
+  <main>
+
+    <article class="card" data-added="2026-01-16" data-info="https://hotwheels.fandom.com/wiki/%2717_Ford_GT">
+      <img class="thumb" src="img/fordgtkreemjas.jpg" alt="´17 FORD GT">
+      <div class="content">
+        <h3 class="title">´17 FORD GT</h3>
+        <p class="desc">2021 - THEN AND NOW - 164/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford GT is a limited-production high-performance sports car produced by the Ford Motor Company over two generations. Styled by Chris Svensson, the second generation of the Ford GT was unveiled at the 2015 North American International Auto Show, alongside the video game Forza Motorsport 6. Powered by a 3.5L EcoBoost D35 twin-turbocharged V6 producing 647 horsepower mated to a 7-speed Getrag 7DCL750 dual clutch, development of the car was highly secretive, with only some twelve people allowed access to Ford's design studio. Initially planned to be produced from 2016 to 2020 at Multimatic in Canada, the car received technical upgrades in 2020, including a power boost to 660 horsepower; it also received a two year production extension, with the last cars produced in 2022 along with a number of special editions to send off the model. 1,250 were produced; the cars were hand-built at a rate of one car a day and a maximum of 250 a year.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2026-01-13" data-info="https://hotwheels.fandom.com/wiki/%2717_Ford_GT">
+      <img class="thumb" src="img/lillagt.jpg" alt="´17 FORD GT">
+      <div class="content">
+        <h3 class="title">´17 FORD GT</h3>
+        <p class="desc">2025 - HW MOTOR SHOW 5-PACK</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford GT is a limited-production high-performance sports car produced by the Ford Motor Company over two generations. Styled by Chris Svensson, the second generation of the Ford GT was unveiled at the 2015 North American International Auto Show, alongside the video game Forza Motorsport 6. Powered by a 3.5L EcoBoost D35 twin-turbocharged V6 producing 647 horsepower mated to a 7-speed Getrag 7DCL750 dual clutch, development of the car was highly secretive, with only some twelve people allowed access to Ford's design studio. Initially planned to be produced from 2016 to 2020 at Multimatic in Canada, the car received technical upgrades in 2020, including a power boost to 660 horsepower; it also received a two year production extension, with the last cars produced in 2022 along with a number of special editions to send off the model. 1,250 were produced; the cars were hand-built at a rate of one car a day and a maximum of 250 a year.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-29" data-info="https://hotwheels.fandom.com/wiki/Ford_Performance_Supervan_4">
+      <img class="thumb" src="img/supervan.jpg" alt="FORD PERFORMANCE SUPERVAN 4">
+      <div class="content">
+        <h3 class="title">FORD PERFORMANCE SUPERVAN 4</h3>
+        <p class="desc">2024 - HW GREEN SPEED - 128/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford SuperVan 4, officially known as the Ford Pro Electric SuperVan, is a high-performance all-electric racing van developed by Ford Europe, based on the Ford Transit Custom. Designed by Levent Tuna and Ernesto Rupar of Ford of Europe's design studio, the SuperVan 4 is the first all-electric version of the Ford SuperVan, featuring four electric motors producing some 1,972 horsepower. It was upgraded into the SuperVan 4.2 in 2024 for an attempt at the Pikes Peak Hill Climb.
+
+The base of the casting reads Ford Supervan4.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-29" data-info="https://hotwheels.fandom.com/wiki/Ford_Mustang_Dark_Horse">
+      <img class="thumb" src="img/sininedarkhorse.jpg" alt="FORD MUSTANG DARK HORSE">
+      <div class="content">
+        <h3 class="title">FORD MUSTANG DARK HORSE</h3>
+        <p class="desc">2024 - THEN AND NOW - 250/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford Mustang Dark Horse is a high-performance version of the S650 Ford Mustang. Designed by Chris Stevens, the Dark Horse was designed more for track performance, filling a niche similar to the previous Boss 302 and GT350 models, being intended to slot into that niche. It is powered by a 5.0L Coyote V8, modified with forged pistons and a unique crankshaft design, mated to a 6-speed Tremec TR-3160 manual; the engine produces 500 horsepower.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-21" data-info="https://hotwheels.fandom.com/wiki/Custom_Ford_Maverick">
+      <img class="thumb" src="img/maverickmust.jpg" alt="CUSTOM FORD MAVERICK">
+      <div class="content">
+        <h3 class="title">CUSTOM FORD MAVERICK</h3>
+        <p class="desc">2024 - VINTAGE RACING CLUB - 4/5</p>
+      </div>
+    <div class="info-text" hidden>
+
+This custom 1972 Ford Maverick is based on a real car created in 2016 by Sung Kang, who previously built the Datsun Fugu-Z (another Hot Wheels model). Originally titled "Project Underdog" or "UDog", the restomod Maverick was designed and built at SEMA Garage with Pennzoil sponsorship and the help of three Los Angeles area high school students (symbolized by the "U3" logo seen on the sides and rear). Contrary to the Hot Wheels card text, the UDog has a 2.3L four-cylinder Ford EcoBoost engine (from the 2015 Mustang) boosted with a GReddy turbocharger supplying nearly 400 horsepower to the 6-speed manual transmission (also borrowed from the Mustang). The car features a Rocket Bunny custom body kit, a Grabber-style carbon-fiber hood, and subtle cues from the Brazilian Mavericks built in the late '70s.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-21" data-info="https://hotwheels.fandom.com/wiki/%2787_Ford_Sierra_Cosworth">
+      <img class="thumb" src="img/punanesierra.jpg" alt="'87 Ford Sierra Cosworth">
+      <div class="content">
+        <h3 class="title">'87 Ford Sierra Cosworth</h3>
+        <p class="desc">2023 - HW: THE '80S - 2/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford Sierra was a large family car designed by Uwe Bahnsen, Bob Lutz and Patrick le Quément. The car was intended to replace the Ford Cortina and Taunus lines. The RS Cosworth was a high-performance version of the Ford Sierra, fitted with a 2.0L turbocharged Cosworth inline-4. This casting depicts an Sierra RS500 Cosworth, the most powerful version with a further refined engine, made in a limited series of 500 examples and campaigned in many Group A racing and rally series from 1987 on. It can be distinguished from the regular RS Cosworth by the indent below the grille which opens an extra air intake not found on the regular RS and the lower lip spoiler below the large 'whale-tail' wing which the regular RS lacks.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-21" data-info="https://hotwheels.fandom.com/wiki/%2787_Ford_Sierra_Cosworth">
+      <img class="thumb" src="img/lillasierra.jpg" alt="'87 Ford Sierra Cosworth">
+      <div class="content">
+        <h3 class="title">'87 Ford Sierra Cosworth</h3>
+        <p class="desc">2022 - RETRO RACERS - 33/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford Sierra was a large family car designed by Uwe Bahnsen, Bob Lutz and Patrick le Quément. The car was intended to replace the Ford Cortina and Taunus lines. The RS Cosworth was a high-performance version of the Ford Sierra, fitted with a 2.0L turbocharged Cosworth inline-4. This casting depicts an Sierra RS500 Cosworth, the most powerful version with a further refined engine, made in a limited series of 500 examples and campaigned in many Group A racing and rally series from 1987 on. It can be distinguished from the regular RS Cosworth by the indent below the grille which opens an extra air intake not found on the regular RS and the lower lip spoiler below the large 'whale-tail' wing which the regular RS lacks.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-21" data-info="https://hotwheels.fandom.com/wiki/%2767_Ford_GT40_Mk.IV">
+      <img class="thumb" src="img/fordgtgulf.jpg" alt="'67 Ford GT40 Mk.IV">
+      <div class="content">
+        <h3 class="title">'67 Ford GT40 Mk.IV</h3>
+        <p class="desc">2022 - RETRO RACERS - 58/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford Mk.IV was the final iteration of the Ford GT40. The car only competed in two races, the 12h of Sebring and the 24h of Le Mans, both in 1967; the car won both races. The GT40 Mk.IV was also notable as being the only version of the GT40 which was designed and built in the United States (the Mk I to III were built in the United Kingdom), with a total of six built by Kar Kraft.
+
+The initial livery of the GT40 Mk.IV casting resembles that of the livery of the real car which won the 1967 24h of Le Mans driven by Dan Gurney and A.J. Foyt; the graphics of this release were done by Leeway Chang. This casting could be seen as a successor casting of sorts to the original Redline Ford Mark IV from 1969.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-18" data-info="https://hotwheels.fandom.com/wiki/%2717_Ford_F-150_Raptor">
+      <img class="thumb" src="img/f150raptor.jpg" alt="'17 Ford F-150 Raptor">
+      <div class="content">
+        <h3 class="title">'17 Ford F-150 Raptor</h3>
+        <p class="desc">2025 - HW DIRT - 178/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+With its performance-tuned suspension system, advanced-off road technology and increased horsepower. The 2017 Ford F-150 Raptor can take on any off-road adventure with style.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-18" data-info="https://hotwheels.fandom.com/wiki/Escort_Rally">
+      <img class="thumb" src="img/mustescort.jpg" alt="FORD ESCORT">
+      <div class="content">
+        <h3 class="title">FORD ESCORT</h3>
+        <p class="desc">2025 - COMPACT KINGS - 113/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford Escort RS2000 Maxi is a special homologation version of the Ford Escort intended for use in the FIA 2-Liter World Rally Cup. Originally introduced in 1992, the Escort was introduced into the 2-Liter World Rally Cup in 1996; compared to its more famous brother the Escort RS Cosworth which competed in Group A, the RS2000 was a front-wheel drive car powered by a 2.0L N7A inline-4. Result for the series are hard to come by but the car is known to have won at least one race in the series. It was raced until 1999 when the championship folded due to high costs and replaced with the Super 1600 category.
+
+This casting incorporates some design elements from the Group A RS Cosworth model, such as the headlight configuration as well as the four fog lights in front.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-16" data-info="https://hotwheels.fandom.com/wiki/%2712_Ford_Fiesta">
+      <img class="thumb" src="img/punanefiesta.jpg" alt="'12 FORD FIESTA">
+      <div class="content">
+        <h3 class="title">'12 FORD FIESTA</h3>
+        <p class="desc">2026 - COMPACT KINGS - 1/5</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford Fiesta RS WRC is a rally car built for the Ford World Rally Team and other privateer teams for World Rally Car regulations. Manufactured by M-Sport, the Fiesta RS WRC acts as the replacement for the Focus RS WRC and is largely based on the road-going Fiesta. The car is powered by a Pipo Moteurs-built 1.6L EcoBoost inline-4, mated to a 6-speed semi-automatic. An additional version was introduced in 2013 to comply with the FIA's Regional Rally Car regulations; the car can be converted back and forth between WRC and RRC specifications. The Fiesta RS WRC was replaced with the Fiesta WRC for 2017 and beyond.
+
+This model replicates a Fiesta RS WRC driven by American rally driver and Internet personality Ken Block for a number of his Gymkhana videos. The car was auctioned off in December 2022 by RM Sotheby's for $252,000.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-05" data-info="https://hotwheels.fandom.com/wiki/%2770_Ford_Escort_RS1600">
+      <img class="thumb" src="img/kuldneescort.jpg" alt="'70 FORD ESCORT RS1600">
+      <div class="content">
+        <h3 class="title">'70 FORD ESCORT RS1600</h3>
+        <p class="desc">2025 - ULTRA HOTS - 1/8</p>
+      </div>
+    <div class="info-text" hidden>
+
+The first generation Ford Escort was designed in Great Britain as a replacement for the aging Ford Anglia, and was a major breakthrough for the company in European and Asia-Pacific Markets. The Ford Escort has been built in several countries in Europe, plus Australia, New Zealand and Taiwan. The Hot Wheels casting depicts a rally car based on the two-door saloon body in right-hand drive.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-29" data-info="https://hotwheels.fandom.com/wiki/Ford_Mustang_GTD">
+      <img class="thumb" src="img/gtdhall.jpg" alt="FORD MUSTANG GTD">
+      <div class="content">
+        <h3 class="title">FORD MUSTANG GTD</h3>
+        <p class="desc">2025 - MUSTANG 60TH - 34/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford Mustang GTD is a high-performance version of the seventh-generation Ford Mustang introduced for the 2025 model year. Designed by Anthony Colard, Stavros Melabiotis and Omead Dorandish, the Mustang GTD is a road-going version of the Ford Mustang GT3 race car. The car uses the 5.2L Ford Predator supercharged V8 from the 2020 Ford Shelby GT500; priced at $325,000 per car, it is expected to be a limited production vehicle.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-16" data-info="https://hotwheels.fandom.com/wiki/Ford_RS200">
+      <img class="thumb" src="img/rs200sinine.jpg" alt="FORD RS200">
+      <div class="content">
+        <h3 class="title">FORD RS200</h3>
+        <p class="desc">2025 - PEAK PURSUIT - 247/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford RS200 is a homologation special two-door all-wheel drive sports car designed by Ford Europe to comply with FIA Homologation Regulations, as the RS200 was used as a rally car in Group B in the FIA World Rally Championship which required road car versions to be produced. The initial release of the RS200 has a livery based on that of the RS200s entered by Ford Motor Co. Ltd. in the 1986 World Rally Championship.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-16" data-info="https://hotwheels.fandom.com/wiki/2020_Ford_Mustang_Shelby_GT500">
+      <img class="thumb" src="img/hallmustang.jpg" alt="2020 Ford Mustang Shelby GT500">
+      <div class="content">
+        <h3 class="title">2020 Ford Mustang Shelby GT500</h3>
+        <p class="desc">2026 - NIGHTSPEED - 10/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The 2020 Ford Mustang Shelby GT500 is touted as being the fastest Mustang of all time, with a 5.2L supercharged Predator cross-plane crank V8 producing 760 horsepower.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-16" data-info="https://hotwheels.fandom.com/wiki/Ford_Mustang_Mach-E_1400">
+      <img class="thumb" src="img/mache.jpg" alt="Ford Mustang Mach-E 1400">
+      <div class="content">
+        <h3 class="title">Ford Mustang Mach-E 1400</h3>
+        <p class="desc">2026 - HW EV - 8/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford Mustang Mach-E 1400 is a heavily modified Ford Mustang Mach-E intended as a technology demonstrator. The car was developed as a result of a collaboration between Ford and RTR Performance. The car is able to produce some 1400 BHP from its seven motors.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-10-15" data-info="https://hotwheels.fandom.com/wiki/%2769_Ford_Mustang_Boss_302">
+      <img class="thumb" src="img/mustangpun.jpg" alt="´69 FORD MUSTANG BOSS 302">
+      <div class="content">
+        <h3 class="title">´69 FORD MUSTANG BOSS 302</h3>
+        <p class="desc">2025 - MUSTANG 60 YEARS - 2/5</p>
+      </div>
+    <div class="info-text" hidden>
+
+This casting is a depiction of a 1969 Ford Mustang intended for Trans Am racing. This casting, while very similar in appearance to the '70 Ford Mustang Boss 302, is a different casting and is not to be confused with it; it is likely that this casting was modified from the earlier '70 Ford Mustang casting hence their similar outward appearance. Due to their similar appearance parts from one casting can be switched with another.
+
+The casting has undergone two retools over the course of its life. In 2015, the casting lost its metal base and plastic spoiler, the latter being integrated into the body. The casting went through a further retool in 2019 where the front grill and rear panel were made part of the base.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Ford_Escort_RS2000">
+      <img class="thumb" src="img/escortrs20001.jpg" alt="FORD ESCORT RS2000">
+      <div class="content">
+        <h3 class="title">FORD ESCORT RS2000</h3>
+        <p class="desc">2024 - FACTORY FRESH - 23/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford Escort is a small family car manufactured by Ford of Europe from 1968 to 2000. Frequently the best selling car in the United Kingdom, the Escort was also used for motorsports, especially rallying to great success. Many drivers such as Björn Waldegård, Hannu Mikkola and Ari Vatanen used Escorts and won numerous races with them.
+
+This casting depicts a Ford Escort Mk II with various "Series-X" performance parts fitted; the parts themselves were colloquially known as "X-Packs".
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Escort_Rally">
+      <img class="thumb" src="img/escort4.jpg" alt="FORD ESCORT">
+      <div class="content">
+        <h3 class="title">FORD ESCORT</h3>
+        <p class="desc">2025 - COMPACT KINGS - 113/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford Escort RS2000 Maxi is a special homologation version of the Ford Escort intended for use in the FIA 2-Liter World Rally Cup. Originally introduced in 1992, the Escort was introduced into the 2-Liter World Rally Cup in 1996; compared to its more famous brother the Escort RS Cosworth which competed in Group A, the RS2000 was a front-wheel drive car powered by a 2.0L N7A inline-4. Result for the series are hard to come by but the car is known to have won at least one race in the series. It was raced until 1999 when the championship folded due to high costs and replaced with the Super 1600 category.
+
+This casting incorporates some design elements from the Group A RS Cosworth model, such as the headlight configuration as well as the four fog lights in front.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-25" data-info="https://hotwheels.fandom.com/wiki/%2792_Ford_Mustang">
+      <img class="thumb" src="img/punane92mustang.jpg" alt="´92 FORD MUSTANG">
+      <div class="content">
+        <h3 class="title">´92 FORD MUSTANG</h3>
+        <p class="desc">2024 - HW: THE ´90s - 194/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The '92 Ford Mustang Casting was created by Hot Wheels designer Jun Imai for the Modern Classics Series. It resembles a Mustang owned by Alec Tam when he joined the Hot Wheels Team. The Mustang was later sold to designer Fraser Campbell. The Mustang featured the same paint and graphics as the one Imai created for the Modern Classics.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2792_Ford_Mustang">
+      <img class="thumb" src="img/92mustang7.jpg" alt="´92 FORD MUSTANG">
+      <div class="content">
+        <h3 class="title">´92 FORD MUSTANG</h3>
+        <p class="desc">2025 - HW: ´70s vs ´90s - 127/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The '92 Ford Mustang Casting was created by Hot Wheels designer Jun Imai for the Modern Classics Series. It resembles a Mustang owned by Alec Tam when he joined the Hot Wheels Team. The Mustang was later sold to designer Fraser Campbell. The Mustang featured the same paint and graphics as the one Imai created for the Modern Classics.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-16" data-info="https://hotwheels.fandom.com/wiki/Ford_GT-40">
+      <img class="thumb" src="img/gt40val.jpg" alt="FORD GT-40">
+      <div class="content">
+        <h3 class="title">FORD GT-40</h3>
+        <p class="desc">2024 - FACTORY FRESH - 12/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford GT-40 is a Hot Wheels casting which debuted in the 1999 First Editions Series. It is based on the MkI version and was designed by Phil Riehlman. It has been used numerous times since its conception.
+
+The real-life Ford GT-40 MkII upgraded to the 427ci V8 from the 255ci of the MkI, and featured a 4-speed gearbox built by Kar Kraft. The MkII GT-40 raced very successfully at endurance championships and notably dominated the 1966 24 Hours of Le Mans in a 1-2-3 victory.
+
+The tooling for the car was completely updated in 2019; it features an improved interior piece and now features a post-post construction as opposed to post-tab construction. Versions assembled in Thailand or Indonesia retain the older post-tab design.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-10-13" data-info="https://hotwheels.fandom.com/wiki/2016_Ford_GT_Race">
+      <img class="thumb" src="img/fordgtroheline.jpg" alt="2016 FORD GT RACE">
+      <div class="content">
+        <h3 class="title">2016 FORD GT RACE</h3>
+        <p class="desc">2024 - THEN AND NOW - 229/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford GT LM GTE is a grand touring racing car built by Multimatic for Ford Performance for use in endurance racing. Styled by Chris Svensson and based on the Ford GT road car, the car marked Ford's official return to endurance racing. The car is powered by a 3.5L Ford EcoBoost D35 twin-turbocharged V6 mated to a Ricardo 6-speed sequential; it competed in both the IMSA SportsCar Championship and the World Endurance Championship as a GTE/GTLM homologated vehicle. The car's most notable victory was at the 2016 24 Hours of Le Mans, fifty years after Ford's first victory at the race, with the #66 car driven by Joey Hand, Dirk Müller and Sebastién Bourdais taking victory; the car also won the 2018 Constructors' Championship in the 2018 IMSA SportsCar Championship. Ford wound down their GT LM GTE program after 2019, capping off the year with a final victory by a privately-entered car by Keating Motorsports at the 2019 24 Hours of Le Mans, although the win was later rescinded due to the car exceeding fuel capacity limits during post-race inspection. Eight chassis were built.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Ford_GT">
+      <img class="thumb" src="img/fordgt159.jpg" alt="FORD GT">
+      <div class="content">
+        <h3 class="title">FORD GT</h3>
+        <p class="desc">2025 - MODIFIED - 159/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford GT GT1 (also known as the Ford GT1) is a grand touring race car built by Matech Concepts in compliance with GT1 racing regulations. Powered by a 5.3L "Cammer" V8, the GT GT1 was raced by Matech Competition and the Marc VDS Racing Team in the FIA GT1 World Championship, with four chassis split evenly between both teams. The GT GT1 saw some success in the series, winning a number of races; in 2011, Matech Concepts had folded and the two cars fielded by them were sold off to Belgium Racing. Three of the GT GT1s also competed in the 2010 24 Hours of Le Mans, two were run by Marc VDS and one by Matech; all three retired at various stages within the race. A GT3 version known as the Ford GT GT3 was also developed for GT3 competition.
+
+This casting features a different rear wing compared to its real life counterpart. The casting was retooled in 2015 to have the rear wing cast into the body; the original tooling with the plastic wing is still used on occasion. Originally named Ford GT LM, the name remains cast into the base of the model.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Ford_GT">
+      <img class="thumb" src="img/gtvalge.jpg" alt="FORD GT">
+      <div class="content">
+        <h3 class="title">FORD GT</h3>
+        <p class="desc">2025 - HW MODIFIED - 156/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford GT GT1 (also known as the Ford GT1) is a grand touring race car built by Matech Concepts in compliance with GT1 racing regulations. Powered by a 5.3L "Cammer" V8, the GT GT1 was raced by Matech Competition and the Marc VDS Racing Team in the FIA GT1 World Championship, with four chassis split evenly between both teams. The GT GT1 saw some success in the series, winning a number of races; in 2011, Matech Concepts had folded and the two cars fielded by them were sold off to Belgium Racing. Three of the GT GT1s also competed in the 2010 24 Hours of Le Mans, two were run by Marc VDS and one by Matech; all three retired at various stages within the race. A GT3 version known as the Ford GT GT3 was also developed for GT3 competition.
+
+This casting features a different rear wing compared to its real life counterpart. The casting was retooled in 2015 to have the rear wing cast into the body; the original tooling with the plastic wing is still used on occasion. Originally named Ford GT LM, the name remains cast into the base of the model.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2717_Ford_GT">
+      <img class="thumb" src="img/17gt9.jpg" alt="´17 FORD GT">
+      <div class="content">
+        <h3 class="title">´17 FORD GT</h3>
+        <p class="desc">2024 - HW EXOTICS - 240/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford GT is a limited-production high-performance sports car produced by the Ford Motor Company over two generations. Styled by Chris Svensson, the second generation of the Ford GT was unveiled at the 2015 North American International Auto Show, alongside the video game Forza Motorsport 6. Powered by a 3.5L EcoBoost D35 twin-turbocharged V6 producing 647 horsepower mated to a 7-speed Getrag 7DCL750 dual clutch, development of the car was highly secretive, with only some twelve people allowed access to Ford's design studio. Initially planned to be produced from 2016 to 2020 at Multimatic in Canada, the car received technical upgrades in 2020, including a power boost to 660 horsepower; it also received a two year production extension, with the last cars produced in 2022 along with a number of special editions to send off the model. 1,250 were produced; the cars were hand-built at a rate of one car a day and a maximum of 250 a year.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Ford_Mustang_GTD">
+      <img class="thumb" src="img/mustang34.jpg" alt="FORD MUSTANG GTD">
+      <div class="content">
+        <h3 class="title">FORD MUSTANG GTD</h3>
+        <p class="desc">2025 - MUSTANG 60TH - 34/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford Mustang GTD is a high-performance version of the seventh-generation Ford Mustang introduced for the 2025 model year. Designed by Anthony Colard, Stavros Melabiotis and Omead Dorandish, the Mustang GTD is a road-going version of the Ford Mustang GT3 race car. The car uses the 5.2L Ford Predator supercharged V8 from the 2020 Ford Shelby GT500; priced at $325,000 per car, it is expected to be a limited production vehicle.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Ford_Mustang_Dark_Horse">
+      <img class="thumb" src="img/mustangdarkhorse7.jpg" alt="FORD MUSTANG DARK HORSE">
+      <div class="content">
+        <h3 class="title">FORD MUSTANG DARK HORSE</h3>
+        <p class="desc">2025 - THEN AND NOW - 219/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Ford Mustang Dark Horse is a high-performance version of the S650 Ford Mustang. Designed by Chris Stevens, the Dark Horse was designed more for track performance, filling a niche similar to the previous Boss 302 and GT350 models, being intended to slot into that niche. It is powered by a 5.0L Coyote V8, modified with forged pistons and a unique crankshaft design, mated to a 6-speed Tremec TR-3160 manual; the engine produces 500 horsepower.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/2020_Ford_Mustang_Shelby_GT500">
+      <img class="thumb" src="img/2020shelbygt5002.jpg" alt="2020 FORD MUSTANG SHELBY GT500">
+      <div class="content">
+        <h3 class="title">2020 FORD MUSTANG SHELBY GT500</h3>
+        <p class="desc">2025 - MUSTANG 60TH - 73/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The 2020 Ford Mustang Shelby GT500 is touted as being the fastest Mustang of all time, with a 5.2L supercharged Predator cross-plane crank V8 producing 760 horsepower.
+
+'20 Ford Shelby GT500 is written on the base.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Custom_%2718_Ford_Mustang_GT">
+      <img class="thumb" src="img/custom18mustang.jpg" alt="CUSTOM ´18 FORD MUSTANG GT">
+      <div class="content">
+        <h3 class="title">CUSTOM ´18 FORD MUSTANG GT</h3>
+        <p class="desc">2025 - MUSTANG 60TH - 211/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+This is a modified version of the 2018 Ford Mustang GT, featuring a custom bodykit and wing and "flip lip" adjustable splitter.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-10-22" data-info="https://hotwheels.fandom.com/wiki/%2799_Ford_F-150_SVT_Lightning">
+      <img class="thumb" src="img/f150svt.jpg" alt="´99 FORD F-150 SVT LIGHTNING">
+      <div class="content">
+        <h3 class="title">´99 FORD F-150 SVT LIGHTNING</h3>
+        <p class="desc">2025 - HOT TRUCKS - 94/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The '99 Ford F-150 SVT Lightning is a high performance truck derived from the regular F-150 offered in a flare side pickup configuration by the Ford Motor Company, produced from 1999 to 2004.
+
+While very similar in appearance to the Ford F-150 SVT Lightning, both are two different castings done by different designers; the mainline casting is slightly shorter than the premium.
+
+The base of the casting reads F-150 SVT Lightning.
+
+</div>
+    </article>
+
+  </main>
+
+  <footer>© JOEL-MARK STOMMA <span id="year"></span></footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script>
+(() => {
+  // --- KOKKUPANEK: loome lightboxi elemendid ---
+  const overlay = document.createElement('div'); overlay.id = 'lb-overlay';
+  overlay.innerHTML = `
+    <button id="lb-close" aria-label="Sulge">✕</button>
+    <button id="lb-back-recent" aria-label="Tagasi hiljuti lisatud juurde">← Tagasi</button>
+    <button class="lb-arrow" id="lb-prev" aria-label="Eelmine">‹</button>
+    <img id="lb-img" alt="">
+    <button class="lb-arrow" id="lb-next" aria-label="Järgmine">›</button>
+    <div id="lb-cap" aria-live="polite"></div>
+  `;
+  document.body.appendChild(overlay);
+
+  const imgEl = overlay.querySelector('#lb-img');
+  const capEl = overlay.querySelector('#lb-cap');
+  const btnPrev = overlay.querySelector('#lb-prev');
+  const btnNext = overlay.querySelector('#lb-next');
+  const btnClose = overlay.querySelector('#lb-close');
+  const btnBackRecent = overlay.querySelector('#lb-back-recent');
+  if (btnBackRecent) {
+    btnBackRecent.addEventListener('click', () => {
+      // mine avalehele ja ava “Hiljuti lisatud”
+      location.href = '../index.html#recent';
+    });
+  }
+
+
+  // --- KOGU SAMA LEHE (sama tootja) mudelipildid ---
+  // Muuda SELECTOR vajadusel, kui sinu .card struktuur erineb
+  const cards = [...document.querySelectorAll('.card')];
+
+  function getModelLabel(card){
+    return (
+      card.getAttribute('data-model') ||
+      card.dataset?.model ||
+      card.querySelector?.('.model-name, .title, h3, h2')?.textContent ||
+      card.querySelector?.('img')?.alt ||
+      ''
+    )?.toString().trim();
+  }
+
+  function getFullSrc(card){
+    const a = card.querySelector('a[href]');
+    const img = card.querySelector('img');
+    // Eelistame <a href> originaali, muidu img.src
+    return a?.getAttribute('href') || img?.getAttribute('data-full') || img?.src || '';
+  }
+
+  const gallery = cards
+    .map(card => {
+      const src = getFullSrc(card);
+      if (!src) return null;
+      let label = getModelLabel(card);
+      if (!label) {
+        // Fallback: võta failinimi
+        try { label = src.split('/').pop().split('?')[0]; } catch(e) {}
+      }
+      return { card, src, label };
+    })
+    .filter(Boolean);
+
+  if (!gallery.length) return; // pole midagi avada
+
+  let i = 0; // aktiivse pildi index
+
+  function openAt(idx){
+    i = (idx + gallery.length) % gallery.length;
+    const { src, label } = gallery[i];
+    imgEl.src = src;
+    imgEl.alt = label || '';
+    capEl.textContent = label || '';
+    overlay.classList.add('open');
+    document.body.classList.add('lb-open');
+    // eellae naabrid
+    const prev = new Image(); prev.src = gallery[(i-1+gallery.length)%gallery.length].src;
+    const next = new Image(); next.src = gallery[(i+1)%gallery.length].src;
+    // peida nooled kui ainult 1 pilt
+    const single = gallery.length < 2;
+    btnPrev.style.display = single ? 'none' : '';
+    btnNext.style.display = single ? 'none' : '';
+  }
+
+  function closeLB(){
+    overlay.classList.remove('open');
+    document.body.classList.remove('lb-open');
+    imgEl.src = '';
+  }
+
+  function next(){ openAt(i+1); }
+  function prev(){ openAt(i-1); }
+
+  // --- KLIKID PEALE: igale kaardi pildile ---
+  cards.forEach((card, idx) => {
+    const clickable = card.querySelector('a, img');
+    if (!clickable) return;
+    clickable.addEventListener('click', (e) => {
+      // Kui see on link suure pildini, ära lase brauseril eraldi lehte avada
+      if (clickable.tagName === 'A') e.preventDefault();
+      // Leia galerii indeks sama kaardi järgi (mitte lihtsalt idx – filtrid võisid ära jätta)
+      const found = gallery.findIndex(g => g.card === card);
+      openAt(found >= 0 ? found : idx);
+    });
+  });
+
+  // --- Nupud ja klaviatuur ---
+  btnClose.addEventListener('click', closeLB);
+  btnNext.addEventListener('click', next);
+  btnPrev.addEventListener('click', prev);
+
+  // Klaviatuur: Esc sulgeb; ←/→ liiklus
+  window.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') return closeLB();
+    if (e.key === 'ArrowRight') return next();
+    if (e.key === 'ArrowLeft') return prev();
+  });
+
+  // Klõps tumedal taustal sulgeb
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeLB();
+  });
+
+  // --- Valikuline: kui tullakse lehele ?m=Model päringuga, ava esimene vastav ---
+  const qp = new URLSearchParams(location.search);
+  const m = qp.get('m');
+  if (m) {
+    const mLower = m.toLowerCase();
+    const firstMatch = gallery.findIndex(g =>
+      (g.label || '').toLowerCase().includes(mLower) ||
+      g.card.getAttribute('data-model')?.toLowerCase() === mLower
+    );
+    if (firstMatch >= 0) openAt(firstMatch);
+  }
+})();
+</script>
+
+<script>
+(() => {
+  // Loo elemendid: kaks küljenoolt + mobiili alumine ribanupp
+  const prevBox = document.createElement('div'); prevBox.id = 'brand-prev'; prevBox.className = 'brand-nav';
+  const nextBox = document.createElement('div'); nextBox.id = 'brand-next'; nextBox.className = 'brand-nav';
+  const aPrev = document.createElement('a'); aPrev.href = '#'; aPrev.textContent = '‹'; aPrev.setAttribute('aria-label','Eelmine tootja');
+  const aNext = document.createElement('a'); aNext.href = '#'; aNext.textContent = '›'; aNext.setAttribute('aria-label','Järgmine tootja');
+  prevBox.appendChild(aPrev); nextBox.appendChild(aNext);
+
+  const bar = document.createElement('nav'); bar.className = 'brand-bar';
+  const barPrev = document.createElement('a'); barPrev.href = '#'; barPrev.textContent = '‹'; barPrev.setAttribute('aria-label','Eelmine tootja');
+  const barNext = document.createElement('a'); barNext.href = '#'; barNext.textContent = '›'; barNext.setAttribute('aria-label','Järgmine tootja');
+  bar.append(barPrev, barNext);
+
+  document.body.append(prevBox, nextBox, bar);
+
+  // Failiprotokolliga ei saa avalehte lugeda
+  if (location.protocol === 'file:') {
+    prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
+    return;
+  }
+
+  const here = location.pathname.replace(/index\.html$/, '');
+  const brandSlug = here.split('/').filter(Boolean).pop();
+
+  fetch('../index.html', { cache:'no-store' }).then(r => r.text()).then(html => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const indexURL = new URL('../index.html', location.href);
+    const rows = [...doc.querySelectorAll('.brand-card[href]')];
+
+    // Järjestus = avalehe järjestus
+    const list = rows.map(row => {
+      const href = row.getAttribute('href');
+      const url = new URL(href, indexURL);
+      const path = url.pathname.replace(/index\.html$/, '');
+      const name = (row.querySelector('.brand-name')?.textContent || '').trim() || path.split('/').filter(Boolean).pop();
+      return { path, name, href: url.pathname + url.search + url.hash };
+    });
+
+    // Leia praegune index
+    let i = list.findIndex(x => x.path === here);
+    if (i === -1) i = list.findIndex(x => x.path.split('/').filter(Boolean).pop() === brandSlug);
+    if (i === -1 || list.length < 2) {
+      prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
+      return;
+    }
+
+    const prev = list[(i - 1 + list.length) % list.length];
+    const next = list[(i + 1) % list.length];
+
+    // Sea lingid/tiitrid kõigile kolmele UI-le
+    [aPrev, barPrev].forEach(a => { a.href = prev.href; a.title = prev.name; });
+    [aNext, barNext].forEach(a => { a.href = next.href; a.title = next.name; });
+
+    // Klaviatuur: ← / → (kui lightbox pole avatud)
+    function lightboxOpen(){
+      const lb = document.getElementById('lb-overlay');
+      return !!(lb && lb.classList.contains('open'));
+    }
+    window.addEventListener('keydown', (e) => {
+      if (lightboxOpen()) return;
+      if (e.key === 'ArrowLeft') location.href = aPrev.href;
+      if (e.key === 'ArrowRight') location.href = aNext.href;
+    });
+
+    // Swipe (mobiil): horisontaalne libistus vahetab tootjat, kui lightbox pole avatud
+    let sx = null, sy = null;
+    window.addEventListener('touchstart', (e) => { const t = e.changedTouches[0]; sx = t.clientX; sy = t.clientY; }, {passive:true});
+    window.addEventListener('touchend', (e) => {
+      if (lightboxOpen() || sx === null) return;
+      const t = e.changedTouches[0]; const dx = t.clientX - sx; const dy = t.clientY - sy;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+        location.href = dx > 0 ? aPrev.href : aNext.href;
+      }
+      sx = sy = null;
+    }, {passive:true});
+  }).catch(() => {
+    prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
+  });
+})();
+</script>
+
+<script>
+// 1) Lisa nupud kõigile kaartidele, millel on data-info
+document.querySelectorAll('.card[data-info]').forEach(card=>{
+  const url = card.dataset.info;
+  if(!url) return;
+  const a = document.createElement('a');
+  a.className = 'info-btn';
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = 'Lisainfo';
+  card.appendChild(a);
+});
+
+// 2) Kindlusta, et "Lisainfo" klikk ei ava lightboxi
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('a.info-btn');
+  if (btn) {
+    // ära lase kaardil/listeneritel (nt lightbox) edasi reageerida
+    e.stopPropagation();
+  }
+}, true); // capture-faasis, et peatada enne teisi kuulajaid
+</script>
+
+
+<script>
+(function(){
+  const isHoverFine = matchMedia("(hover:hover) and (pointer:fine)").matches;
+
+  let pop = document.getElementById('info-popover');
+  if(!pop){
+    pop = document.createElement('div');
+    pop.id = 'info-popover';
+    pop.innerHTML = `
+      <button class="x" aria-label="Sulge">✕</button>
+      <div class="t"></div>
+      <div class="body"></div>
+      <div class="more" style="margin-top:6px;"><a target="_blank" rel="noopener">Loe veel →</a></div>
+    `;
+    document.body.appendChild(pop);
+  }
+  const titleEl = pop.querySelector('.t');
+  const bodyEl  = pop.querySelector('.body');
+  const moreA   = pop.querySelector('.more a');
+  const closeBtn= pop.querySelector('.x');
+
+  let hideTimer = null;
+  let currentBtn = null;
+
+  function fillFromCard(card){
+    const t = (card.querySelector('.title')?.textContent || 'Info').trim();
+    const custom = (card.querySelector('.info-text')?.innerHTML || '').trim();
+    const url = card.dataset.info || '#';
+    titleEl.textContent = t;
+    bodyEl.innerHTML = custom;
+    moreA.href = url;
+  }
+
+  function placeByButton(btn){
+    const r = btn.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const margin = 8;
+    pop.style.visibility = 'hidden';
+    pop.classList.add('show');
+    pop.classList.remove('arrow-top','arrow-bottom');
+    const pr = pop.getBoundingClientRect();
+    let top  = r.bottom + margin;
+    let left = r.left;
+    if (left + pr.width > vw - margin) left = Math.max(margin, vw - margin - pr.width);
+    if (top + pr.height > vh - margin){
+      top = r.top - margin - pr.height;
+      pop.classList.add('arrow-bottom');
+    } else {
+      pop.classList.add('arrow-top');
+    }
+    if (left < margin) left = margin;
+    if (top  < margin) top  = margin;
+    pop.style.left = left + "px";
+    pop.style.top  = top  + "px";
+    pop.style.visibility = '';
+  }
+
+  function showFor(btn){
+    const card = btn.closest('.card');
+    if(!card) return;
+    currentBtn = btn;
+    fillFromCard(card);
+    placeByButton(btn);
+    pop.classList.add('show');
+  }
+  function hideSoon(delay=100){
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=>{ pop.classList.remove('show'); currentBtn=null; }, delay);
+  }
+  function cancelHide(){ clearTimeout(hideTimer); }
+
+  closeBtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    pop.classList.remove('show');
+    currentBtn = null;
+  });
+
+  document.querySelectorAll('.info-btn').forEach(btn=>{
+    const card = btn.closest('.card');
+    if(!card) return;
+    if(isHoverFine){
+      btn.addEventListener('mouseenter', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      pop.addEventListener('mouseenter', cancelHide);
+      pop.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      btn.addEventListener('focus', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('blur',  ()=>{ hideSoon(120); });
+      btn.addEventListener('click', e=>{ e.stopPropagation(); });
+    } else {
+      btn.addEventListener('click', e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(pop.classList.contains('show') && currentBtn === btn){
+          pop.classList.remove('show'); currentBtn=null;
+        } else {
+          showFor(btn);
+        }
+      });
+      pop.addEventListener('click', e=>e.stopPropagation());
+    }
+  });
+
+  ['scroll','resize'].forEach(ev=>{
+    window.addEventListener(ev, ()=>{
+      if(currentBtn && pop.classList.contains('show')){
+        placeByButton(currentBtn);
+      }
+    }, {passive:true});
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(pop.classList.contains('show')){
+      if(!pop.contains(e.target) && !e.target.closest('.info-btn')){
+        pop.classList.remove('show'); currentBtn=null;
+      }
+    }
+  });
+})();
+</script>
+
+<script>
+(() => {
+  // Ära tee midagi, kui failis juba brändi-nooled olemas
+  // (see kontroll on tegelikult Pythonis, aga lisame siia ka turvaks)
+  if (document.querySelector('.brand-nav-arrow')) return;
+
+  if (location.protocol === 'file:') {
+    // fetch ei tööta korralikult file:// pealt
+    return;
+  }
+
+  // Loo stiil
+  const style = document.createElement('style');
+  style.textContent = `
+    .brand-nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 44px;
+      color: #fff;
+      padding: 8px 14px;
+      cursor: pointer;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.30);
+      border: 1px solid rgba(255,255,255,0.35);
+      user-select: none;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s;
+      z-index: 9000;
+    }
+    .brand-nav-arrow:hover {
+      background: rgba(255,255,255,0.20);
+    }
+    #brandPrev { left: 16px; }
+    #brandNext { right: 16px; }
+
+    @media (max-width: 700px){
+      .brand-nav-arrow {
+        display: none;
+      }
+      .brand-nav-mobile {
+        position: fixed;
+        left: 50%;
+        bottom: 16px;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        background: rgba(0,0,0,0.30);
+        border: 1px solid rgba(255,255,255,0.35);
+        padding: 8px 14px;
+        border-radius: 999px;
+        backdrop-filter: blur(4px);
+        z-index: 9000;
+      }
+      .brand-nav-mobile a {
+        color: #fff;
+        font-size: 26px;
+        text-decoration: none;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Loo nooled (desktop)
+  const prevBox = document.createElement('div');
+  const nextBox = document.createElement('div');
+  prevBox.className = 'brand-nav-arrow';
+  nextBox.className = 'brand-nav-arrow';
+  prevBox.id = 'brandPrev';
+  nextBox.id = 'brandNext';
+  prevBox.textContent = '‹';
+  nextBox.textContent = '›';
+  document.body.appendChild(prevBox);
+  document.body.appendChild(nextBox);
+
+  // Leia praeguse tootja slug kausta nimest
+  const currentPath = location.pathname.replace(/\/index\.html$/, '');
+  const currentSlug = currentPath.split('/').filter(Boolean).pop();
+
+  // Kasutame mudelid.html-i, sest seal on .brand-card järjekord
+  const base = new URL('../mudelid.html', location.href);
+
+  fetch(base.href, { cache: 'no-store' })
+    .then(r => r.text())
+    .then(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const rows = [...doc.querySelectorAll('.brand-card[href]')];
+
+      const list = rows.map(row => {
+        const href = row.getAttribute('href');
+        const url  = new URL(href, base);
+        const slug = url.pathname
+          .replace(/\/index\.html$/, '')
+          .split('/')
+          .filter(Boolean)
+          .pop();
+        return { href: url.pathname, slug };
+      }).filter(x => !!x.slug);
+
+      if (!list.length) return;
+
+      let i = list.findIndex(x => x.slug === currentSlug);
+      if (i === -1) return;
+
+      const prev = list[(i - 1 + list.length) % list.length];
+      const next = list[(i + 1) % list.length];
+
+      // Desktop nooled
+      prevBox.addEventListener('click', () => { location.href = prev.href; });
+      nextBox.addEventListener('click', () => { location.href = next.href; });
+
+      // Klaviatuur (← / →)
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') location.href = prev.href;
+        if (e.key === 'ArrowRight') location.href = next.href;
+      });
+
+      // Mobiiliriba
+      const bar = document.createElement('div');
+      bar.className = 'brand-nav-mobile';
+      bar.innerHTML = `
+        <a href="${prev.href}" aria-label="Eelmine tootja">‹</a>
+        <a href="${next.href}" aria-label="Järgmine tootja">›</a>
+      `;
+      document.body.appendChild(bar);
+    })
+    .catch(() => {
+      // vaikne error – kui mudelid.html ei lae, siis lihtsalt pole nooli
+    });
+})();
+</script>
+
+
+
+
+<!-- === FIX: remove bottom brand arrows (js) === -->
+<script>
+(() => {
+  // Kui mingi skript lisas alumise riba/nupud, eemalda need
+  document.querySelectorAll('.brand-bar, .brand-nav-mobile').forEach(el => el.remove());
+})();
+</script>
+<!-- === /FIX: remove bottom brand arrows (js) === -->
+
+
+
+
+<!-- === JOEL BRAND PILL v3 START === -->
+<script>
+/* === JOEL: mobile brand pill with names (v3) === */
+(function(){
+  // ära dubleeri
+  const existing = document.querySelector('.joel-brand-pill');
+  if (existing) return;
+  if (location.protocol === 'file:') return;
+
+  // Korista vanad alumised ribad/elemendid kui kuskil jäänud
+  document.querySelectorAll('.joel-brand-bar, .brand-bar, .brand-nav-mobile').forEach(el => el.remove());
+
+  // Loo pill
+  const pill = document.createElement('nav');
+  pill.className = 'joel-brand-pill';
+  pill.innerHTML = `
+    <a class="left" href="#" aria-label="Eelmine tootja">
+      <span class="arr">‹</span><span class="name">...</span>
+    </a>
+    <span class="sep" aria-hidden="true"></span>
+    <a class="right" href="#" aria-label="Järgmine tootja">
+      <span class="name">...</span><span class="arr">›</span>
+    </a>
+  `;
+  document.body.appendChild(pill);
+
+  // Leia praegune slug (kausta nimi)
+  const herePath = location.pathname.replace(/\/index\.html$/,'/').replace(/\/+$|^$/,'/');
+  const slug = herePath.split('/').filter(Boolean).pop();
+
+  fetch('../mudelid.html', { cache:'no-store' })
+    .then(r => r.ok ? r.text() : Promise.reject())
+    .then(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const cards = [...doc.querySelectorAll('.brand-card[href]')];
+
+      // järjestus = mudelid.html, võtame ka nime
+      const list = cards.map(c => {
+        const href = (c.getAttribute('href') || '').trim();
+        const name = (c.querySelector('.brand-name')?.textContent || '').trim();
+        const s = href.replace(/\/index\.html$/,'').split('/').filter(Boolean).pop();
+        return { href, slug: s, name: name || s };
+      }).filter(x => x.slug);
+
+      const i = list.findIndex(x => x.slug === slug);
+      if (i < 0 || list.length < 2) { pill.remove(); return; }
+
+      const prev = list[(i - 1 + list.length) % list.length];
+      const next = list[(i + 1) % list.length];
+
+      const prevA = pill.querySelector('.left');
+      const nextA = pill.querySelector('.right');
+
+      prevA.href = '../' + prev.href.replace(/^\.\//,'');
+      nextA.href = '../' + next.href.replace(/^\.\//,'');
+
+      prevA.querySelector('.name').textContent = (prev.name || '').toUpperCase();
+      nextA.querySelector('.name').textContent = (next.name || '').toUpperCase();
+
+      // Kui lightbox lahti, peida pill
+      function lbOpen(){
+        const lb = document.getElementById('lb-overlay');
+        return lb && lb.classList.contains('open');
+      }
+      const lb = document.getElementById('lb-overlay');
+      if (lb){
+        const obs = new MutationObserver(() => {
+          pill.style.display = lbOpen() ? 'none' : '';
+        });
+        obs.observe(lb, { attributes:true, attributeFilter:['class'] });
+      }
+    })
+    .catch(() => {
+      pill.remove();
+    });
+})();
+</script>
+<!-- === JOEL BRAND PILL v3 END === -->
+
+</body>
+</html>

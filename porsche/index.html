@@ -1,0 +1,1576 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PORSCHE</title>
+  <style>
+@font-face {
+  font-family: 'BebasKai';
+  src: url('../fonts/bebaskai.woff2') format('woff2'),
+       url('../fonts/bebaskai.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+    :root{
+      --bg:#FFFFFF; --panel:#FFFFFF; --text:#000000; --muted:#000000; --border:#000000; --link:#000000;
+      --maxw:900px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: var(--bg) url("../img/taust3.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text);
+      font-family: 'BebasKai', sans-serif;
+      font-size: 30px;
+    }
+    .logo{position:fixed; top:12px; left:12px; width:60px; height:60px; border-radius:7px; object-fit:cover; border:1px solid var(--border); background:#FFFFFF}
+    header{max-width:var(--maxw); margin:60px auto 10px; padding:0 16px}
+    a.back{color:var(--link); text-decoration:none}
+    h1{margin:6px 0 0; font-size:70px;}
+    p.lead{margin:0; color:var(--muted)}
+    main{
+      max-width:var(--maxw); margin:18px auto 60px; padding:0 16px;
+      display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(220px,1fr))
+    }
+    .card{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
+    .thumb{aspect-ratio:4/3; width:100%; object-fit:cover; display:block; background:#222}
+    .content{padding:10px 12px}
+    .title{margin:0 0 6px; font-size:20px}
+    .desc{margin:0; color:var(--muted); font-size:10px}
+    footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:18px}
+
+/* Lightbox (täisekraanil pildi vaatamine) */
+#lb-overlay{
+  position: fixed; inset: 0; z-index: 9999;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.85);
+}
+#lb-overlay.open{ display: flex; }
+
+#lb-img{
+  max-width: 90vw; max-height: 85vh;
+  box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  border-radius: 12px;
+}
+
+/* Ülanurga sulgemisnupp */
+#lb-close{
+  position: fixed; top: 16px; right: 16px; z-index: 10000;
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.5);
+  color: #fff; font-size: 20px; border-radius: 10px; padding: 8px 12px; cursor: pointer;
+}
+
+/* Vasak/parem nooled */
+.lb-arrow{
+  position: fixed; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.5);
+  color: #fff; font-size: 28px; border-radius: 12px; padding: 10px 14px; cursor: pointer;
+  user-select: none;
+}
+#lb-prev{ left: 16px; }
+#lb-next{ right: 16px; }
+
+/* All pealkiri (mudeli nimi) */
+#lb-cap{
+  position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+  color: #fff; font-size: 16px; text-align: center; opacity: .9;
+  max-width: 90vw;
+}
+
+/* Taustakerimise keelamine kui lightbox on avatud */
+body.lb-open{ overflow: hidden; }
+
+/* Väiksel ekraanil veidi väiksemad nupud */
+@media (max-width: 600px){
+  .lb-arrow{ font-size: 24px; padding: 8px 12px; }
+  #lb-close{ font-size: 18px; padding: 6px 10px; }
+}
+
+/* Küljenooled (desktop) */
+.brand-nav{
+  position: fixed; top: 50%; transform: translateY(-50%);
+  z-index: 9000;
+}
+#brand-prev{ left: 12px; }
+#brand-next{ right: 12px; }
+.brand-nav a{
+  display:flex; align-items:center; justify-content:center;
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(0,0,0,.35); color: #fff;
+  border: 1px solid rgba(255,255,255,.4);
+  text-decoration: none; font-size: 28px; user-select: none;
+  backdrop-filter: blur(4px);
+}
+.brand-nav a:hover{ background: rgba(0,0,0,.5); }
+.brand-nav a:focus{ outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Mobiili alumine nav-pill */
+.brand-bar{
+  position: fixed;
+  left: 50%;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 9000;
+  display: none; /* näitame vaid mobiilis */
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.4);
+  backdrop-filter: blur(6px);
+}
+.brand-bar a{
+  display:inline-flex; align-items:center; justify-content:center;
+  width: 38px; height: 38px; font-size: 22px; color:#fff; text-decoration:none;
+}
+.brand-bar a:focus{ outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Kui lightbox on avatud, peida brändi-nav */
+body.lb-open .brand-nav,
+body.lb-open .brand-bar{ display: none !important; }
+
+/* Mobiilis: peida küljenooled, näita alumist riba */
+@media (max-width: 700px){
+  .brand-nav{ display: none; }
+  .brand-bar{ display: flex; }
+}
+
+/* Nupu paigutus ja stiil */
+.card{ position: relative; }
+.card .content{ padding-right: 94px; }  /* ruum nupule paremal */
+
+.info-btn{
+  position: absolute; right: 12px; bottom: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px;
+  border: 2px solid #000000;   /* must rõngas */
+  border-radius: 999px;
+  background: #fff;
+  color: #000000;
+  text-decoration: none;
+  font-size: 14px; line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.info-btn:hover{ background:#D3D3D3; }
+.info-btn:focus{ outline: 2px solid #000; outline-offset: 2px; }
+
+@media (max-width:600px){
+  .info-btn{ padding: 5px 10px; font-size: 13px; right: 10px; bottom: 10px; }
+  .card .content{ padding-right: 86px; }
+}
+
+  /* ← TAGASI nupu stiil (täpsem selektor, et ületada olemasolevad lühemad reeglid) */
+header a.back {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 24px;
+  color: var(--link);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+header a.back:hover {
+  background: #f0f0f0;
+}
+
+/* Extra top space so fixed logo doesn't overlap */
+@media (max-width: 1000px){
+  header{ margin-top: 110px !important; }
+}
+
+/* PATCH: info-btn top-left + centered content */
+.card { position: relative; } /* kindlalt ankur nuppu jaoks */
+
+.card .content {
+  padding: 10px 12px;           /* eemaldame vana padding-right hack'i */
+  text-align: center;           /* pealkiri ja alamrida keskele */
+}
+
+.card .title {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.card .desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+/* LISAINFO – ujuv pildi ülemises vasakus nurgas */
+.card .info-btn {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  left: 8px;
+  right: auto;                  /* tühistame varasema "parem alumine" */
+  bottom: auto;
+
+  /* nupp väiksem, aga sama 14px tekst */
+  padding: 5px 10px;
+  border: 1px solid #000;       /* õhem raam */
+  border-radius: 999px;
+  background: rgba(255,255,255,.95);
+  color: #000;
+  text-decoration: none;
+
+  font-size: 14px;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+@media (hover:hover){
+  .card .info-btn:hover { background: #D3D3D3; }
+}
+.card .info-btn:focus { outline: 2px solid #000; outline-offset: 2px; }
+
+/* mobiilis veidi kompaktsem */
+@media (max-width:600px){
+  .card .info-btn{ top:6px; left:6px; padding:4px 8px; }
+  .card .content{ padding:8px 10px; }
+}
+
+/* PATCH: info-btn transparent default + white on hover */
+/* Vaikimisi läbipaistev taust, must tekst; hoveril valge taust */
+.card .info-btn {
+  background: transparent !important;
+  color: #000 !important;
+  border-color: #000 !important;   /* ei muuda paksust, ainult värvi */
+  transition: background .25s ease, color .25s ease;
+}
+@media (hover:hover) {
+  .card .info-btn:hover {
+    background: #fff !important;
+  }
+}
+
+/* PATCH: larger #lb-cap font-size */
+/* Suurem lightboxi pealdis */
+#lb-cap {
+  font-size: 30px !important;
+}
+@media (max-width:600px) {
+  #lb-cap {
+    font-size: 20px !important;
+  }
+}
+
+
+/* ——— ÜLE KAARDI ÄÄRE UJUVA INFO-AKNA STIIL ——— */
+#info-popover{
+  position: fixed;           /* ei lõigata kaardi poolt */
+  inset: auto auto auto auto;
+  z-index: 10000;            /* kõige pealmine */
+  display: none;
+  max-width: min(420px, 90vw);
+  background: rgba(255,255,255,.98);
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.24);
+  line-height: 1.25;
+  font-size: 14px;
+}
+#info-popover.show{ display:block; }
+
+#info-popover .x{
+  position:absolute; top:6px; right:8px;
+  background:transparent; border:0; cursor:pointer;
+  font:inherit; line-height:1;
+}
+#info-popover .t{ font-weight:600; margin:0 0 6px; }
+#info-popover .more a{ color:#000; text-decoration: underline; }
+
+/* soovi korral väike “nooleke” nupu poole */
+#info-popover::after{
+  content:"";
+  position: absolute;
+  width: 10px; height: 10px;
+  background: #fff;
+  border-left:1px solid #000;
+  border-top:1px solid #000;
+  transform: rotate(45deg);
+}
+#info-popover.arrow-top::after{
+  top:-6px; left:16px;
+}
+#info-popover.arrow-bottom::after{
+  bottom:-6px; left:16px; transform: rotate(225deg);
+}
+
+
+/* --- FIX: disable mobile purple swipe arrows --- */
+html, body { overflow-x: hidden; }
+body { overscroll-behavior-x: none; touch-action: pan-y; }
+
+
+/* === FIX: brand arrows link colors (no purple visited) === */
+.brand-nav a,
+.brand-nav a:visited,
+.brand-nav a:hover,
+.brand-nav a:active,
+.brand-nav a:focus,
+.brand-bar a,
+.brand-bar a:visited,
+.brand-bar a:hover,
+.brand-bar a:active,
+.brand-bar a:focus,
+.brand-nav-mobile a,
+.brand-nav-mobile a:visited,
+.brand-nav-mobile a:hover,
+.brand-nav-mobile a:active,
+.brand-nav-mobile a:focus {
+  color: #fff !important;
+  text-decoration: none !important;
+}
+/* === /FIX: brand arrows link colors === */
+
+
+/* === FIX: remove bottom brand arrows === */
+/* Peida alumised brändi-nooled/riba (mobiil) */
+.brand-bar,
+.brand-nav-mobile {
+  display: none !important;
+}
+/* === /FIX: remove bottom brand arrows === */
+
+
+/* JOEL: swipe-fix (desktop no browser arrows, mobile ok) */
+/* --- DESKTOP: keela browser swipe / (lillad nooled) --- */
+@media (hover:hover) and (pointer:fine) {
+  html, body {
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
+  }
+}
+
+/* --- MOBIIL: luba swipe --- */
+@media (hover:none) and (pointer:coarse) {
+  html, body {
+    overscroll-behavior-x: auto;
+    touch-action: pan-x pan-y;
+  }
+}
+
+
+/* === AUTO: Lightbox back-to-recent button === */
+#lb-back-recent{
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 10001;
+
+  background: rgba(255,255,255,.95);
+  border: 2px solid #fff;
+  color: #fff;
+
+  /* sama “stiil” nagu su lightboxi nupud, aga tekstiga */
+  border-radius: 12px;
+  padding: 8px 12px;
+
+  font-family: 'BebasKai', sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.5);
+  backdrop-filter: blur(4px);
+}
+#lb-back-recent:hover{
+  background: rgba(255,255,255,.25);
+}
+@media (max-width: 600px){
+  #lb-back-recent{ font-size: 16px; padding: 6px 10px; }
+}
+
+/* === JOEL BRAND PILL v3 START === */
+/* Mobiili pill: eelmine + järgmine tootja nimega + keskel eraldusjoon */
+.joel-brand-pill {
+  position: fixed;
+  left: 50%;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 9999;
+
+  display: none;
+  width: min(92vw, 560px);
+  padding: 8px 10px;         /* madalam */
+  border-radius: 999px;
+
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.40);
+  backdrop-filter: blur(6px);
+
+  align-items: stretch;
+  gap: 8px;
+}
+
+.joel-brand-pill a {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  text-decoration: none !important;
+  color: #fff !important;
+  min-width: 0;
+}
+
+.joel-brand-pill .left { justify-content: flex-start; }
+.joel-brand-pill .right{ justify-content: flex-end; }
+
+.joel-brand-pill .arr {
+  font-size: 26px;
+  line-height: 1;
+  opacity: .95;
+  user-select: none;
+}
+
+.joel-brand-pill .name {
+  font-size: 16px;
+  line-height: 1.05;
+  text-transform: uppercase;
+  max-width: 100%;
+  min-width: 0;
+
+  /* lubab 2 rida */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.joel-brand-pill .right .name{ text-align: right; }
+.joel-brand-pill .left  .name{ text-align: left; }
+
+/* Keskmine eraldusjoon */
+.joel-brand-pill .sep {
+  width: 1px;
+  align-self: stretch;
+  margin: 2px 2px;
+  background: rgba(255,255,255,.45);
+  border-radius: 999px;
+  flex: 0 0 1px;
+}
+
+/* Näita ainult mobiilis */
+@media (max-width: 800px){
+  .joel-brand-pill{ display: flex; }
+}
+/* === JOEL BRAND PILL v3 END === */
+
+</style>
+
+<style>
+/* JOEL: mobile-brand-arrows v1 */
+/* Brauseri back/forward swipe-indikaatorite vältimine desktopis */
+@media (hover:hover) and (pointer:fine) {
+  html, body {
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
+    overflow-x: hidden;
+  }
+}
+
+/* Mobiilis lubame swipe'i (kui sinu lehel on muu swipe) */
+@media (hover:none) and (pointer:coarse) {
+  html, body {
+    overscroll-behavior-x: auto;
+    touch-action: pan-x pan-y;
+  }
+}
+
+/* Mobiili alumine nav-pill */
+.joel-brand-bar {
+  position: fixed;
+  left: 50%;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: none;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+}
+
+.joel-brand-bar a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-size: 44px;          /* umbes 2x lightbox nooltest */
+  line-height: 1;
+  color: #fff;
+  text-decoration: none;
+  user-select: none;
+}
+
+@media (max-width: 800px) {
+  .joel-brand-bar { display: flex; }
+}
+</style>
+
+</head>
+<body>
+  <a href="../index.html"><img class="logo" src="../img/logo2.png" alt="Logo" onerror="this.remove()"/></a>
+
+  <header>
+    <a class="back" href="../mudelid.html">← KÕIK MUDELID</a>
+    <h1>PORSCHE</h1>
+    <p class="lead">VAJUTA PILDILE, ET NÄHA SUURELT</p>
+  </header>
+
+  <main>
+
+    <article class="card" data-added="2026-01-16" data-info="https://hotwheels.fandom.com/wiki/Porsche_Taycan_Turbo_S">
+      <img class="thumb" src="img/valgeporscheev.jpg" alt="PORSCHE TAYCAN TURBO S">
+      <div class="content">
+        <h3 class="title">PORSCHE TAYCAN TURBO S</h3>
+        <p class="desc">2026 - HW EV - 34/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche Taycan is an all-electric executive car produced by Porsche since 2019. It is currently available as a sedan although station wagon versions will be offered in the near future. The name "Taycan" roughly translates to "lively young horse" from Turkish, in reference to the horse on Stuttgart's coat of arms in Porsche's logo. The Turbo S, which this casting replicates, is the most powerful trim level featuring 751 BHP.
+
+This casting was originally intended to be released in 2020 along with the rest of Hot Wheels id's Series 2 lineup, but numerous production delays due to the COVID-19 pandemic and poor sales led to a bulk of the original Series 2 cars not being released on schedule. What was intended to be the initial release of the Taycan would resemble the Porsche Taycan Turbo safety car used in the Porsche Carrera Cup Deutschland series. The casting thus debuted in the 2021 mainline without being labeled a New Model.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2026-01-12" data-info="https://hotwheels.fandom.com/wiki/Porsche_Panamera_Turbo_S_E-Hybrid_Sport_Turismo">
+      <img class="thumb" src="img/hybridpanamerasinine.jpg" alt="Porsche Panamera Turbo S E-Hybrid Sport Turismo">
+      <div class="content">
+        <h3 class="title">Porsche Panamera Turbo S E-Hybrid Sport Turismo</h3>
+        <p class="desc">2025 - HYBRID SPEED - 4/5</p>
+      </div>
+    <div class="info-text" hidden>
+
+This high-end Porsche Panamera packs a might E-punch with 680 combined hp, an 8-speed automatic gearbox, and a top speed of 192 mph. It's the ideal blend of performance and luxury!
+
+</div>
+    </article>
+
+    <article class="card" data-added="2026-01-01" data-info="https://hotwheels.fandom.com/wiki/Porsche_Carrera_GT">
+      <img class="thumb" src="img/carreragtprem.jpg" alt="Porsche Carrera GT">
+      <div class="content">
+        <h3 class="title">Porsche Carrera GT</h3>
+        <p class="desc">2025 - Car Culture: Timeless Icons - 3/5</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche Carrera GT is a high-performance limited production sports car produced by Dr. Ing. h.c. F. Porsche AG. Styled by Harm Lagaay, the Carrera GT was initially unveiled as a concept car at the 2000 Paris Motor Show, using a 5.5L V10 originally built for Porsche's Formula One exploits. The concept was styled by Jason Hill and was so well-received that Porsche made the decision to produce the car. The production version of the car uses a 5.7L M80/01 V10 mated to a 6-speed manual; this is the only road-going Porsche model to use a V10 engine. Production began in 2004 and ended in 2006, with 1,270 cars produced. Today, the car is one of the most highly-collectible Porsche models.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2026-01-01" data-info="https://hotwheels.fandom.com/wiki/%2771_Porsche_911">
+      <img class="thumb" src="img/71911valge.jpg" alt="´71 PORSCHE 911">
+      <div class="content">
+        <h3 class="title">´71 PORSCHE 911</h3>
+        <p class="desc">2023 - RETRO RACERS - 126/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+A high–performance sport car worthy of an international spy adventure, this distinctively designed vehicle looks elegant from every angle and boasts a powerful 2.2-litre engine that delivers pure Porsche-driving pleasure. One of the most influential vehicles in automobile history, the 911 racers to the top of every enthusiast’s wish list!
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-22" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Carrera_RS_3.8">
+      <img class="thumb" src="img/hallcarrerars3.8.jpg" alt="Porsche 911 Carrera RS 3.8">
+      <div class="content">
+        <h3 class="title">Porsche 911 Carrera RS 3.8</h3>
+        <p class="desc">2024 - FAST & FURIOUS - 3/5</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 911 Carrera RS is a lightweight limited-production version of the 964-generation Porsche 911. It was based on the Carrera Cup race cars used at the time and featured numerous revisions for added performance. The Carrera RS 3.8 was a non-turbo, enhanced version of the Carrera RS, featuring wider bodywork and a 3.8L M64/04 flat-6. A total of 55 were produced in 1993, when production ceased.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-14" data-info="https://hotwheels.fandom.com/wiki/Porsche_Panamera_Turbo_S_E-Hybrid_Sport_Turismo">
+      <img class="thumb" src="img/punanepanamera.jpg" alt="Porsche Panamera Turbo S E-Hybrid Sport Turismo">
+      <div class="content">
+        <h3 class="title">Porsche Panamera Turbo S E-Hybrid Sport Turismo</h3>
+        <p class="desc">2023 - HW GREEN SPEED - 38/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+This high-end Porsche Panamera packs a might E-punch with 680 combined hp, an 8-speed automatic gearbox, and a top speed of 192 mph. It's the ideal blend of performance and luxury!
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-14" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Rallye">
+      <img class="thumb" src="img/rohelinerallye.jpg" alt="PORSCHE 911 RALLYE">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 RALLYE</h3>
+        <p class="desc">2025 - SAFARI MODE - 154/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 911 Dakar is a special limited-production off-road edition of the 992-generation Porsche 911. It features a 3.0L DKKB twin-turbocharged flat-6 driving all four wheels, mated to an 8-speed PDK transmission. The car uses Pirelli Scorpion All Terrain Plus tires and features raised ground clearance. Unveiled at the 2022 Los Angeles Auto Show, 2,500 units are slated to be produced.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-29" data-info="https://hotwheels.fandom.com/wiki/Porsche_356_Outlaw">
+      <img class="thumb" src="img/356outlaw.jpg" alt="PORSCHE 356 OUTLAW">
+      <div class="content">
+        <h3 class="title">PORSCHE 356 OUTLAW</h3>
+        <p class="desc">2025 - ULTRA HOTS - 5/8</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 356 is a sports car produced by Porsche from 1948 to 1965 as their first production road car offering. Designed by Ferry Porsche and Erwin Komenda, the 356 was noted for its light weight and nimble handling. Produced over four series, the 356 A, introduced in late 1955, was the car's first major revision. It was nicknamed "T1" among enthusiasts due to its internal "Type 1" factory designation. Produced from 1955 to 1959, a number of engine choices were available for each trim level, from the 1.3L 506 flat-4 to the 1.6L 616/1 flat-4; all engines were mated to a 4-speed manual. This generation also featured the Speedster, an open-topped version with few fittings and trim pieces. 21,045 were produced.
+
+The Hot Wheels casting is detailed with notches to simulate the ventilation for the rear-fitted engine and a fuel filler cap through the hood. This casting is modeled after a lightly customized 356 A owned by fashion designer Magnus Walker. Initially named the Porsche 356A Outlaw, the "A" in the name was removed in 2020. Certain versions feature a number of base variations with the old and new names.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-24" data-info="https://hotwheels.fandom.com/wiki/%2771_Porsche_911">
+      <img class="thumb" src="img/roosaporge.jpg" alt="´71 PORSCHE 911">
+      <div class="content">
+        <h3 class="title">´71 PORSCHE 911</h3>
+        <p class="desc">2026 - NEON SPEEDERS - 8/8</p>
+      </div>
+    <div class="info-text" hidden>
+
+A high–performance sport car worthy of an international spy adventure, this distinctively designed vehicle looks elegant from every angle and boasts a powerful 2.2-litre engine that delivers pure Porsche-driving pleasure. One of the most influential vehicles in automobile history, the 911 racers to the top of every enthusiast’s wish list!
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-24" data-info="https://hotwheels.fandom.com/wiki/%2771_Porsche_911">
+      <img class="thumb" src="img/993gt2.jpg" alt="PORSCHE 993 GT2">
+      <div class="content">
+        <h3 class="title">PORSCHE 993 GT2</h3>
+        <p class="desc">2025 - NEON SPEEDERS - 8/8</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 911 GT2 is a high-performance track-focused version of the Porsche 911, initially introduced in 1993. The GT2 was introduced with the 993-generation 911, and as a result is often known as the 993 GT2. Built to comply with homologation requirements for GT2 class racing, the 993 GT2 is powered by a 3.6L M64.60 turbocharged flat-6, mated to a 6-speed manual. Compared to other 911s, the GT2 featured a large rear wing and widened fenders. The car made 424 horsepower when initially released; this would be increased to 444 by production's end in 1998. 57 cars were produced, making the 993 GT2 one of the rarest Porsches of its time.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-16" data-info="https://hotwheels.fandom.com/wiki/Porsche_917_LH">
+      <img class="thumb" src="img/917lh.jpg" alt="´78 PORSCHE 935-78">
+      <div class="content">
+        <h3 class="title">´78 PORSCHE 935-78</h3>
+        <p class="desc">2025 - THE HOT ONES - 7/8</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 917 LH was the second new model version made in cooperation with the 2017 racing game Project CARS 2, developed by Slightly Mad Studios and published by Bandai Namco Entertainment.
+
+It is based on the real-life Porsche 917 LH, 'Langheck' (Long Tail). Only five 917 LH were made and competed in the endurance racing in the 1970 and 1971 seasons.
+
+The first release of the Hot Wheels 917 LH is a replica of the car #18 driven by Pedro Rodriguez and Jackie Oliver (Chassis: 917-043) at the 1971 24 Hours of Le Mans, despite having the fastest qualifying time and setting a new lap record, they did not complete the race. The car still exists and has been restored to its livery from the previous year (1970), it is on display at the Simeone Foundation Auto Museum.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2778_Porsche_935-78">
+      <img class="thumb" src="img/93578.jpg" alt="´78 PORSCHE 935-78">
+      <div class="content">
+        <h3 class="title">´78 PORSCHE 935-78</h3>
+        <p class="desc">2024 - ULTRA HOTS - 4/8</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 935/78 was the final model of Porsche's 935, produced in 1978 purely for the Le Mans of that year. The 935 was part of the 'Special Production cars'(Group 5).
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_934_Turbo_RSR">
+      <img class="thumb" src="img/934turbo.jpg" alt="PORSCHE 934 TURBO RSR">
+      <div class="content">
+        <h3 class="title">PORSCHE 934 TURBO RSR</h3>
+        <p class="desc">2025 - NEON SPEEDERS - 6/8</p>
+      </div>
+    <div class="info-text" hidden>
+
+Several releases of the casting exist with a variation in the casting where the front bumper opening comes with or without a mesh texture.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-16" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Carrera_T">
+      <img class="thumb" src="img/carrerathall.jpg" alt="PORSCHE 911 CARRERA T">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 CARRERA T</h3>
+        <p class="desc">2026 - FACTORY FRESH - 15/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 911 Carrera T is a special variant of the 911, intended for driving pleasure. The 992 generation of the 911 Carrera T was introduced in 2022 and features the 3.0L DKCA twin-turbocharged flat-6 as the base 911, but is lighter thanks to the use of lighter materials and most notably uses a 7-speed manual transmission. Introduced for the 2023 model year, prices start at about $143,700.
+
+This casting is based on the 911 Carrera T owned by Hot Wheels Global Head of Design Ted Wu; it features the Sport Chrono and SportDesign packages. Two teddy bears can be found in the passenger seat.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-10-26" data-info="https://hotwheels.fandom.com/wiki/%2767_Porsche_911_R">
+      <img class="thumb" src="img/67911r.jpg" alt="´67 PORSCHE 911 R">
+      <div class="content">
+        <h3 class="title">´67 PORSCHE 911 R</h3>
+        <p class="desc">2025 - NATIONAL ICONS - 5/5</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 911 R is a special lightweight homologation version of the original Porsche 911. Designed to take the then newly-released 911 to its limits, the 911 R featured numerous weight-saving measures, such as a fiberglass bodyshell and panels fabricated by Karl Baur, lightweight windows and removal of numerous interior features. The car used the 2.0L 901/22 flat-6 from the 906 and can be distinguished from other 911s by its flared wheel arches. Produced from 1967 to 1968, 24 were produced, including 4 prototypes.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-10-13" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Rallye">
+      <img class="thumb" src="img/porscherallye.jpg" alt="PORSCHE 911 RALLYE">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 RALLYE</h3>
+        <p class="desc">2024 - HW TURBO - 172/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 911 Dakar is a special limited-production off-road edition of the 992-generation Porsche 911. It features a 3.0L DKKB twin-turbocharged flat-6 driving all four wheels, mated to an 8-speed PDK transmission. The car uses Pirelli Scorpion All Terrain Plus tires and features raised ground clearance. Unveiled at the 2022 Los Angeles Auto Show, 2,500 units are slated to be produced.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Turbo_Cabriolet">
+      <img class="thumb" src="img/911cabrio.jpg" alt="PORSCHE 911 TURBO CABRIOLET">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 TURBO CABRIOLET</h3>
+        <p class="desc">2025 - THEN AND NOW - 238/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 911 Turbo Cabriolet was a highly-exclusive version of the Porsche 964, produced in extremely limited quantities in 1993. Designed by Ben Dimson, the 911 Turbo Cabriolet was essentially a standard Porsche 911 Carrera 2 cabriolet fitted with the "Turbo-Look" option, codenamed M491, but fitted with some additional modifications; all 911 Turbo Cabriolets were said to have been constructed after being removed from the production line at Zuffenhausen and transported to Porsche Exclusive's Sonderwisch (lit. "special wishes", currently Sonderwunsch) department, led by Rolf Sprenger. Each was said to have been fitted with the 3.3L M30/69 turbocharged inline-6 355hp. Six were produced, making this one of the rarest 964 variants to exist.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_GT3">
+      <img class="thumb" src="img/911must.jpg" alt="PORSCHE 911 GT3">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 GT3</h3>
+        <p class="desc">2025 - HW RACE DAY - 74/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 911 GT3 is a high-performance homologation model of the Porsche 911, sitting above the 911 Turbo but below the GT2, initially introduced in 1999 with the 996 generation. The fourth generation of the GT3, based on the 992 generation of the Porsche 911, was unveiled in February 2021. The car uses the same 4.0L naturally aspriated MA1.76 flat-6 as its predecessor, the 991 version of the GT3, but uprated to produce 510 BHP. Transmission options include a 7-speed dual clutch or a 6-speed manual. A Touring version featuring a retractable wing is also available.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-10-20" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_GT3_RS_(2011)">
+      <img class="thumb" src="img/ff911.jpg" alt="PORSCHE 911 GT3 RS">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 GT3 RS</h3>
+        <p class="desc">2025 - FAST & FURIOUS 5-PACK</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 911 GT3 is a high-performance homologation of the Porsche 911. The second generation of 911 GT3, introduced in 2006, was based on the 997 generation of Porsche 911 and was fitted with a new 3.6L M97.76 flat-6. The 911 GT3 was refined further to become the 911 GT3 RS, unveiled in late 2006. An updated version of the 911 GT3 to coincide with the 997's facelifts, colloquially known as the 997.2 GT3, was introduced in 2009, followed by the GT3 RS in 2010; this GT3 RS would be fitted with a new 3.8L M97.77 flat-6. A more powerful version known as the 911 GT3 RS 4.0 would be introduced in 2011, powered by a 4.0L M97.74 flat-6. Production ended in 2011 with 2,000 997.2 GT3 RS's produced.
+
+The casting was retooled in 2015, losing the plastic wing and having it cast into the body. Mainline releases of this casting also lose the rollcage.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_GT3_RS_(2016)">
+      <img class="thumb" src="img/911roosa.jpg" alt="PORSCHE 911 GT3 RS">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 GT3 RS</h3>
+        <p class="desc">2025 - THEN AND NOW - 220/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 911 GT3 is a High-Performance variation of the Porsche 911 that Porsche debuted as the 991 Porsche 911 GT3 RS at the Geneva Motor Show in 2015. Fitted with Turbo-styled intakes, in lieu of the intake below the rear wing. The roof is made from magnesium to reduce weight. The interior includes full bucket seats, carbon-fibre inserts, and the Club Sport Package as standard (a bolted-on roll cage behind the front seats). The RS's 4.0-litre unit with 500 hp (373 kW) replaces the previous 3.8-litre engine. Race time on the Nürburgring track is a mere 7 minutes and 20 seconds.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_Taycan_Turbo_S">
+      <img class="thumb" src="img/taycanroh.jpg" alt="PORSCHE TAYCAN TURBO S">
+      <div class="content">
+        <h3 class="title">PORSCHE TAYCAN TURBO S</h3>
+        <p class="desc">2023 - FACTORY FRESH - 149/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche Taycan is an all-electric executive car produced by Porsche since 2019. It is currently available as a sedan although station wagon versions will be offered in the near future. The name "Taycan" roughly translates to "lively young horse" from Turkish, in reference to the horse on Stuttgart's coat of arms in Porsche's logo. The Turbo S, which this casting replicates, is the most powerful trim level featuring 751 BHP.
+
+This casting was originally intended to be released in 2020 along with the rest of Hot Wheels id's Series 2 lineup, but numerous production delays due to the COVID-19 pandemic and poor sales led to a bulk of the original Series 2 cars not being released on schedule. What was intended to be the initial release of the Taycan would resemble the Porsche Taycan Turbo safety car used in the Porsche Carrera Cup Deutschland series. The casting thus debuted in the 2021 mainline without being labeled a New Model.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/1983_Porsche_928S">
+      <img class="thumb" src="img/928spun.jpg" alt="1983 PORSCHE 928S">
+      <div class="content">
+        <h3 class="title">1983 PORSCHE 928S</h3>
+        <p class="desc">2025 - MUSCLE MANIA - 250/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 928 is a luxury grand touring sports car produced by Porsche from 1978 to 1995. Designed by Wolfgang Möbius and Anatole Lapine, the 928 was Porsche's flagship model for a time. The original intention of the model was to replace the Porsche 911, although this did not work as planned due to the 911 easily eclipsing the 928 in popularity. 61,056 were produced.
+
+This casting was designed based on the Porsche 928S Safari casting. A pair of sunglasses can be found in the passenger seat.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-10-13" data-info="https://hotwheels.fandom.com/wiki/Porsche_904_Carrera_GTS">
+      <img class="thumb" src="img/porschepunane.jpg" alt="PORSCHE 904 CARRERA GTS">
+      <div class="content">
+        <h3 class="title">PORSCHE 904 CARRERA GTS</h3>
+        <p class="desc">2024 - HW EXOTICS - 158/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 904 was a racing sports car manufactured by Porsche from 1964 to 1965. Designed by Ferdinand Alexander Porsche, the 904 was Porsche's first sports car since withdrawing from Formula One in 1962. The Carrera GTS, powered by a 2.0L 587/3 flat-4, was introduced in 1963 to compete in the FIA-GT category at various international racing events. 106 chassis were produced for street legal compliance.
+
+The initial livery of this casting is based on chassis 904-005, driven by Antonio Pucci and Colin Davis to victory for Porsche System Engineering in the 1964 Targa Florio.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_904_Carrera_GTS">
+      <img class="thumb" src="img/904tume.jpg" alt="PORSCHE 904 CARRERA GTS">
+      <div class="content">
+        <h3 class="title">PORSCHE 904 CARRERA GTS</h3>
+        <p class="desc">2025 - HW RACE DAY - 100/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 904 was a racing sports car manufactured by Porsche from 1964 to 1965. Designed by Ferdinand Alexander Porsche, the 904 was Porsche's first sports car since withdrawing from Formula One in 1962. The Carrera GTS, powered by a 2.0L 587/3 flat-4, was introduced in 1963 to compete in the FIA-GT category at various international racing events. 106 chassis were produced for street legal compliance.
+
+The initial livery of this casting is based on chassis 904-005, driven by Antonio Pucci and Colin Davis to victory for Porsche System Engineering in the 1964 Targa Florio.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_904_Carrera_GTS">
+      <img class="thumb" src="img/904hele.jpg" alt="PORSCHE 904 CARRERA GTS">
+      <div class="content">
+        <h3 class="title">PORSCHE 904 CARRERA GTS</h3>
+        <p class="desc">2025 - HW RACE DAY - 100/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 904 was a racing sports car manufactured by Porsche from 1964 to 1965. Designed by Ferdinand Alexander Porsche, the 904 was Porsche's first sports car since withdrawing from Formula One in 1962. The Carrera GTS, powered by a 2.0L 587/3 flat-4, was introduced in 1963 to compete in the FIA-GT category at various international racing events. 106 chassis were produced for street legal compliance.
+
+The initial livery of this casting is based on chassis 904-005, driven by Antonio Pucci and Colin Davis to victory for Porsche System Engineering in the 1964 Targa Florio.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/%2796_Porsche_Carrera">
+      <img class="thumb" src="img/96carrera.jpg" alt="´96 PORSCHE CARRERA">
+      <div class="content">
+        <h3 class="title">´96 PORSCHE CARRERA</h3>
+        <p class="desc">2024 - HW: THE ´90S - 174/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The '96 Porsche Carrera is a Hot Wheels casting debuted in the 2019 Hot Wheels lineup, under the 'Nightburnerz' mini-series. The real-life 1996 Porsche Carrera was part of the 993-generation (successor to the 964-series) of the Porsche 911, built from 1994-1998. The 993 was the last generation of air-cooled 911s. The Carrera was the more street-oriented version while the 993 GT2 took on the role as the race-derived model. (Named for the GT2 Class of race cars).
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Carrera_RS_2.7">
+      <img class="thumb" src="img/kollanecarrera.jpg" alt="PORSCHE 911 CARRERA RS 2.7">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 CARRERA RS 2.7</h3>
+        <p class="desc">2024 - FACTORY FRESH - 46/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Porsche 911 Carrera RS was a homologation special of the original Porsche 911. Designed to allow Porsche to compete in FIA Group 4 competition, the Carrera RS featured a larger 2.7L 911/83 flat-6 making 210 horsepower as well as a ducktail spoiler, larger brakes, stiffer suspension and larger rear wheels. A number of additional versions of the Carrera RS were produced, usually with weight-saving modifications; a later version of the Carrera RS featured a bigger engine. 1,580 were produced, comfortably exceeding the 500 cars required for homologation purposes. In modern times, the Carrera RS is highly valued by collectors and is said to be one of the best 911s ever produced.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-10-13" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Carrera_Clip">
+      <img class="thumb" src="img/valgeclip.jpg" alt="PORSCHE 911 CARRERA CLIP">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 CARRERA CLIP</h3>
+        <p class="desc">2024 - EXPERIMOTORS - 134/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+This is a keychain version of a Porsche 911 Carrera, in a similar style to the Coupe Clip.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Carrera_Clip">
+      <img class="thumb" src="img/911carreraclip6.jpg" alt="PORSCHE 911 CARRERA CLIP">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 CARRERA CLIP</h3>
+        <p class="desc">2025 - EXPERIMOTORS - 187/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+This is a keychain version of a Porsche 911 Carrera, in a similar style to the Coupe Clip.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-10-22" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Carrera_Clip">
+      <img class="thumb" src="img/911clipsin.jpg" alt="PORSCHE 911 CARRERA CLIP">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 CARRERA CLIP</h3>
+        <p class="desc">2025 - EXPERIMOTORS - 187/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+This is a keychain version of a Porsche 911 Carrera, in a similar style to the Coupe Clip.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-04" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Turbo_3.6_(964)">
+      <img class="thumb" src="img/lilla911tooned.jpg" alt="PORSCHE 911 TURBO 3.6(964)">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 TURBO 3.6(964)</h3>
+        <p class="desc">2024 - TOONED - 199/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+This casting depicts a 'Tooned version of a Porsche 964, featuring squished up & cartoonish proportions.
+
+The driver's side window is lowered down.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Porsche_911_Turbo_3.6_(964)">
+      <img class="thumb" src="img/pisikemust.jpg" alt="PORSCHE 911 TURBO 3.6(964)">
+      <div class="content">
+        <h3 class="title">PORSCHE 911 TURBO 3.6(964)</h3>
+        <p class="desc">2023 - TOONED - 234/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+This casting depicts a 'Tooned version of a Porsche 964, featuring squished up & cartoonish proportions.
+
+The driver's side window is lowered down.
+
+</div>
+    </article>
+
+  </main>
+
+  <footer>© JOEL-MARK STOMMA <span id="year"></span></footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+
+<script>
+(() => {
+  // --- KOKKUPANEK: loome lightboxi elemendid ---
+  const overlay = document.createElement('div'); overlay.id = 'lb-overlay';
+  overlay.innerHTML = `
+    <button id="lb-close" aria-label="Sulge">✕</button>
+    <button id="lb-back-recent" aria-label="Tagasi hiljuti lisatud juurde">← Tagasi</button>
+    <button class="lb-arrow" id="lb-prev" aria-label="Eelmine">‹</button>
+    <img id="lb-img" alt="">
+    <button class="lb-arrow" id="lb-next" aria-label="Järgmine">›</button>
+    <div id="lb-cap" aria-live="polite"></div>
+  `;
+  document.body.appendChild(overlay);
+
+  const imgEl = overlay.querySelector('#lb-img');
+  const capEl = overlay.querySelector('#lb-cap');
+  const btnPrev = overlay.querySelector('#lb-prev');
+  const btnNext = overlay.querySelector('#lb-next');
+  const btnClose = overlay.querySelector('#lb-close');
+  const btnBackRecent = overlay.querySelector('#lb-back-recent');
+  if (btnBackRecent) {
+    btnBackRecent.addEventListener('click', () => {
+      // mine avalehele ja ava “Hiljuti lisatud”
+      location.href = '../index.html#recent';
+    });
+  }
+
+
+  // --- KOGU SAMA LEHE (sama tootja) mudelipildid ---
+  // Muuda SELECTOR vajadusel, kui sinu .card struktuur erineb
+  const cards = [...document.querySelectorAll('.card')];
+
+  function getModelLabel(card){
+    return (
+      card.getAttribute('data-model') ||
+      card.dataset?.model ||
+      card.querySelector?.('.model-name, .title, h3, h2')?.textContent ||
+      card.querySelector?.('img')?.alt ||
+      ''
+    )?.toString().trim();
+  }
+
+  function getFullSrc(card){
+    const a = card.querySelector('a[href]');
+    const img = card.querySelector('img');
+    // Eelistame <a href> originaali, muidu img.src
+    return a?.getAttribute('href') || img?.getAttribute('data-full') || img?.src || '';
+  }
+
+  const gallery = cards
+    .map(card => {
+      const src = getFullSrc(card);
+      if (!src) return null;
+      let label = getModelLabel(card);
+      if (!label) {
+        // Fallback: võta failinimi
+        try { label = src.split('/').pop().split('?')[0]; } catch(e) {}
+      }
+      return { card, src, label };
+    })
+    .filter(Boolean);
+
+  if (!gallery.length) return; // pole midagi avada
+
+  let i = 0; // aktiivse pildi index
+
+  function openAt(idx){
+    i = (idx + gallery.length) % gallery.length;
+    const { src, label } = gallery[i];
+    imgEl.src = src;
+    imgEl.alt = label || '';
+    capEl.textContent = label || '';
+    overlay.classList.add('open');
+    document.body.classList.add('lb-open');
+    // eellae naabrid
+    const prev = new Image(); prev.src = gallery[(i-1+gallery.length)%gallery.length].src;
+    const next = new Image(); next.src = gallery[(i+1)%gallery.length].src;
+    // peida nooled kui ainult 1 pilt
+    const single = gallery.length < 2;
+    btnPrev.style.display = single ? 'none' : '';
+    btnNext.style.display = single ? 'none' : '';
+  }
+
+  function closeLB(){
+    overlay.classList.remove('open');
+    document.body.classList.remove('lb-open');
+    imgEl.src = '';
+  }
+
+  function next(){ openAt(i+1); }
+  function prev(){ openAt(i-1); }
+
+  // --- KLIKID PEALE: igale kaardi pildile ---
+  cards.forEach((card, idx) => {
+    const clickable = card.querySelector('a, img');
+    if (!clickable) return;
+    clickable.addEventListener('click', (e) => {
+      // Kui see on link suure pildini, ära lase brauseril eraldi lehte avada
+      if (clickable.tagName === 'A') e.preventDefault();
+      // Leia galerii indeks sama kaardi järgi (mitte lihtsalt idx – filtrid võisid ära jätta)
+      const found = gallery.findIndex(g => g.card === card);
+      openAt(found >= 0 ? found : idx);
+    });
+  });
+
+  // --- Nupud ja klaviatuur ---
+  btnClose.addEventListener('click', closeLB);
+  btnNext.addEventListener('click', next);
+  btnPrev.addEventListener('click', prev);
+
+  // Klaviatuur: Esc sulgeb; ←/→ liiklus
+  window.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') return closeLB();
+    if (e.key === 'ArrowRight') return next();
+    if (e.key === 'ArrowLeft') return prev();
+  });
+
+  // Klõps tumedal taustal sulgeb
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeLB();
+  });
+
+  // --- Valikuline: kui tullakse lehele ?m=Model päringuga, ava esimene vastav ---
+  const qp = new URLSearchParams(location.search);
+  const m = qp.get('m');
+  if (m) {
+    const mLower = m.toLowerCase();
+    const firstMatch = gallery.findIndex(g =>
+      (g.label || '').toLowerCase().includes(mLower) ||
+      g.card.getAttribute('data-model')?.toLowerCase() === mLower
+    );
+    if (firstMatch >= 0) openAt(firstMatch);
+  }
+})();
+</script>
+
+<script>
+(() => {
+  // Loo elemendid: kaks küljenoolt + mobiili alumine ribanupp
+  const prevBox = document.createElement('div'); prevBox.id = 'brand-prev'; prevBox.className = 'brand-nav';
+  const nextBox = document.createElement('div'); nextBox.id = 'brand-next'; nextBox.className = 'brand-nav';
+  const aPrev = document.createElement('a'); aPrev.href = '#'; aPrev.textContent = '‹'; aPrev.setAttribute('aria-label','Eelmine tootja');
+  const aNext = document.createElement('a'); aNext.href = '#'; aNext.textContent = '›'; aNext.setAttribute('aria-label','Järgmine tootja');
+  prevBox.appendChild(aPrev); nextBox.appendChild(aNext);
+
+  const bar = document.createElement('nav'); bar.className = 'brand-bar';
+  const barPrev = document.createElement('a'); barPrev.href = '#'; barPrev.textContent = '‹'; barPrev.setAttribute('aria-label','Eelmine tootja');
+  const barNext = document.createElement('a'); barNext.href = '#'; barNext.textContent = '›'; barNext.setAttribute('aria-label','Järgmine tootja');
+  bar.append(barPrev, barNext);
+
+  document.body.append(prevBox, nextBox, bar);
+
+  // Failiprotokolliga ei saa avalehte lugeda
+  if (location.protocol === 'file:') {
+    prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
+    return;
+  }
+
+  const here = location.pathname.replace(/index\.html$/, '');
+  const brandSlug = here.split('/').filter(Boolean).pop();
+
+  fetch('../index.html', { cache:'no-store' }).then(r => r.text()).then(html => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const indexURL = new URL('../index.html', location.href);
+    const rows = [...doc.querySelectorAll('.brand-card[href]')];
+
+    // Järjestus = avalehe järjestus
+    const list = rows.map(row => {
+      const href = row.getAttribute('href');
+      const url = new URL(href, indexURL);
+      const path = url.pathname.replace(/index\.html$/, '');
+      const name = (row.querySelector('.brand-name')?.textContent || '').trim() || path.split('/').filter(Boolean).pop();
+      return { path, name, href: url.pathname + url.search + url.hash };
+    });
+
+    // Leia praegune index
+    let i = list.findIndex(x => x.path === here);
+    if (i === -1) i = list.findIndex(x => x.path.split('/').filter(Boolean).pop() === brandSlug);
+    if (i === -1 || list.length < 2) {
+      prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
+      return;
+    }
+
+    const prev = list[(i - 1 + list.length) % list.length];
+    const next = list[(i + 1) % list.length];
+
+    // Sea lingid/tiitrid kõigile kolmele UI-le
+    [aPrev, barPrev].forEach(a => { a.href = prev.href; a.title = prev.name; });
+    [aNext, barNext].forEach(a => { a.href = next.href; a.title = next.name; });
+
+    // Klaviatuur: ← / → (kui lightbox pole avatud)
+    function lightboxOpen(){
+      const lb = document.getElementById('lb-overlay');
+      return !!(lb && lb.classList.contains('open'));
+    }
+    window.addEventListener('keydown', (e) => {
+      if (lightboxOpen()) return;
+      if (e.key === 'ArrowLeft') location.href = aPrev.href;
+      if (e.key === 'ArrowRight') location.href = aNext.href;
+    });
+
+    // Swipe (mobiil): horisontaalne libistus vahetab tootjat, kui lightbox pole avatud
+    let sx = null, sy = null;
+    window.addEventListener('touchstart', (e) => { const t = e.changedTouches[0]; sx = t.clientX; sy = t.clientY; }, {passive:true});
+    window.addEventListener('touchend', (e) => {
+      if (lightboxOpen() || sx === null) return;
+      const t = e.changedTouches[0]; const dx = t.clientX - sx; const dy = t.clientY - sy;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+        location.href = dx > 0 ? aPrev.href : aNext.href;
+      }
+      sx = sy = null;
+    }, {passive:true});
+  }).catch(() => {
+    prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
+  });
+})();
+</script>
+
+<script>
+// 1) Lisa nupud kõigile kaartidele, millel on data-info
+document.querySelectorAll('.card[data-info]').forEach(card=>{
+  const url = card.dataset.info;
+  if(!url) return;
+  const a = document.createElement('a');
+  a.className = 'info-btn';
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = 'Lisainfo';
+  card.appendChild(a);
+});
+
+// 2) Kindlusta, et "Lisainfo" klikk ei ava lightboxi
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('a.info-btn');
+  if (btn) {
+    // ära lase kaardil/listeneritel (nt lightbox) edasi reageerida
+    e.stopPropagation();
+  }
+}, true); // capture-faasis, et peatada enne teisi kuulajaid
+</script>
+
+
+<script>
+(function(){
+  const isHoverFine = matchMedia("(hover:hover) and (pointer:fine)").matches;
+
+  let pop = document.getElementById('info-popover');
+  if(!pop){
+    pop = document.createElement('div');
+    pop.id = 'info-popover';
+    pop.innerHTML = `
+      <button class="x" aria-label="Sulge">✕</button>
+      <div class="t"></div>
+      <div class="body"></div>
+      <div class="more" style="margin-top:6px;"><a target="_blank" rel="noopener">Loe veel →</a></div>
+    `;
+    document.body.appendChild(pop);
+  }
+  const titleEl = pop.querySelector('.t');
+  const bodyEl  = pop.querySelector('.body');
+  const moreA   = pop.querySelector('.more a');
+  const closeBtn= pop.querySelector('.x');
+
+  let hideTimer = null;
+  let currentBtn = null;
+
+  function fillFromCard(card){
+    const t = (card.querySelector('.title')?.textContent || 'Info').trim();
+    const custom = (card.querySelector('.info-text')?.innerHTML || '').trim();
+    const url = card.dataset.info || '#';
+    titleEl.textContent = t;
+    bodyEl.innerHTML = custom;
+    moreA.href = url;
+  }
+
+  function placeByButton(btn){
+    const r = btn.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const margin = 8;
+    pop.style.visibility = 'hidden';
+    pop.classList.add('show');
+    pop.classList.remove('arrow-top','arrow-bottom');
+    const pr = pop.getBoundingClientRect();
+    let top  = r.bottom + margin;
+    let left = r.left;
+    if (left + pr.width > vw - margin) left = Math.max(margin, vw - margin - pr.width);
+    if (top + pr.height > vh - margin){
+      top = r.top - margin - pr.height;
+      pop.classList.add('arrow-bottom');
+    } else {
+      pop.classList.add('arrow-top');
+    }
+    if (left < margin) left = margin;
+    if (top  < margin) top  = margin;
+    pop.style.left = left + "px";
+    pop.style.top  = top  + "px";
+    pop.style.visibility = '';
+  }
+
+  function showFor(btn){
+    const card = btn.closest('.card');
+    if(!card) return;
+    currentBtn = btn;
+    fillFromCard(card);
+    placeByButton(btn);
+    pop.classList.add('show');
+  }
+  function hideSoon(delay=100){
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=>{ pop.classList.remove('show'); currentBtn=null; }, delay);
+  }
+  function cancelHide(){ clearTimeout(hideTimer); }
+
+  closeBtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    pop.classList.remove('show');
+    currentBtn = null;
+  });
+
+  document.querySelectorAll('.info-btn').forEach(btn=>{
+    const card = btn.closest('.card');
+    if(!card) return;
+    if(isHoverFine){
+      btn.addEventListener('mouseenter', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      pop.addEventListener('mouseenter', cancelHide);
+      pop.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      btn.addEventListener('focus', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('blur',  ()=>{ hideSoon(120); });
+      btn.addEventListener('click', e=>{ e.stopPropagation(); });
+    } else {
+      btn.addEventListener('click', e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(pop.classList.contains('show') && currentBtn === btn){
+          pop.classList.remove('show'); currentBtn=null;
+        } else {
+          showFor(btn);
+        }
+      });
+      pop.addEventListener('click', e=>e.stopPropagation());
+    }
+  });
+
+  ['scroll','resize'].forEach(ev=>{
+    window.addEventListener(ev, ()=>{
+      if(currentBtn && pop.classList.contains('show')){
+        placeByButton(currentBtn);
+      }
+    }, {passive:true});
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(pop.classList.contains('show')){
+      if(!pop.contains(e.target) && !e.target.closest('.info-btn')){
+        pop.classList.remove('show'); currentBtn=null;
+      }
+    }
+  });
+})();
+</script>
+
+<script>
+(() => {
+  // Ära tee midagi, kui failis juba brändi-nooled olemas
+  // (see kontroll on tegelikult Pythonis, aga lisame siia ka turvaks)
+  if (document.querySelector('.brand-nav-arrow')) return;
+
+  if (location.protocol === 'file:') {
+    // fetch ei tööta korralikult file:// pealt
+    return;
+  }
+
+  // Loo stiil
+  const style = document.createElement('style');
+  style.textContent = `
+    .brand-nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 44px;
+      color: #fff;
+      padding: 8px 14px;
+      cursor: pointer;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.30);
+      border: 1px solid rgba(255,255,255,0.35);
+      user-select: none;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s;
+      z-index: 9000;
+    }
+    .brand-nav-arrow:hover {
+      background: rgba(255,255,255,0.20);
+    }
+    #brandPrev { left: 16px; }
+    #brandNext { right: 16px; }
+
+    @media (max-width: 700px){
+      .brand-nav-arrow {
+        display: none;
+      }
+      .brand-nav-mobile {
+        position: fixed;
+        left: 50%;
+        bottom: 16px;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        background: rgba(0,0,0,0.30);
+        border: 1px solid rgba(255,255,255,0.35);
+        padding: 8px 14px;
+        border-radius: 999px;
+        backdrop-filter: blur(4px);
+        z-index: 9000;
+      }
+      .brand-nav-mobile a {
+        color: #fff;
+        font-size: 26px;
+        text-decoration: none;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Loo nooled (desktop)
+  const prevBox = document.createElement('div');
+  const nextBox = document.createElement('div');
+  prevBox.className = 'brand-nav-arrow';
+  nextBox.className = 'brand-nav-arrow';
+  prevBox.id = 'brandPrev';
+  nextBox.id = 'brandNext';
+  prevBox.textContent = '‹';
+  nextBox.textContent = '›';
+  document.body.appendChild(prevBox);
+  document.body.appendChild(nextBox);
+
+  // Leia praeguse tootja slug kausta nimest
+  const currentPath = location.pathname.replace(/\/index\.html$/, '');
+  const currentSlug = currentPath.split('/').filter(Boolean).pop();
+
+  // Kasutame mudelid.html-i, sest seal on .brand-card järjekord
+  const base = new URL('../mudelid.html', location.href);
+
+  fetch(base.href, { cache: 'no-store' })
+    .then(r => r.text())
+    .then(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const rows = [...doc.querySelectorAll('.brand-card[href]')];
+
+      const list = rows.map(row => {
+        const href = row.getAttribute('href');
+        const url  = new URL(href, base);
+        const slug = url.pathname
+          .replace(/\/index\.html$/, '')
+          .split('/')
+          .filter(Boolean)
+          .pop();
+        return { href: url.pathname, slug };
+      }).filter(x => !!x.slug);
+
+      if (!list.length) return;
+
+      let i = list.findIndex(x => x.slug === currentSlug);
+      if (i === -1) return;
+
+      const prev = list[(i - 1 + list.length) % list.length];
+      const next = list[(i + 1) % list.length];
+
+      // Desktop nooled
+      prevBox.addEventListener('click', () => { location.href = prev.href; });
+      nextBox.addEventListener('click', () => { location.href = next.href; });
+
+      // Klaviatuur (← / →)
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') location.href = prev.href;
+        if (e.key === 'ArrowRight') location.href = next.href;
+      });
+
+      // Mobiiliriba
+      const bar = document.createElement('div');
+      bar.className = 'brand-nav-mobile';
+      bar.innerHTML = `
+        <a href="${prev.href}" aria-label="Eelmine tootja">‹</a>
+        <a href="${next.href}" aria-label="Järgmine tootja">›</a>
+      `;
+      document.body.appendChild(bar);
+    })
+    .catch(() => {
+      // vaikne error – kui mudelid.html ei lae, siis lihtsalt pole nooli
+    });
+})();
+</script>
+
+
+
+
+<!-- === FIX: remove bottom brand arrows (js) === -->
+<script>
+(() => {
+  // Kui mingi skript lisas alumise riba/nupud, eemalda need
+  document.querySelectorAll('.brand-bar, .brand-nav-mobile').forEach(el => el.remove());
+})();
+</script>
+<!-- === /FIX: remove bottom brand arrows (js) === -->
+
+
+
+
+<!-- === JOEL BRAND PILL v3 START === -->
+<script>
+/* === JOEL: mobile brand pill with names (v3) === */
+(function(){
+  // ära dubleeri
+  const existing = document.querySelector('.joel-brand-pill');
+  if (existing) return;
+  if (location.protocol === 'file:') return;
+
+  // Korista vanad alumised ribad/elemendid kui kuskil jäänud
+  document.querySelectorAll('.joel-brand-bar, .brand-bar, .brand-nav-mobile').forEach(el => el.remove());
+
+  // Loo pill
+  const pill = document.createElement('nav');
+  pill.className = 'joel-brand-pill';
+  pill.innerHTML = `
+    <a class="left" href="#" aria-label="Eelmine tootja">
+      <span class="arr">‹</span><span class="name">...</span>
+    </a>
+    <span class="sep" aria-hidden="true"></span>
+    <a class="right" href="#" aria-label="Järgmine tootja">
+      <span class="name">...</span><span class="arr">›</span>
+    </a>
+  `;
+  document.body.appendChild(pill);
+
+  // Leia praegune slug (kausta nimi)
+  const herePath = location.pathname.replace(/\/index\.html$/,'/').replace(/\/+$|^$/,'/');
+  const slug = herePath.split('/').filter(Boolean).pop();
+
+  fetch('../mudelid.html', { cache:'no-store' })
+    .then(r => r.ok ? r.text() : Promise.reject())
+    .then(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const cards = [...doc.querySelectorAll('.brand-card[href]')];
+
+      // järjestus = mudelid.html, võtame ka nime
+      const list = cards.map(c => {
+        const href = (c.getAttribute('href') || '').trim();
+        const name = (c.querySelector('.brand-name')?.textContent || '').trim();
+        const s = href.replace(/\/index\.html$/,'').split('/').filter(Boolean).pop();
+        return { href, slug: s, name: name || s };
+      }).filter(x => x.slug);
+
+      const i = list.findIndex(x => x.slug === slug);
+      if (i < 0 || list.length < 2) { pill.remove(); return; }
+
+      const prev = list[(i - 1 + list.length) % list.length];
+      const next = list[(i + 1) % list.length];
+
+      const prevA = pill.querySelector('.left');
+      const nextA = pill.querySelector('.right');
+
+      prevA.href = '../' + prev.href.replace(/^\.\//,'');
+      nextA.href = '../' + next.href.replace(/^\.\//,'');
+
+      prevA.querySelector('.name').textContent = (prev.name || '').toUpperCase();
+      nextA.querySelector('.name').textContent = (next.name || '').toUpperCase();
+
+      // Kui lightbox lahti, peida pill
+      function lbOpen(){
+        const lb = document.getElementById('lb-overlay');
+        return lb && lb.classList.contains('open');
+      }
+      const lb = document.getElementById('lb-overlay');
+      if (lb){
+        const obs = new MutationObserver(() => {
+          pill.style.display = lbOpen() ? 'none' : '';
+        });
+        obs.observe(lb, { attributes:true, attributeFilter:['class'] });
+      }
+    })
+    .catch(() => {
+      pill.remove();
+    });
+})();
+</script>
+<!-- === JOEL BRAND PILL v3 END === -->
+
+</body>
+</html>

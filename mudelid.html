@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KÕIK MUDELID</title>
+  <style>
+@font-face {
+  font-family: 'BebasKai';
+  src: url('fonts/bebaskai.woff2') format('woff2'),
+       url('fonts/bebaskai.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+    :root{
+      --bg:#FFFFFF; --panel:#FFFFFF; --text:#000000; --muted:#000000; --border:#000000; --link:#000000;
+      --maxw:500px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body {
+  margin:0;
+  background: url("img/taust3.jpg?v=2") no-repeat center center fixed;
+  background-size: cover;
+  color: var(--text);
+  font-family: 'BebasKai', sans-serif;
+  font-size: 30px;
+}
+/* link (kest) – fikseeritud positsioon ja mõõdud */
+.logo{
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: 100px;
+  height: 100px;
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: #fff;
+  z-index: 1000;        /* jääb kaartidest ettepoole */
+  text-decoration: none;
+}
+
+/* pilt sees – täidab kesta ilusti */
+.logo img{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;    /* mitte object-fill */
+  border-radius: 7px;
+}
+
+
+    header{max-width:var(--maxw); margin:60px auto 10px; padding:0 16px}
+    h1{margin:0 0 6px; font-size:50px; }
+    p.lead{margin:0; color:var(--muted)}
+    main{max-width:var(--maxw); margin:18px auto 60px; padding:0 16px}
+    .list{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
+
+
+    .hint{color:#000000; font-size:20px}
+
+footer{
+  max-width: 1200px;      /* enne: var(--maxw) */
+  margin: 0 auto 40px;
+  padding: 0 16px;
+  color: var(--muted);
+  font-size: 22px;
+  text-align: center;
+}
+
+@media (max-width:600px){
+  .logo{
+    width: 40px;
+    height: 40px;
+    margin: 8px 0 0 8px;
+  }
+  /* pildi reegleid muutma ei pea */
+  header{ margin-top:12px; } /* enam pole suurt ülemist vahet vaja */
+}
+
+/* grid */
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  max-width: 1200px;
+  /* rohkem ruumi all servas, et tähestik ja logod ei jookseks vastu ääre */
+  margin: 18px auto 100px;
+  padding: 0 16px;
+}
+
+.brand-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 25px;
+  padding: 24px 16px;
+  text-decoration: none;
+  color: var(--link);
+  transition: transform 0.2s, background 0.2s;
+  text-align: center;
+}
+
+.brand-card:hover {
+  background: #FFFFFF;
+  transform: translateY(-3px);
+}
+
+.brand-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 12px;
+  background: #FFFFFF;
+  border-radius: 8px;
+}
+
+.brand-name {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.hint {
+  font-size: 16px;
+  color: #000000;
+}
+
+/* --- TOP edetabel paremas servas --- */
+#top-models-sidebar{
+  display:none; /* mudelid.html lehel ei kasuta */
+}
+
+@media (max-width: 1200px){
+  #top-models-sidebar{ display:none; }
+}
+
+/* --- kaheveeruline paigutus --- */
+.layout{ display:none; } /* mudelid.html lehel ei kasuta */
+
+/* --- TOP tootjate külgriba --- */
+.sidebar{ display:none; } /* mudelid.html lehel ei kasuta */
+
+/* Mobiil/kitsem vaade: külgriba alla, täislaius, ei kata midagi */
+@media (max-width: 1100px){
+  .layout{ display:none; }
+  .sidebar{ display:none; }
+}
+
+/* 📱 Kompaktne mobiilivaade */
+@media (max-width: 600px){
+  /* rohkem kaarte ühele reale */
+  .brand-grid{
+    gap: 8px;
+    /* väiksemad kaardid + rohkem veerge (tavaliselt 3; suurematel telefonidel 4) */
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    padding: 0 8px;         /* kitsamad servad */
+  }
+
+  /* kaart ise väiksem */
+  .brand-card{
+    padding: 10px 8px;
+    border-radius: 12px;
+  }
+
+  /* logo, nimi ja vihje väiksemaks = madalam kaart */
+  .brand-logo{
+    width: 56px; height: 56px;
+    margin-bottom: 6px;
+  }
+  .brand-name{
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  .hint{
+    font-size: 12px;
+    opacity: .7;
+  }
+
+  /* päis kompaktsemaks, et kaarte rohkem ekraanile mahuks */
+  header{ margin: 10px auto 6px; }
+  h1{ font-size: 28px; margin-bottom: 2px; }
+  .lead{ font-size: 14px; }
+}
+
+/* Väga väike ekraan (nt 360px lai) – veel pisem logo/tekst */
+@media (max-width: 380px){
+  .brand-logo{ width: 48px; height: 48px; }
+  .brand-name{ font-size: 13px; }
+}
+
+.search{
+  max-width: var(--maxw);
+  margin: 10px auto 0;
+  padding: 0 16px;
+}
+.search input{
+  width: 90%;
+  font: 16px/1.3 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+
+/* Hiljuti lisatud blokk ja selle kaardid pole mudelid.html lehel kasutusel */
+.recent-wrap{ display:none; }
+.recent-grid{ display:none; }
+.recent-card{ display:none; }
+
+a.back {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 24px;
+  color: var(--link);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+a.back:hover {
+  background: #FFFFFF;
+}
+
+@media (max-width: 600px) {
+  header {
+    margin-top: 80px !important;
+  }
+}
+
+/* Kaheveeruline paigutus: vasakul tähed, paremal grid */
+.brands-layout{
+  max-width: 1200px;
+  margin: 18px auto 80px;   /* 80px annab all rohkem õhku */
+  padding: 0 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* vasak tähestiku riba */
+.alpha-nav{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 16px;
+  position: sticky;
+  top: 80px;            /* jääb kerimisel mõnusalt paika */
+}
+
+/* üks täht */
+.alpha-btn{
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.9);
+  color: #000;
+  cursor: pointer;
+  font-family: 'BebasKai', sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  text-align: center;
+  min-width: 36px;
+  transition: background .15s, transform .15s;
+}
+.alpha-btn:hover{
+  background:#f2f2f2;
+  transform: translateY(-1px);
+}
+
+/* aktiivne täht (viimane, mida klikkisid) */
+.alpha-btn.active{
+  background:#000;
+  color:#fff;
+}
+
+/* parempoolne grid täidab ülejäänud ruumi */
+.brand-grid{
+  flex: 1;
+  margin: 0;                 /* enne oli margin:18px auto 60px; */
+  padding: 0;
+}
+
+/* Mobiilis: peida tähestiku riba, jäta ainult grid */
+@media (max-width: 700px){
+  .brands-layout{
+    display:block;
+    max-width: 1200px;
+    margin: 18px auto 60px;
+    padding: 0 16px;
+  }
+  .alpha-nav{
+    display:none;
+  }
+  .brand-grid{
+    margin-top: 10px;
+  }
+}
+
+  </style>
+
+</head>
+<body>
+
+<a href="index.html" class="logo" aria-label="Avaleht">
+  <img src="img/logo2.png" alt="Logo" onerror="this.parentElement.remove()">
+</a>
+
+<header>
+  <a class="back" href="index.html">← AVALEHT</a>
+  <h1>KÕIK MUDELID</h1>
+  <p class="lead">KOKKU ERINEVAID: <span id="count">0</span></p>
+   <div class="search">
+    <input id="brandSearch" type="search" placeholder="OTSI NIME" autocomplete="off">
+     </div>
+</header>
+
+<!-- NB! Siin EI ole "Hiljuti lisatud" ega TOP-külgriba -->
+
+<div class="brands-layout">
+  <nav class="alpha-nav" aria-label="Tootja algustäht">
+    <button type="button" class="alpha-btn active" data-letter="">KÕIK</button>
+    <button type="button" class="alpha-btn" data-letter="A">A</button>
+    <button type="button" class="alpha-btn" data-letter="B">B</button>
+    <button type="button" class="alpha-btn" data-letter="C">C</button>
+    <button type="button" class="alpha-btn" data-letter="D">D</button>
+    <button type="button" class="alpha-btn" data-letter="E">E</button>
+    <button type="button" class="alpha-btn" data-letter="F">F</button>
+    <button type="button" class="alpha-btn" data-letter="G">G</button>
+    <button type="button" class="alpha-btn" data-letter="H">H</button>
+    <button type="button" class="alpha-btn" data-letter="I">I</button>
+    <button type="button" class="alpha-btn" data-letter="J">J</button>
+    <button type="button" class="alpha-btn" data-letter="K">K</button>
+    <button type="button" class="alpha-btn" data-letter="L">L</button>
+    <button type="button" class="alpha-btn" data-letter="M">M</button>
+    <button type="button" class="alpha-btn" data-letter="N">N</button>
+    <button type="button" class="alpha-btn" data-letter="O">O</button>
+    <button type="button" class="alpha-btn" data-letter="P">P</button>
+    <button type="button" class="alpha-btn" data-letter="Q">Q</button>
+    <button type="button" class="alpha-btn" data-letter="R">R</button>
+    <button type="button" class="alpha-btn" data-letter="S">S</button>
+    <button type="button" class="alpha-btn" data-letter="T">T</button>
+    <button type="button" class="alpha-btn" data-letter="U">U</button>
+    <button type="button" class="alpha-btn" data-letter="V">V</button>
+    <button type="button" class="alpha-btn" data-letter="W">W</button>
+    <button type="button" class="alpha-btn" data-letter="X">X</button>
+    <button type="button" class="alpha-btn" data-letter="Y">Y</button>
+    <button type="button" class="alpha-btn" data-letter="Z">Z</button>
+  </nav>
+
+  <main class="brand-grid">
+
+  <a class="brand-card" href="acura/index.html">
+    <img src="img/logod/acura.png" alt="Acura logo" class="brand-logo">
+    <span class="brand-name">ACURA</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="alfaromeo/index.html">
+    <img src="img/logod/alfaromeo.png" alt="Alfa Romeo logo" class="brand-logo">
+    <span class="brand-name">Alfa Romeo</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="astonmartin/index.html">
+    <img src="img/logod/astonmartin.jpg" alt="Aston Martin logo" class="brand-logo">
+    <span class="brand-name">Aston Martin</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="audi/index.html">
+    <img src="img/logod/audi.png" alt="Audi logo" class="brand-logo">
+    <span class="brand-name">Audi</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="bentley/index.html">
+    <img src="img/logod/bentley.png" alt="Bentley logo" class="brand-logo">
+    <span class="brand-name">BENTLEY</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="bmw/index.html">
+    <img src="img/logod/bmw.png" alt="BMW logo" class="brand-logo">
+    <span class="brand-name">BMW</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="bugatti/index.html">
+    <img src="img/logod/bugatti.jpg" alt="Bugatti logo" class="brand-logo">
+    <span class="brand-name">BUGATTI</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="buick/index.html">
+    <img src="img/logod/buick.png" alt="Buick logo" class="brand-logo">
+    <span class="brand-name">Buick</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="cadillac/index.html">
+    <img src="img/logod/cadillac.png" alt="Cadillac logo" class="brand-logo">
+    <span class="brand-name">Cadillac</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="chevrolet/index.html">
+    <img src="img/logod/chevrolet.jpg" alt="Chevrolet logo" class="brand-logo">
+    <span class="brand-name">Chevrolet</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="corvette/index.html">
+    <img src="img/logod/corvette.png" alt="Corvette logo" class="brand-logo">
+    <span class="brand-name">Corvette</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="cupra/index.html">
+    <img src="img/logod/cupra.png" alt="Cupra logo" class="brand-logo">
+    <span class="brand-name">Cupra</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="datsun/index.html">
+    <img src="img/logod/datsun.png" alt="Datsun logo" class="brand-logo">
+    <span class="brand-name">Datsun</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="delorean/index.html">
+    <img src="img/logod/dmc.png" alt="DMC logo" class="brand-logo">
+    <span class="brand-name">DELOREAN MOTOR COMPANY</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="dodge/index.html">
+    <img src="img/logod/dodge.png" alt="Dodge logo" class="brand-logo">
+    <span class="brand-name">Dodge</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="ferrari/index.html">
+    <img src="img/logod/ferrari.png" alt="Ferrari logo" class="brand-logo">
+    <span class="brand-name">Ferrari</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="fiat/index.html">
+    <img src="img/logod/fiat.png" alt="Fiat logo" class="brand-logo">
+    <span class="brand-name">Fiat</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="ford/index.html">
+    <img src="img/logod/ford.png" alt="Ford logo" class="brand-logo">
+    <span class="brand-name">Ford</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="honda/index.html">
+    <img src="img/logod/honda.png" alt="Honda logo" class="brand-logo">
+    <span class="brand-name">Honda</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="jaguar/index.html">
+    <img src="img/logod/jaguar.png" alt="Jaguar logo" class="brand-logo">
+    <span class="brand-name">Jaguar</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="jeep/index.html">
+    <img src="img/logod/jeep.png" alt="Jeep logo" class="brand-logo">
+    <span class="brand-name">Jeep</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="kia/index.html">
+    <img src="img/logod/kia.png" alt="Kia logo" class="brand-logo">
+    <span class="brand-name">KIA</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="koenigsegg/index.html">
+    <img src="img/logod/koenigsegg.png" alt="Koenigsegg logo" class="brand-logo">
+    <span class="brand-name">Koenigsegg</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="lamborghini/index.html">
+    <img src="img/logod/lambo.png" alt="Lamborghini logo" class="brand-logo">
+    <span class="brand-name">Lamborghini</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="landrover/index.html">
+    <img src="img/logod/landrover.png" alt="Land Rover logo" class="brand-logo">
+    <span class="brand-name">Land Rover</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="lexus/index.html">
+    <img src="img/logod/lexus.png" alt="Lexus logo" class="brand-logo">
+    <span class="brand-name">Lexus</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="lotus/index.html">
+    <img src="img/logod/lotus.png" alt="Lotus logo" class="brand-logo">
+    <span class="brand-name">Lotus</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="maserati/index.html">
+    <img src="img/logod/maserati.png" alt="Maserati logo" class="brand-logo">
+    <span class="brand-name">Maserati</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="mazda/index.html">
+    <img src="img/logod/mazda.png" alt="Mazda logo" class="brand-logo">
+    <span class="brand-name">Mazda</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="mclaren/index.html">
+    <img src="img/logod/mclaren.png" alt="McLaren logo" class="brand-logo">
+    <span class="brand-name">McLaren</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="mcmurtry/index.html">
+    <img src="img/logod/mcmurtry.png" alt="McMurtry logo" class="brand-logo">
+    <span class="brand-name">McMurtry</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="mercedes-benz/index.html">
+    <img src="img/logod/mercedes.png" alt="Mercedes-Benz logo" class="brand-logo">
+    <span class="brand-name">Mercedes-Benz</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="mercury/index.html">
+    <img src="img/logod/mercury.png" alt="Mercury logo" class="brand-logo">
+    <span class="brand-name">Mercury</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="mitsubishi/index.html">
+    <img src="img/logod/mitsu.png" alt="Mitsubishi logo" class="brand-logo">
+    <span class="brand-name">Mitsubishi</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="nissan/index.html">
+    <img src="img/logod/nissan.png" alt="Nissan logo" class="brand-logo">
+    <span class="brand-name">Nissan</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="pagani/index.html">
+    <img src="img/logod/pagani.png" alt="Pagani logo" class="brand-logo">
+    <span class="brand-name">Pagani</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="peugeot/index.html">
+    <img src="img/logod/peugeot.png" alt="Peugeot logo" class="brand-logo">
+    <span class="brand-name">Peugeot</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="plymouth/index.html">
+    <img src="img/logod/plymouth.png" alt="Plymouth logo" class="brand-logo">
+    <span class="brand-name">Plymouth</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="pontiac/index.html">
+    <img src="img/logod/pontiac.png" alt="Pontiac logo" class="brand-logo">
+    <span class="brand-name">Pontiac</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="porsche/index.html">
+    <img src="img/logod/porsche.png" alt="Porsche logo" class="brand-logo">
+    <span class="brand-name">Porsche</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="proton/index.html">
+    <img src="img/logod/proton.png" alt="Proton logo" class="brand-logo">
+    <span class="brand-name">Proton</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="renault/index.html">
+    <img src="img/logod/renault.png" alt="Renault logo" class="brand-logo">
+    <span class="brand-name">Renault</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="shelby/index.html">
+    <img src="img/logod/shelby.png" alt="Shelby logo" class="brand-logo">
+    <span class="brand-name">Shelby American</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="subaru/index.html">
+    <img src="img/logod/subaru.png" alt="Subaru logo" class="brand-logo">
+    <span class="brand-name">Subaru</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="tesla/index.html">
+    <img src="img/logod/tesla.png" alt="Tesla logo" class="brand-logo">
+    <span class="brand-name">Tesla</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="toyota/index.html">
+    <img src="img/logod/toyota.png" alt="Toyota logo" class="brand-logo">
+    <span class="brand-name">Toyota</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="volkswagen/index.html">
+    <img src="img/logod/volks.png" alt="Volkswagen logo" class="brand-logo">
+    <span class="brand-name">Volkswagen</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="volvo/index.html">
+    <img src="img/logod/volvo.png" alt="Volvo logo" class="brand-logo">
+    <span class="brand-name">Volvo</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="wmotors/index.html">
+    <img src="img/logod/wmotors.png" alt="W Motors logo" class="brand-logo">
+    <span class="brand-name">W Motors</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="f1/index.html">
+    <img src="img/logod/f1.png" alt="F1 logo" class="brand-logo">
+    <span class="brand-name">F1</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="joelwheels/index.html">
+    <img src="img/logod/joelwheels.png" alt="JoelWheels logo" class="brand-logo">
+    <span class="brand-name">JoelWheels</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="sth/index.html">
+    <img src="img/logod/sth.png" alt="STH logo" class="brand-logo">
+    <span class="brand-name">STH</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="th/index.html">
+    <img src="img/logod/th.png" alt="TH logo" class="brand-logo">
+    <span class="brand-name">TH</span>
+    <span class="hint"></span>
+  </a>
+
+  <a class="brand-card" href="hwfantasy/index.html">
+    <img src="img/logod/hwfantasy.png" alt="HW Fantasy logo" class="brand-logo">
+    <span class="brand-name">HW FANTASY</span>
+    <span class="hint"></span>
+  </a>
+
+ </main>
+
+</div>
+
+  <footer>© JOEL-MARK STOMMA <span id="year"></span></footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+<!-- Loenda mudelid ja pane (n) vihjed kaardile -->
+<script>
+(async () => {
+  const brandCards = [...document.querySelectorAll('.brand-card')];
+  let total = 0;
+
+  if (location.protocol === 'file:') {
+    console.warn('Ava leht läbi http://localhost:8000 või GitHub Pages.');
+    const totalEl = document.getElementById('count');
+    if (totalEl) totalEl.textContent = '—';
+    return;
+  }
+
+  await Promise.all(brandCards.map(async card => {
+    const href = card.getAttribute('href');
+    const hint = card.querySelector('.hint');
+    if (!href) return;
+
+    try {
+      const res = await fetch(href, { cache: 'no-store' });
+      if (!res.ok) return;
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+
+      let n = doc.querySelectorAll('.card').length;
+      if (!n) {
+        const meta = doc.querySelector('meta[name="models-count"]');
+        if (meta) n = parseInt(meta.content) || 0;
+      }
+      total += n;
+      if (hint) hint.textContent = n ? `(${n})` : '';
+    } catch (_) { /* ignore */ }
+  }));
+
+  const totalEl = document.getElementById('count');
+  if (totalEl) totalEl.textContent = total;
+})();
+</script>
+
+<!-- Otsing (algustähte, nagu avalehel varem) + ?q= tugi -->
+<script>
+(() => {
+  const input = document.getElementById('brandSearch');
+  if (!input) return;
+
+  const norm = s => (s||'').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+
+  const cards = Array.from(document.querySelectorAll('.brand-card'));
+  const getName = el => (el.querySelector('.brand-name')?.textContent || '');
+
+  function applyFilter(){
+    const term = norm(input.value.trim());
+    cards.forEach(card => {
+      const name = norm(getName(card));
+      const ok = term === '' || name.startsWith(term);
+      card.style.display = ok ? '' : 'none';
+    });
+  }
+  input.addEventListener('input', applyFilter);
+  input.addEventListener('keydown', e => { if (e.key === 'Escape'){ input.value=''; applyFilter(); input.blur(); }});
+
+  // ?q=Joel -> eeltäida ja filtreeri
+  const params = new URLSearchParams(location.search);
+  const q = params.get('q');
+  if (q){ input.value = q; applyFilter(); }
+
+  // 🔤 Tähestiku nupud vasakul
+  const alphaNav = document.querySelector('.alpha-nav');
+  if (alphaNav){
+    const buttons = alphaNav.querySelectorAll('.alpha-btn');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // märgi aktiivne
+        buttons.forEach(b => b.classList.toggle('active', b === btn));
+
+        const letter = (btn.dataset.letter || '').trim();
+
+        // tühjenda või pane otsingusse see täht
+        input.value = letter;
+        applyFilter();
+      });
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1209 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HW FANTASY</title>
+  <style>
+@font-face {
+  font-family: 'BebasKai';
+  src: url('../fonts/bebaskai.woff2') format('woff2'),
+       url('../fonts/bebaskai.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+    :root{
+      --bg:#FFFFFF; --panel:#FFFFFF; --text:#000000; --muted:#000000; --border:#000000; --link:#000000;
+      --maxw:900px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: var(--bg) url("../img/taust3.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text);
+      font-family: 'BebasKai', sans-serif;
+      font-size: 30px;
+    }
+    .logo{position:fixed; top:12px; left:12px; width:60px; height:60px; border-radius:7px; object-fit:cover; border:1px solid var(--border); background:#FFFFFF}
+    header{max-width:var(--maxw); margin:60px auto 10px; padding:0 16px}
+    a.back{color:var(--link); text-decoration:none}
+    h1{margin:6px 0 0; font-size:70px;}
+    p.lead{margin:0; color:var(--muted)}
+    main{
+      max-width:var(--maxw); margin:18px auto 60px; padding:0 16px;
+      display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(220px,1fr))
+    }
+    .card{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
+    .thumb{aspect-ratio:4/3; width:100%; object-fit:cover; display:block; background:#222}
+    .content{padding:10px 12px}
+    .title{margin:0 0 6px; font-size:20px}
+    .desc{margin:0; color:var(--muted); font-size:10px}
+    footer{max-width:var(--maxw); margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:18px}
+
+/* Lightbox (täisekraanil pildi vaatamine) */
+#lb-overlay{
+  position: fixed; inset: 0; z-index: 9999;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.85);
+}
+#lb-overlay.open{ display: flex; }
+
+#lb-img{
+  max-width: 90vw; max-height: 85vh;
+  box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  border-radius: 12px;
+}
+
+/* Ülanurga sulgemisnupp */
+#lb-close{
+  position: fixed; top: 16px; right: 16px; z-index: 10000;
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.5);
+  color: #fff; font-size: 20px; border-radius: 10px; padding: 8px 12px; cursor: pointer;
+}
+
+/* Vasak/parem nooled */
+.lb-arrow{
+  position: fixed; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.5);
+  color: #fff; font-size: 28px; border-radius: 12px; padding: 10px 14px; cursor: pointer;
+  user-select: none;
+}
+#lb-prev{ left: 16px; }
+#lb-next{ right: 16px; }
+
+/* All pealkiri (mudeli nimi) */
+#lb-cap{
+  position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+  color: #fff; font-size: 16px; text-align: center; opacity: .9;
+  max-width: 90vw;
+}
+
+/* Taustakerimise keelamine kui lightbox on avatud */
+body.lb-open{ overflow: hidden; }
+
+/* Väiksel ekraanil veidi väiksemad nupud */
+@media (max-width: 600px){
+  .lb-arrow{ font-size: 24px; padding: 8px 12px; }
+  #lb-close{ font-size: 18px; padding: 6px 10px; }
+}
+
+/* Küljenooled (desktop) */
+.brand-nav{
+  position: fixed; top: 50%; transform: translateY(-50%);
+  z-index: 9000;
+}
+#brand-prev{ left: 12px; }
+#brand-next{ right: 12px; }
+.brand-nav a{
+  display:flex; align-items:center; justify-content:center;
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(0,0,0,.35); color: #fff;
+  border: 1px solid rgba(255,255,255,.4);
+  text-decoration: none; font-size: 28px; user-select: none;
+  backdrop-filter: blur(4px);
+}
+.brand-nav a:hover{ background: rgba(0,0,0,.5); }
+.brand-nav a:focus{ outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Mobiili alumine nav-pill */
+.brand-bar{
+  position: fixed;
+  left: 50%;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 9000;
+  display: none; /* näitame vaid mobiilis */
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.4);
+  backdrop-filter: blur(6px);
+}
+.brand-bar a{
+  display:inline-flex; align-items:center; justify-content:center;
+  width: 38px; height: 38px; font-size: 22px; color:#fff; text-decoration:none;
+}
+.brand-bar a:focus{ outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Kui lightbox on avatud, peida brändi-nav */
+body.lb-open .brand-nav,
+body.lb-open .brand-bar{ display: none !important; }
+
+/* Mobiilis: peida küljenooled, näita alumist riba */
+@media (max-width: 700px){
+  .brand-nav{ display: none; }
+  .brand-bar{ display: flex; }
+}
+
+/* Nupu paigutus ja stiil */
+.card{ position: relative; }
+.card .content{ padding-right: 94px; }  /* ruum nupule paremal */
+
+.info-btn{
+  position: absolute; right: 12px; bottom: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px;
+  border: 2px solid #000000;   /* must rõngas */
+  border-radius: 999px;
+  background: #fff;
+  color: #000000;
+  text-decoration: none;
+  font-size: 14px; line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.info-btn:hover{ background:#D3D3D3; }
+.info-btn:focus{ outline: 2px solid #000; outline-offset: 2px; }
+
+@media (max-width:600px){
+  .info-btn{ padding: 5px 10px; font-size: 13px; right: 10px; bottom: 10px; }
+  .card .content{ padding-right: 86px; }
+}
+
+  /* ← TAGASI nupu stiil (täpsem selektor, et ületada olemasolevad lühemad reeglid) */
+header a.back {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 24px;
+  color: var(--link);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+header a.back:hover {
+  background: #f0f0f0;
+}
+
+/* Extra top space so fixed logo doesn't overlap */
+@media (max-width: 1000px){
+  header{ margin-top: 110px !important; }
+}
+
+/* PATCH: info-btn top-left + centered content */
+.card { position: relative; } /* kindlalt ankur nuppu jaoks */
+
+.card .content {
+  padding: 10px 12px;           /* eemaldame vana padding-right hack'i */
+  text-align: center;           /* pealkiri ja alamrida keskele */
+}
+
+.card .title {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.card .desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+/* LISAINFO – ujuv pildi ülemises vasakus nurgas */
+.card .info-btn {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  left: 8px;
+  right: auto;                  /* tühistame varasema "parem alumine" */
+  bottom: auto;
+
+  /* nupp väiksem, aga sama 14px tekst */
+  padding: 5px 10px;
+  border: 1px solid #000;       /* õhem raam */
+  border-radius: 999px;
+  background: rgba(255,255,255,.95);
+  color: #000;
+  text-decoration: none;
+
+  font-size: 14px;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+@media (hover:hover){
+  .card .info-btn:hover { background: #D3D3D3; }
+}
+.card .info-btn:focus { outline: 2px solid #000; outline-offset: 2px; }
+
+/* mobiilis veidi kompaktsem */
+@media (max-width:600px){
+  .card .info-btn{ top:6px; left:6px; padding:4px 8px; }
+  .card .content{ padding:8px 10px; }
+}
+
+/* PATCH: info-btn transparent default + white on hover */
+/* Vaikimisi läbipaistev taust, must tekst; hoveril valge taust */
+.card .info-btn {
+  background: transparent !important;
+  color: #000 !important;
+  border-color: #000 !important;   /* ei muuda paksust, ainult värvi */
+  transition: background .25s ease, color .25s ease;
+}
+@media (hover:hover) {
+  .card .info-btn:hover {
+    background: #fff !important;
+  }
+}
+
+/* PATCH: larger #lb-cap font-size */
+/* Suurem lightboxi pealdis */
+#lb-cap {
+  font-size: 30px !important;
+}
+@media (max-width:600px) {
+  #lb-cap {
+    font-size: 20px !important;
+  }
+}
+
+
+/* ——— ÜLE KAARDI ÄÄRE UJUVA INFO-AKNA STIIL ——— */
+#info-popover{
+  position: fixed;           /* ei lõigata kaardi poolt */
+  inset: auto auto auto auto;
+  z-index: 10000;            /* kõige pealmine */
+  display: none;
+  max-width: min(420px, 90vw);
+  background: rgba(255,255,255,.98);
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.24);
+  line-height: 1.25;
+  font-size: 14px;
+}
+#info-popover.show{ display:block; }
+
+#info-popover .x{
+  position:absolute; top:6px; right:8px;
+  background:transparent; border:0; cursor:pointer;
+  font:inherit; line-height:1;
+}
+#info-popover .t{ font-weight:600; margin:0 0 6px; }
+#info-popover .more a{ color:#000; text-decoration: underline; }
+
+/* soovi korral väike “nooleke” nupu poole */
+#info-popover::after{
+  content:"";
+  position: absolute;
+  width: 10px; height: 10px;
+  background: #fff;
+  border-left:1px solid #000;
+  border-top:1px solid #000;
+  transform: rotate(45deg);
+}
+#info-popover.arrow-top::after{
+  top:-6px; left:16px;
+}
+#info-popover.arrow-bottom::after{
+  bottom:-6px; left:16px; transform: rotate(225deg);
+}
+
+
+/* --- FIX: disable mobile purple swipe arrows --- */
+html, body { overflow-x: hidden; }
+body { overscroll-behavior-x: none; touch-action: pan-y; }
+
+
+/* === FIX: brand arrows link colors (no purple visited) === */
+.brand-nav a,
+.brand-nav a:visited,
+.brand-nav a:hover,
+.brand-nav a:active,
+.brand-nav a:focus,
+.brand-bar a,
+.brand-bar a:visited,
+.brand-bar a:hover,
+.brand-bar a:active,
+.brand-bar a:focus,
+.brand-nav-mobile a,
+.brand-nav-mobile a:visited,
+.brand-nav-mobile a:hover,
+.brand-nav-mobile a:active,
+.brand-nav-mobile a:focus {
+  color: #fff !important;
+  text-decoration: none !important;
+}
+/* === /FIX: brand arrows link colors === */
+
+
+/* === FIX: remove bottom brand arrows === */
+/* Peida alumised brändi-nooled/riba (mobiil) */
+.brand-bar,
+.brand-nav-mobile {
+  display: none !important;
+}
+/* === /FIX: remove bottom brand arrows === */
+
+
+/* JOEL: swipe-fix (desktop no browser arrows, mobile ok) */
+/* --- DESKTOP: keela browser swipe / (lillad nooled) --- */
+@media (hover:hover) and (pointer:fine) {
+  html, body {
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
+  }
+}
+
+/* --- MOBIIL: luba swipe --- */
+@media (hover:none) and (pointer:coarse) {
+  html, body {
+    overscroll-behavior-x: auto;
+    touch-action: pan-x pan-y;
+  }
+}
+
+
+/* === AUTO: Lightbox back-to-recent button === */
+#lb-back-recent{
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 10001;
+
+  background: rgba(255,255,255,.95);
+  border: 2px solid #fff;
+  color: #fff;
+
+  /* sama “stiil” nagu su lightboxi nupud, aga tekstiga */
+  border-radius: 12px;
+  padding: 8px 12px;
+
+  font-family: 'BebasKai', sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.5);
+  backdrop-filter: blur(4px);
+}
+#lb-back-recent:hover{
+  background: rgba(255,255,255,.25);
+}
+@media (max-width: 600px){
+  #lb-back-recent{ font-size: 16px; padding: 6px 10px; }
+}
+
+/* === JOEL BRAND PILL v3 START === */
+/* Mobiili pill: eelmine + järgmine tootja nimega + keskel eraldusjoon */
+.joel-brand-pill {
+  position: fixed;
+  left: 50%;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 9999;
+
+  display: none;
+  width: min(92vw, 560px);
+  padding: 8px 10px;         /* madalam */
+  border-radius: 999px;
+
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.40);
+  backdrop-filter: blur(6px);
+
+  align-items: stretch;
+  gap: 8px;
+}
+
+.joel-brand-pill a {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  text-decoration: none !important;
+  color: #fff !important;
+  min-width: 0;
+}
+
+.joel-brand-pill .left { justify-content: flex-start; }
+.joel-brand-pill .right{ justify-content: flex-end; }
+
+.joel-brand-pill .arr {
+  font-size: 26px;
+  line-height: 1;
+  opacity: .95;
+  user-select: none;
+}
+
+.joel-brand-pill .name {
+  font-size: 16px;
+  line-height: 1.05;
+  text-transform: uppercase;
+  max-width: 100%;
+  min-width: 0;
+
+  /* lubab 2 rida */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.joel-brand-pill .right .name{ text-align: right; }
+.joel-brand-pill .left  .name{ text-align: left; }
+
+/* Keskmine eraldusjoon */
+.joel-brand-pill .sep {
+  width: 1px;
+  align-self: stretch;
+  margin: 2px 2px;
+  background: rgba(255,255,255,.45);
+  border-radius: 999px;
+  flex: 0 0 1px;
+}
+
+/* Näita ainult mobiilis */
+@media (max-width: 800px){
+  .joel-brand-pill{ display: flex; }
+}
+/* === JOEL BRAND PILL v3 END === */
+
+</style>
+
+<style>
+/* JOEL: mobile-brand-arrows v1 */
+/* Brauseri back/forward swipe-indikaatorite vältimine desktopis */
+@media (hover:hover) and (pointer:fine) {
+  html, body {
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
+    overflow-x: hidden;
+  }
+}
+
+/* Mobiilis lubame swipe'i (kui sinu lehel on muu swipe) */
+@media (hover:none) and (pointer:coarse) {
+  html, body {
+    overscroll-behavior-x: auto;
+    touch-action: pan-x pan-y;
+  }
+}
+
+/* Mobiili alumine nav-pill */
+.joel-brand-bar {
+  position: fixed;
+  left: 50%;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: none;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+}
+
+.joel-brand-bar a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-size: 44px;          /* umbes 2x lightbox nooltest */
+  line-height: 1;
+  color: #fff;
+  text-decoration: none;
+  user-select: none;
+}
+
+@media (max-width: 800px) {
+  .joel-brand-bar { display: flex; }
+}
+</style>
+
+</head>
+<body>
+  <a href="../index.html"><img class="logo" src="../img/logo2.png" alt="Logo" onerror="this.remove()"/></a>
+
+  <header>
+    <a class="back" href="../mudelid.html">← KÕIK MUDELID</a>
+    <h1>HW FANTASY</h1>
+    <p class="lead">VAJUTA PILDILE, ET NÄHA SUURELT</p>
+  </header>
+
+  <main>
+
+    <article class="card" data-added="2025-12-16" data-info="https://hotwheels.fandom.com/wiki/Batmobile_(2021)">
+      <img class="thumb" src="img/batmobile.jpg" alt="BATMOBILE">
+      <div class="content">
+        <h3 class="title">BATMOBILE</h3>
+        <p class="desc">2026 - BATMAN - 4/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+This version of the Batmobile depicts the vehicle as seen in the 2022 film The Batman. It features a muscle car-like design.
+
+An enhanced version of this casting was introduced in 2022 for the Premium line; it is notably significantly wider than the mainline.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-12-05" data-info="https://hotwheels.fandom.com/wiki/1966_Bat_Boat">
+      <img class="thumb" src="img/batboat.jpg" alt="1966 BAT BOAT">
+      <div class="content">
+        <h3 class="title">1966 BAT BOAT</h3>
+        <p class="desc">2025 - BATMAN - 232/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+The Batboat is Batman's personalized watercraft. It features a number of weapons and is used in situations when Batman needs to traverse over water.
+
+The vehicle as shown in the 1966 movie was designed by Mel Whitley and Robert Hammond from a Glastron V-174. Modifications include a red beacon, flashing lights, bazooka hatches and numerous other modifications such as a water squirter and jet nozzle to make it appear like it was nuclear-powered; the prop took 31 days to build. The Batboat was later moved to the Hollywood Star Cars Museum in Gatlinburg, Tennessee.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-24" data-info="https://hotwheels.fandom.com/wiki/Pass_'n_Go">
+      <img class="thumb" src="img/passngo.jpg" alt="PASS 'N GO">
+      <div class="content">
+        <h3 class="title">PASS 'N GO</h3>
+        <p class="desc">2026 - DROP TOPS - 5/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+Pass 'n Go is a depiction of the Race Car piece from Monopoly, in celebration of the game's 90th anniversary.
+
+Mr. Monopoly's top hat can be found on the seat.
+
+</div>
+    </article>
+
+    <article class="card" data-added="2025-11-02" data-info="https://hotwheels.fandom.com/wiki/Kei_Swap">
+      <img class="thumb" src="img/keiswap.jpg" alt="KEI SWAP">
+      <div class="content">
+        <h3 class="title">KEI SWAP</h3>
+        <p class="desc">2025 - HW ART CARS - 11/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+Kei Swap is a kei van heavily modified for drifting. It features some design elements from the Mighty K. A boom box, a full set of four MicroFC3 wheels and a mountain bike can be seen in the cargo hold while the front passenger seat has a spilled cup of coffee. The engine mold is reused from Four-1.
+
+In addition to designing this casting, designer Matt Gabe also did the casting's graphics, card artwork and marketing blurb on the rear of the card.
+
+</div>
+    </article>
+
+    <article class="card" data-info="https://hotwheels.fandom.com/wiki/Feline_Lucky">
+      <img class="thumb" src="img/felinelucky.jpg" alt="FELINE LUCKY">
+      <div class="content">
+        <h3 class="title">FELINE LUCKY</h3>
+        <p class="desc">2025 - HW CELEBRATION RACERS - 234/250</p>
+      </div>
+    <div class="info-text" hidden>
+
+Feline Lucky is a depiction of a maneki-neko on wheels. Its left paw raises and lowers as the vehicle rolls like the traditional figurine.
+
+It features a V8 engine with gold coin decorations. A large turbocharger is held up by the maneki-neko figure, mirroring the classic pose where it holds a koban coin. A plate bearing the characters "招き猫" (maneki-neko) is featured on the rear of the engine.
+
+</div>
+    </article>
+
+  </main>
+
+  <footer>© JOEL-MARK STOMMA <span id="year"></span></footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+
+<script>
+(() => {
+  // --- KOKKUPANEK: loome lightboxi elemendid ---
+  const overlay = document.createElement('div'); overlay.id = 'lb-overlay';
+  overlay.innerHTML = `
+    <button id="lb-close" aria-label="Sulge">✕</button>
+    <button id="lb-back-recent" aria-label="Tagasi hiljuti lisatud juurde">← Tagasi</button>
+    <button class="lb-arrow" id="lb-prev" aria-label="Eelmine">‹</button>
+    <img id="lb-img" alt="">
+    <button class="lb-arrow" id="lb-next" aria-label="Järgmine">›</button>
+    <div id="lb-cap" aria-live="polite"></div>
+  `;
+  document.body.appendChild(overlay);
+
+  const imgEl = overlay.querySelector('#lb-img');
+  const capEl = overlay.querySelector('#lb-cap');
+  const btnPrev = overlay.querySelector('#lb-prev');
+  const btnNext = overlay.querySelector('#lb-next');
+  const btnClose = overlay.querySelector('#lb-close');
+  const btnBackRecent = overlay.querySelector('#lb-back-recent');
+  if (btnBackRecent) {
+    btnBackRecent.addEventListener('click', () => {
+      // mine avalehele ja ava “Hiljuti lisatud”
+      location.href = '../index.html#recent';
+    });
+  }
+
+
+  // --- KOGU SAMA LEHE (sama tootja) mudelipildid ---
+  // Muuda SELECTOR vajadusel, kui sinu .card struktuur erineb
+  const cards = [...document.querySelectorAll('.card')];
+
+  function getModelLabel(card){
+    return (
+      card.getAttribute('data-model') ||
+      card.dataset?.model ||
+      card.querySelector?.('.model-name, .title, h3, h2')?.textContent ||
+      card.querySelector?.('img')?.alt ||
+      ''
+    )?.toString().trim();
+  }
+
+  function getFullSrc(card){
+    const a = card.querySelector('a[href]');
+    const img = card.querySelector('img');
+    // Eelistame <a href> originaali, muidu img.src
+    return a?.getAttribute('href') || img?.getAttribute('data-full') || img?.src || '';
+  }
+
+  const gallery = cards
+    .map(card => {
+      const src = getFullSrc(card);
+      if (!src) return null;
+      let label = getModelLabel(card);
+      if (!label) {
+        // Fallback: võta failinimi
+        try { label = src.split('/').pop().split('?')[0]; } catch(e) {}
+      }
+      return { card, src, label };
+    })
+    .filter(Boolean);
+
+  if (!gallery.length) return; // pole midagi avada
+
+  let i = 0; // aktiivse pildi index
+
+  function openAt(idx){
+    i = (idx + gallery.length) % gallery.length;
+    const { src, label } = gallery[i];
+    imgEl.src = src;
+    imgEl.alt = label || '';
+    capEl.textContent = label || '';
+    overlay.classList.add('open');
+    document.body.classList.add('lb-open');
+    // eellae naabrid
+    const prev = new Image(); prev.src = gallery[(i-1+gallery.length)%gallery.length].src;
+    const next = new Image(); next.src = gallery[(i+1)%gallery.length].src;
+    // peida nooled kui ainult 1 pilt
+    const single = gallery.length < 2;
+    btnPrev.style.display = single ? 'none' : '';
+    btnNext.style.display = single ? 'none' : '';
+  }
+
+  function closeLB(){
+    overlay.classList.remove('open');
+    document.body.classList.remove('lb-open');
+    imgEl.src = '';
+  }
+
+  function next(){ openAt(i+1); }
+  function prev(){ openAt(i-1); }
+
+  // --- KLIKID PEALE: igale kaardi pildile ---
+  cards.forEach((card, idx) => {
+    const clickable = card.querySelector('a, img');
+    if (!clickable) return;
+    clickable.addEventListener('click', (e) => {
+      // Kui see on link suure pildini, ära lase brauseril eraldi lehte avada
+      if (clickable.tagName === 'A') e.preventDefault();
+      // Leia galerii indeks sama kaardi järgi (mitte lihtsalt idx – filtrid võisid ära jätta)
+      const found = gallery.findIndex(g => g.card === card);
+      openAt(found >= 0 ? found : idx);
+    });
+  });
+
+  // --- Nupud ja klaviatuur ---
+  btnClose.addEventListener('click', closeLB);
+  btnNext.addEventListener('click', next);
+  btnPrev.addEventListener('click', prev);
+
+  // Klaviatuur: Esc sulgeb; ←/→ liiklus
+  window.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') return closeLB();
+    if (e.key === 'ArrowRight') return next();
+    if (e.key === 'ArrowLeft') return prev();
+  });
+
+  // Klõps tumedal taustal sulgeb
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeLB();
+  });
+
+  // --- Valikuline: kui tullakse lehele ?m=Model päringuga, ava esimene vastav ---
+  const qp = new URLSearchParams(location.search);
+  const m = qp.get('m');
+  if (m) {
+    const mLower = m.toLowerCase();
+    const firstMatch = gallery.findIndex(g =>
+      (g.label || '').toLowerCase().includes(mLower) ||
+      g.card.getAttribute('data-model')?.toLowerCase() === mLower
+    );
+    if (firstMatch >= 0) openAt(firstMatch);
+  }
+})();
+</script>
+
+<script>
+(() => {
+  // Loo elemendid: kaks küljenoolt + mobiili alumine ribanupp
+  const prevBox = document.createElement('div'); prevBox.id = 'brand-prev'; prevBox.className = 'brand-nav';
+  const nextBox = document.createElement('div'); nextBox.id = 'brand-next'; nextBox.className = 'brand-nav';
+  const aPrev = document.createElement('a'); aPrev.href = '#'; aPrev.textContent = '‹'; aPrev.setAttribute('aria-label','Eelmine tootja');
+  const aNext = document.createElement('a'); aNext.href = '#'; aNext.textContent = '›'; aNext.setAttribute('aria-label','Järgmine tootja');
+  prevBox.appendChild(aPrev); nextBox.appendChild(aNext);
+
+  const bar = document.createElement('nav'); bar.className = 'brand-bar';
+  const barPrev = document.createElement('a'); barPrev.href = '#'; barPrev.textContent = '‹'; barPrev.setAttribute('aria-label','Eelmine tootja');
+  const barNext = document.createElement('a'); barNext.href = '#'; barNext.textContent = '›'; barNext.setAttribute('aria-label','Järgmine tootja');
+  bar.append(barPrev, barNext);
+
+  document.body.append(prevBox, nextBox, bar);
+
+  // Failiprotokolliga ei saa avalehte lugeda
+  if (location.protocol === 'file:') {
+    prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
+    return;
+  }
+
+  const here = location.pathname.replace(/index\.html$/, '');
+  const brandSlug = here.split('/').filter(Boolean).pop();
+
+  fetch('../index.html', { cache:'no-store' }).then(r => r.text()).then(html => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const indexURL = new URL('../index.html', location.href);
+    const rows = [...doc.querySelectorAll('.brand-card[href]')];
+
+    // Järjestus = avalehe järjestus
+    const list = rows.map(row => {
+      const href = row.getAttribute('href');
+      const url = new URL(href, indexURL);
+      const path = url.pathname.replace(/index\.html$/, '');
+      const name = (row.querySelector('.brand-name')?.textContent || '').trim() || path.split('/').filter(Boolean).pop();
+      return { path, name, href: url.pathname + url.search + url.hash };
+    });
+
+    // Leia praegune index
+    let i = list.findIndex(x => x.path === here);
+    if (i === -1) i = list.findIndex(x => x.path.split('/').filter(Boolean).pop() === brandSlug);
+    if (i === -1 || list.length < 2) {
+      prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
+      return;
+    }
+
+    const prev = list[(i - 1 + list.length) % list.length];
+    const next = list[(i + 1) % list.length];
+
+    // Sea lingid/tiitrid kõigile kolmele UI-le
+    [aPrev, barPrev].forEach(a => { a.href = prev.href; a.title = prev.name; });
+    [aNext, barNext].forEach(a => { a.href = next.href; a.title = next.name; });
+
+    // Klaviatuur: ← / → (kui lightbox pole avatud)
+    function lightboxOpen(){
+      const lb = document.getElementById('lb-overlay');
+      return !!(lb && lb.classList.contains('open'));
+    }
+    window.addEventListener('keydown', (e) => {
+      if (lightboxOpen()) return;
+      if (e.key === 'ArrowLeft') location.href = aPrev.href;
+      if (e.key === 'ArrowRight') location.href = aNext.href;
+    });
+
+    // Swipe (mobiil): horisontaalne libistus vahetab tootjat, kui lightbox pole avatud
+    let sx = null, sy = null;
+    window.addEventListener('touchstart', (e) => { const t = e.changedTouches[0]; sx = t.clientX; sy = t.clientY; }, {passive:true});
+    window.addEventListener('touchend', (e) => {
+      if (lightboxOpen() || sx === null) return;
+      const t = e.changedTouches[0]; const dx = t.clientX - sx; const dy = t.clientY - sy;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+        location.href = dx > 0 ? aPrev.href : aNext.href;
+      }
+      sx = sy = null;
+    }, {passive:true});
+  }).catch(() => {
+    prevBox.style.display = nextBox.style.display = bar.style.display = 'none';
+  });
+})();
+</script>
+
+<script>
+// 1) Lisa nupud kõigile kaartidele, millel on data-info
+document.querySelectorAll('.card[data-info]').forEach(card=>{
+  const url = card.dataset.info;
+  if(!url) return;
+  const a = document.createElement('a');
+  a.className = 'info-btn';
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = 'Lisainfo';
+  card.appendChild(a);
+});
+
+// 2) Kindlusta, et "Lisainfo" klikk ei ava lightboxi
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('a.info-btn');
+  if (btn) {
+    // ära lase kaardil/listeneritel (nt lightbox) edasi reageerida
+    e.stopPropagation();
+  }
+}, true); // capture-faasis, et peatada enne teisi kuulajaid
+</script>
+
+
+<script>
+(function(){
+  const isHoverFine = matchMedia("(hover:hover) and (pointer:fine)").matches;
+
+  let pop = document.getElementById('info-popover');
+  if(!pop){
+    pop = document.createElement('div');
+    pop.id = 'info-popover';
+    pop.innerHTML = `
+      <button class="x" aria-label="Sulge">✕</button>
+      <div class="t"></div>
+      <div class="body"></div>
+      <div class="more" style="margin-top:6px;"><a target="_blank" rel="noopener">Loe veel →</a></div>
+    `;
+    document.body.appendChild(pop);
+  }
+  const titleEl = pop.querySelector('.t');
+  const bodyEl  = pop.querySelector('.body');
+  const moreA   = pop.querySelector('.more a');
+  const closeBtn= pop.querySelector('.x');
+
+  let hideTimer = null;
+  let currentBtn = null;
+
+  function fillFromCard(card){
+    const t = (card.querySelector('.title')?.textContent || 'Info').trim();
+    const custom = (card.querySelector('.info-text')?.innerHTML || '').trim();
+    const url = card.dataset.info || '#';
+    titleEl.textContent = t;
+    bodyEl.innerHTML = custom;
+    moreA.href = url;
+  }
+
+  function placeByButton(btn){
+    const r = btn.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const margin = 8;
+    pop.style.visibility = 'hidden';
+    pop.classList.add('show');
+    pop.classList.remove('arrow-top','arrow-bottom');
+    const pr = pop.getBoundingClientRect();
+    let top  = r.bottom + margin;
+    let left = r.left;
+    if (left + pr.width > vw - margin) left = Math.max(margin, vw - margin - pr.width);
+    if (top + pr.height > vh - margin){
+      top = r.top - margin - pr.height;
+      pop.classList.add('arrow-bottom');
+    } else {
+      pop.classList.add('arrow-top');
+    }
+    if (left < margin) left = margin;
+    if (top  < margin) top  = margin;
+    pop.style.left = left + "px";
+    pop.style.top  = top  + "px";
+    pop.style.visibility = '';
+  }
+
+  function showFor(btn){
+    const card = btn.closest('.card');
+    if(!card) return;
+    currentBtn = btn;
+    fillFromCard(card);
+    placeByButton(btn);
+    pop.classList.add('show');
+  }
+  function hideSoon(delay=100){
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=>{ pop.classList.remove('show'); currentBtn=null; }, delay);
+  }
+  function cancelHide(){ clearTimeout(hideTimer); }
+
+  closeBtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    pop.classList.remove('show');
+    currentBtn = null;
+  });
+
+  document.querySelectorAll('.info-btn').forEach(btn=>{
+    const card = btn.closest('.card');
+    if(!card) return;
+    if(isHoverFine){
+      btn.addEventListener('mouseenter', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      pop.addEventListener('mouseenter', cancelHide);
+      pop.addEventListener('mouseleave', ()=>{ hideSoon(120); });
+      btn.addEventListener('focus', ()=>{ cancelHide(); showFor(btn); });
+      btn.addEventListener('blur',  ()=>{ hideSoon(120); });
+      btn.addEventListener('click', e=>{ e.stopPropagation(); });
+    } else {
+      btn.addEventListener('click', e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(pop.classList.contains('show') && currentBtn === btn){
+          pop.classList.remove('show'); currentBtn=null;
+        } else {
+          showFor(btn);
+        }
+      });
+      pop.addEventListener('click', e=>e.stopPropagation());
+    }
+  });
+
+  ['scroll','resize'].forEach(ev=>{
+    window.addEventListener(ev, ()=>{
+      if(currentBtn && pop.classList.contains('show')){
+        placeByButton(currentBtn);
+      }
+    }, {passive:true});
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(pop.classList.contains('show')){
+      if(!pop.contains(e.target) && !e.target.closest('.info-btn')){
+        pop.classList.remove('show'); currentBtn=null;
+      }
+    }
+  });
+})();
+</script>
+
+<script>
+(() => {
+  // Ära tee midagi, kui failis juba brändi-nooled olemas
+  // (see kontroll on tegelikult Pythonis, aga lisame siia ka turvaks)
+  if (document.querySelector('.brand-nav-arrow')) return;
+
+  if (location.protocol === 'file:') {
+    // fetch ei tööta korralikult file:// pealt
+    return;
+  }
+
+  // Loo stiil
+  const style = document.createElement('style');
+  style.textContent = `
+    .brand-nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 44px;
+      color: #fff;
+      padding: 8px 14px;
+      cursor: pointer;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.30);
+      border: 1px solid rgba(255,255,255,0.35);
+      user-select: none;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s;
+      z-index: 9000;
+    }
+    .brand-nav-arrow:hover {
+      background: rgba(255,255,255,0.20);
+    }
+    #brandPrev { left: 16px; }
+    #brandNext { right: 16px; }
+
+    @media (max-width: 700px){
+      .brand-nav-arrow {
+        display: none;
+      }
+      .brand-nav-mobile {
+        position: fixed;
+        left: 50%;
+        bottom: 16px;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        background: rgba(0,0,0,0.30);
+        border: 1px solid rgba(255,255,255,0.35);
+        padding: 8px 14px;
+        border-radius: 999px;
+        backdrop-filter: blur(4px);
+        z-index: 9000;
+      }
+      .brand-nav-mobile a {
+        color: #fff;
+        font-size: 26px;
+        text-decoration: none;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Loo nooled (desktop)
+  const prevBox = document.createElement('div');
+  const nextBox = document.createElement('div');
+  prevBox.className = 'brand-nav-arrow';
+  nextBox.className = 'brand-nav-arrow';
+  prevBox.id = 'brandPrev';
+  nextBox.id = 'brandNext';
+  prevBox.textContent = '‹';
+  nextBox.textContent = '›';
+  document.body.appendChild(prevBox);
+  document.body.appendChild(nextBox);
+
+  // Leia praeguse tootja slug kausta nimest
+  const currentPath = location.pathname.replace(/\/index\.html$/, '');
+  const currentSlug = currentPath.split('/').filter(Boolean).pop();
+
+  // Kasutame mudelid.html-i, sest seal on .brand-card järjekord
+  const base = new URL('../mudelid.html', location.href);
+
+  fetch(base.href, { cache: 'no-store' })
+    .then(r => r.text())
+    .then(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const rows = [...doc.querySelectorAll('.brand-card[href]')];
+
+      const list = rows.map(row => {
+        const href = row.getAttribute('href');
+        const url  = new URL(href, base);
+        const slug = url.pathname
+          .replace(/\/index\.html$/, '')
+          .split('/')
+          .filter(Boolean)
+          .pop();
+        return { href: url.pathname, slug };
+      }).filter(x => !!x.slug);
+
+      if (!list.length) return;
+
+      let i = list.findIndex(x => x.slug === currentSlug);
+      if (i === -1) return;
+
+      const prev = list[(i - 1 + list.length) % list.length];
+      const next = list[(i + 1) % list.length];
+
+      // Desktop nooled
+      prevBox.addEventListener('click', () => { location.href = prev.href; });
+      nextBox.addEventListener('click', () => { location.href = next.href; });
+
+      // Klaviatuur (← / →)
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') location.href = prev.href;
+        if (e.key === 'ArrowRight') location.href = next.href;
+      });
+
+      // Mobiiliriba
+      const bar = document.createElement('div');
+      bar.className = 'brand-nav-mobile';
+      bar.innerHTML = `
+        <a href="${prev.href}" aria-label="Eelmine tootja">‹</a>
+        <a href="${next.href}" aria-label="Järgmine tootja">›</a>
+      `;
+      document.body.appendChild(bar);
+    })
+    .catch(() => {
+      // vaikne error – kui mudelid.html ei lae, siis lihtsalt pole nooli
+    });
+})();
+</script>
+
+
+
+
+<!-- === FIX: remove bottom brand arrows (js) === -->
+<script>
+(() => {
+  // Kui mingi skript lisas alumise riba/nupud, eemalda need
+  document.querySelectorAll('.brand-bar, .brand-nav-mobile').forEach(el => el.remove());
+})();
+</script>
+<!-- === /FIX: remove bottom brand arrows (js) === -->
+
+
+
+
+<!-- === JOEL BRAND PILL v3 START === -->
+<script>
+/* === JOEL: mobile brand pill with names (v3) === */
+(function(){
+  // ära dubleeri
+  const existing = document.querySelector('.joel-brand-pill');
+  if (existing) return;
+  if (location.protocol === 'file:') return;
+
+  // Korista vanad alumised ribad/elemendid kui kuskil jäänud
+  document.querySelectorAll('.joel-brand-bar, .brand-bar, .brand-nav-mobile').forEach(el => el.remove());
+
+  // Loo pill
+  const pill = document.createElement('nav');
+  pill.className = 'joel-brand-pill';
+  pill.innerHTML = `
+    <a class="left" href="#" aria-label="Eelmine tootja">
+      <span class="arr">‹</span><span class="name">...</span>
+    </a>
+    <span class="sep" aria-hidden="true"></span>
+    <a class="right" href="#" aria-label="Järgmine tootja">
+      <span class="name">...</span><span class="arr">›</span>
+    </a>
+  `;
+  document.body.appendChild(pill);
+
+  // Leia praegune slug (kausta nimi)
+  const herePath = location.pathname.replace(/\/index\.html$/,'/').replace(/\/+$|^$/,'/');
+  const slug = herePath.split('/').filter(Boolean).pop();
+
+  fetch('../mudelid.html', { cache:'no-store' })
+    .then(r => r.ok ? r.text() : Promise.reject())
+    .then(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const cards = [...doc.querySelectorAll('.brand-card[href]')];
+
+      // järjestus = mudelid.html, võtame ka nime
+      const list = cards.map(c => {
+        const href = (c.getAttribute('href') || '').trim();
+        const name = (c.querySelector('.brand-name')?.textContent || '').trim();
+        const s = href.replace(/\/index\.html$/,'').split('/').filter(Boolean).pop();
+        return { href, slug: s, name: name || s };
+      }).filter(x => x.slug);
+
+      const i = list.findIndex(x => x.slug === slug);
+      if (i < 0 || list.length < 2) { pill.remove(); return; }
+
+      const prev = list[(i - 1 + list.length) % list.length];
+      const next = list[(i + 1) % list.length];
+
+      const prevA = pill.querySelector('.left');
+      const nextA = pill.querySelector('.right');
+
+      prevA.href = '../' + prev.href.replace(/^\.\//,'');
+      nextA.href = '../' + next.href.replace(/^\.\//,'');
+
+      prevA.querySelector('.name').textContent = (prev.name || '').toUpperCase();
+      nextA.querySelector('.name').textContent = (next.name || '').toUpperCase();
+
+      // Kui lightbox lahti, peida pill
+      function lbOpen(){
+        const lb = document.getElementById('lb-overlay');
+        return lb && lb.classList.contains('open');
+      }
+      const lb = document.getElementById('lb-overlay');
+      if (lb){
+        const obs = new MutationObserver(() => {
+          pill.style.display = lbOpen() ? 'none' : '';
+        });
+        obs.observe(lb, { attributes:true, attributeFilter:['class'] });
+      }
+    })
+    .catch(() => {
+      pill.remove();
+    });
+})();
+</script>
+<!-- === JOEL BRAND PILL v3 END === -->
+
+</body>
+</html>
