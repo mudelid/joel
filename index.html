@@ -345,14 +345,16 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
   margin: 0 auto 40px;
   padding: 0 16px;
   display: grid;
-  grid-template-columns: 1.1fr 1.3fr 1.1fr;
+  grid-template-columns: 380px 1fr 380px;
   gap: 24px;
   align-items: flex-start;
 }
 
 /* keskmine tulp – lapsed vahedega */
-.home-center > *{
-  margin-bottom: 24px;
+.home-center{
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 /* gridis olekult ära topi lisamargineid */
