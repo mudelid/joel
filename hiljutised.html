@@ -27,7 +27,7 @@
     font-size:30px;
   }
 
-  /* Logo link üleval vasakus nurgas */
+  /* Logo üleval vasakul */
   .logo{
     position: fixed;
     top: 12px;
@@ -89,120 +89,63 @@
     p.lead{font-size:14px;}
   }
 
-  /* HILJUTI LISATUD – kuupäevade list + päeva vaade */
+  /* ---- PÕHIKAST: nupp + valitud päeva kaardid ---- */
 
   .recent-wrap{
-    max-width: 900px;
+    max-width: 1200px;
     margin: 16px auto 24px;
-    padding: 0 16px 8px;
+    padding: 16px;
     background: rgba(255,255,255,0.92);
     border-radius:16px;
     border:1px solid var(--border);
     box-shadow:0 2px 10px rgba(0,0,0,.08);
   }
 
-  .recent-wrap h2{
-    margin: 10px 0 8px;
-    font-size:26px;
+  .recent-head{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 10px 16px;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
   }
 
-  .recent-wrap p.sub{
-    margin: 0 0 10px;
+  .recent-head .title{
+    font-size:22px;
+    margin:0;
+  }
+
+  .recent-head .current{
     font-size:16px;
-    color:var(--muted);
+    opacity:.9;
   }
 
-  /* Kuupäevade vertikaalne list */
-  .recent-date-list{
-    list-style: none;
-    margin: 0 0 10px;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  .date-open-btn{
+    display:inline-block;
+    padding:10px 18px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:#ffffff;
+    color:#000000;
+    font-family:'BebasKai',sans-serif;
+    font-size:18px;
+    letter-spacing:.5px;
+    cursor:pointer;
+    text-decoration:none;
   }
-
-  .recent-date-list li{
-    margin: 0;
-  }
-
-/* 2-veeruline layout: vasakul kuupäevad, paremal kaardid */
-.recent-layout{
-  display: grid;
-  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
-  gap: 16px;
-  align-items: flex-start;
-}
-
-/* Kuupäevade veerg: keritav, et kaardid jääksid nähtavale */
-.date-col{
-  max-height: 60vh;
-  overflow-y: auto;
-  padding-right: 4px; /* väike ruum scrollbari jaoks */
-}
-
-/* Päeva kaartide veerg */
-.day-col{
-  min-height: 220px;
-}
-
-/* Ära lisa #recentDay-le enam suurt margin-top’i */
-#recentDay{
-  margin-top: 0;
-  border-top: none;
-  padding-top: 0;
-}
-
-  /* Kuupäevanupud */
-  .recent-date-btn{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 6px 12px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-
-    background: #ffffff;
-    color: var(--text);
-
-    font-family: 'BebasKai', sans-serif;
-    font-size: 18px;
-    letter-spacing: .3px;
-
-    cursor: pointer;
-    text-align: left;
-  }
-
-  .recent-date-btn:hover{
-    background: #f2f2f2;
-  }
-
-  .recent-date-btn .d-label{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .recent-date-btn .d-count{
-    font-size: 14px;
-    opacity: .7;
-  }
-
-  /* Valitud päeva blokk */
-  #recentDay{
-    margin-top: 14px;
-    border-top:1px solid var(--border);
-    padding-top:10px;
-  }
+  .date-open-btn:hover{ background:#f2f2f2; }
 
   #recentDay h4{
-    margin: 0 0 8px;
-    font-size: 20px;
+    margin: 0 0 4px;
+    font-size: 24px;
   }
 
-  /* Kasutame sama kaardistiili, mis avalehel “recent-card” */
+  #recentDay .sub{
+    margin: 0 0 12px;
+    font-size: 16px;
+    opacity: .75;
+  }
+
   .recent-grid{
     display:grid;
     gap:8px;
@@ -233,105 +176,156 @@
     opacity:.7;
   }
 
-/* MOBILE NEW UX */
-@media (max-width: 800px){
-
-  /* layout: column */
-  .recent-layout{
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  @media (max-width:600px){
+    .recent-wrap{
+      margin-inline: 8px;
+      padding-inline: 12px;
+    }
+    .recent-grid{
+      grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+    }
   }
 
-  /* kuupäevad -> ribaks */
-  #dateList{
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    overflow-x: auto;
-    padding: 0 12px;
-    margin: 0;
-    list-style: none;
-    scrollbar-width: none;
+  /* ---- KUUPÄEVA MODAL-AKEN ---- */
+
+  #dateModal{
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;              /* .open klass teeb flexiks */
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.55);
+    padding: 16px;
+  }
+  #dateModal.open{
+    display:flex;
   }
 
-  #dateList::-webkit-scrollbar{
-    display: none;
+  .date-modal-card{
+    width: 100%;
+    max-width: 480px;
+    max-height: 80vh;
+    background:#fff;
+    border-radius:16px;
+    border:1px solid #000;
+    box-shadow:0 10px 40px rgba(0,0,0,.4);
+    padding:12px 14px 14px;
+    display:flex;
+    flex-direction:column;
   }
 
-  #dateList li{
-    flex: 0 0 auto;
+  .date-modal-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:6px;
+  }
+
+  .date-modal-head h3{
+    margin:0;
+    font-size:22px;
+  }
+
+  .date-modal-close{
+    border:1px solid #000;
+    border-radius:8px;
+    padding:4px 10px;
+    background:#fff;
+    font-size:16px;
+    cursor:pointer;
+  }
+  .date-modal-close:hover{ background:#f0f0f0; }
+
+  .date-modal-sub{
+    margin:0 0 8px;
+    font-size:14px;
+  }
+
+  .date-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    overflow-y:auto;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
   }
 
   .date-btn{
-    white-space: nowrap;
-    border-radius: 999px;
-    padding: 8px 14px;
-    font-size: 15px;
-  }
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 
-  .date-btn.active{
-    background: #000;
-    color: #fff;
-  }
+    padding:6px 12px;
+    border-radius:999px;
+    border:1px solid var(--border);
 
-  /* kaardid kohe kuupäevade all */
-  #cards{
-    padding: 0 12px 24px;
-  }
+    background:#ffffff;
+    color:var(--text);
 
-  /* ei näita kuupäevade pika listi “veeru” stiili */
-  .date-col{
-    max-height: none !important;
-    overflow: visible !important;
-  }
-}
+    font-family:'BebasKai',sans-serif;
+    font-size:18px;
+    letter-spacing:.3px;
 
-/* --- MOBILE: kuupäevad horisontaalse ribana --- */
-@media (max-width: 800px){
-
-  /* tee #dateList horisontaalseks keritavaks ribaks */
-  #dateList{
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    gap: 8px;
-    margin: 0;
-    padding: 8px 12px 4px;
-    list-style: none;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;              /* Firefox peidab riba */
+    cursor:pointer;
+    text-align:left;
   }
-  #dateList::-webkit-scrollbar{
-    display: none;                      /* Safari/Chrome peidab riba */
+  .date-btn:hover{
+    background:#f2f2f2;
   }
-
-  /* igast li-st saab "pill", mis riba sees libiseb */
-  #dateList li{
-    flex: 0 0 auto;
-  }
-
-  /* nupp veidi kompaktsem, mahub ribasse */
-  .date-btn{
-    white-space: nowrap;
-    min-width: 170px;
-    padding-inline: 14px;
-    font-size: 15px;
-  }
-
-  /* valitud kuupäev – tugevam kontrast (kui sul juba .active on) */
   .date-btn.active{
     background:#000;
     color:#fff;
   }
-
-  /* kaardid otse kuupäevade riba all */
-  #cards{
-    margin-top: 10px;
-    padding-inline: 12px;
+  .date-btn .d-label{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
   }
+  .date-btn .d-count{
+    font-size:14px;
+    opacity:.8;
+  }
+
+  @media (max-width:600px){
+    .date-modal-card{
+      max-width:none;
+      width:100%;
+      height:auto;
+      max-height:85vh;
+    }
+  }
+
+#currentInfo{
+  display:none;
+}
+
+/* Kõik lingid mustaks (sh mobiilis) */
+a, a:link, a:visited{
+  color:#000000;
+}
+
+/* Modal "Sulge" nupp ja kuupäeva avamise nupp musta tekstiga */
+.date-open-btn,
+.date-modal-close{
+  color:#000000;
+}
+
+/* Päevade select musta tekstiga */
+#recentRangeSelect{
+  color:#000000;
+  background:#ffffff;
+}
+
+/* Soovi korral ka globaalselt button/select neutraalseks (eemaldab iOS sinise välimuse) */
+button,
+select{
+  -webkit-appearance:none;
+  appearance:none;
 }
 
   </style>
@@ -346,197 +340,319 @@
   <header>
     <a class="back" href="index.html">← TAGASI</a>
     <h1>HILJUTI LISATUD</h1>
-    <p class="lead">Vaata mudeleid lisamiskuupäeva järgi.</p>
+    <div class="lead" id="recentRangeBox" style="font-size:20px;display:flex;align-items:center;gap:8px;">
+  Lisatud viimase
+  <select id="recentRangeSelect" style="font-family:'BebasKai';font-size:20px;border:1px solid #000;padding:2px 6px;border-radius:6px;">
+    <option value="7">7</option>
+    <option value="14" selected>14</option>
+    <option value="30">30</option>
+    <option value="60">60</option>
+    <option value="90">90</option>
+  </select>
+  päeva jooksul:
+  <span id="recentRangeCount">–</span>
+</div>
   </header>
 
-<section class="recent-wrap">
-  <h2>Kuupäevad</h2>
-  <p class="sub">Vali kuupäev, et näha sel päeval lisatud mudeleid.</p>
+  <section class="recent-wrap">
+    <div class="recent-head">
+      <button type="button" class="date-open-btn" id="openDateModal">VALI KUUPÄEV</button>
+    </div>
 
-  <div class="recent-layout">
-    <!-- Kuupäevade list (vasak veerg) -->
-    <div id="recentGrid" class="date-col"></div>
+    <div id="recentDay" class="day-col">
+      <h4 id="dayLabel"></h4>
+      <p id="dayCount" class="sub"></p>
+      <div class="recent-grid" id="dayGrid"></div>
+    </div>
 
-    <!-- Valitud päeva mudelid (parem veerg) -->
-    <div id="recentDay" class="day-col"></div>
+    <p class="current" id="currentInfo">Laen andmeid…</p>
+  </section>
+
+  <!-- KUUPÄEVA VALIKU MODAL -->
+  <div id="dateModal" aria-hidden="true">
+    <div class="date-modal-card">
+      <div class="date-modal-head">
+        <h3>Vali kuupäev</h3>
+        <button type="button" class="date-modal-close" id="closeDateModal">Sulge</button>
+      </div>
+      <p class="date-modal-sub">Vali päev, mille lisamisi soovid näha.</p>
+      <ul class="date-list" id="dateList"></ul>
+    </div>
   </div>
-</section>
 
   <footer>© JOEL-MARK STOMMA <span id="year"></span></footer>
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 
-<script>
-// HILJUTI LISATUD – kuupäevade kaupa eraldi lehel
-(function(){
-  const listHost  = document.getElementById('recentGrid'); // kuupäevad
-  const dayHost   = document.getElementById('recentDay');  // päeva kaardid
-  if (!listHost || !dayHost) return;
+  <script>
+  // HILJUTI LISATUD – kuupäevamodal + päeva kaardid
+  (function(){
+    const dayTitle    = document.getElementById('dayLabel');
+    const dayCount    = document.getElementById('dayCount');
+    const dayGrid     = document.getElementById('dayGrid');
+    const currentInfo = document.getElementById('currentInfo');
+    const modal       = document.getElementById('dateModal');
+    const dateListEl  = document.getElementById('dateList');
+    const openBtn     = document.getElementById('openDateModal');
+    const closeBtn    = document.getElementById('closeDateModal');
 
-  let byDate   = {};   // { 'YYYY-MM-DD': [ items... ] }
-  let dateKeys = [];
+    if (!dayTitle || !dayCount || !dayGrid || !currentInfo || !modal || !dateListEl) return;
 
-  function formatDateLabel(key){
-    if (/^\d{4}-\d{2}-\d{2}$/.test(key)){
-      const d = new Date(key + 'T00:00:00');
-      return d.toLocaleDateString('et-EE', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
+    let byDate    = {};   // { 'YYYY-MM-DD': [ items... ] }
+    let dateKeys  = [];   // sorteeritud kuupäevad (uuem -> vanem)
+    let currentKey = null;
+
+    function formatDateLabel(key){
+      if (/^\d{4}-\d{2}-\d{2}$/.test(key)){
+        const d = new Date(key + 'T00:00:00');
+        return d.toLocaleDateString('et-EE', {
+          day:'2-digit', month:'2-digit', year:'numeric'
+        });
+      }
+      return key;
+    }
+
+    function openModal(){
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+    }
+    function closeModal(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+    }
+
+    function setActiveDate(key){
+      dateListEl.querySelectorAll('.date-btn').forEach(btn=>{
+        btn.classList.toggle('active', btn.dataset.date === key);
       });
     }
-    return key;
-  }
 
-  // märgi aktiivne kuupäev (desktop + mobiili “pillid”)
-  function setActiveDate(key){
-    listHost.querySelectorAll('.date-btn').forEach(btn=>{
-      btn.classList.toggle('active', btn.dataset.date === key);
-    });
-  }
+    function renderDay(key){
+      const arr = byDate[key] || [];
+      const label = formatDateLabel(key);
 
-  function renderDay(key){
-    const arr = byDate[key] || [];
-    if (!arr.length){
-      dayHost.innerHTML = '';
-      return;
+      if (!arr.length){
+        dayTitle.textContent = label;
+        dayCount.textContent = 'Sel päeval mudeleid lisatud ei ole.';
+        dayGrid.innerHTML = '';
+        currentInfo.textContent = `Näitan kuupäeva: ${label} — 0 mudelit`;
+        setActiveDate(key);
+        return;
+      }
+
+      currentInfo.textContent = `Näitan kuupäeva: ${label} — ${arr.length} mudelit`;
+      dayTitle.textContent = label;
+      dayCount.textContent = `${arr.length} mudelit lisatud sel päeval.`;
+
+      const cardsHtml = arr.map(it => `
+        <a class="recent-card" href="${it.url}">
+          <img class="thumb" src="${it.img}" alt="${it.title}" loading="lazy" decoding="async">
+          <div class="meta">
+            <div class="title">${it.title}</div>
+            <div class="brand">${it.brand}</div>
+          </div>
+        </a>
+      `).join('');
+
+      dayGrid.innerHTML = cardsHtml;
+      setActiveDate(key);
     }
 
-    const label = formatDateLabel(key);
+    function renderDateModal(){
+      if (!dateKeys.length){
+        dateListEl.innerHTML = '<li style="opacity:.7;">Hiljuti lisatud mudeleid ei leitud.</li>';
+        currentInfo.textContent = 'Ei leitud hiljuti lisatud mudeleid.';
+        return;
+      }
 
-    const cardsHtml = arr.map(it => `
-      <a class="recent-card" href="${it.url}">
-        <img class="thumb" src="${it.img}" alt="${it.title}" loading="lazy" decoding="async">
-        <div class="meta">
-          <div class="title">${it.title}</div>
-          <div class="brand">${it.brand}</div>
-        </div>
-      </a>
-    `).join('');
-
-    dayHost.innerHTML = `
-      <h4>${label}</h4>
-      <div class="recent-grid">
-        ${cardsHtml}
-      </div>
-    `;
-
-    setActiveDate(key);
-  }
-
-  function renderDateList(){
-    if (!dateKeys.length){
-      listHost.innerHTML = '<div style="opacity:.7">Hiljuti lisatud mudeleid ei leitud.</div>';
-      dayHost.innerHTML = '';
-      return;
+      dateListEl.innerHTML = dateKeys.map(key => {
+        const arr = byDate[key] || [];
+        return `
+          <li>
+            <button type="button"
+                    class="date-btn${key===currentKey?' active':''}"
+                    data-date="${key}">
+              <span class="d-label">${formatDateLabel(key)}</span>
+              <span class="d-count">${arr.length} mudelit</span>
+            </button>
+          </li>
+        `;
+      }).join('');
     }
 
-    // NB! siit tuleb nüüd #dateList ja .date-btn
-    listHost.innerHTML = `
-      <ul id="dateList" class="recent-date-list">
-        ${dateKeys.map(key => {
-          const arr = byDate[key] || [];
-          return `
-            <li>
-              <button type="button"
-                      class="date-btn"
-                      data-date="${key}">
-                <span class="d-label">${formatDateLabel(key)}</span>
-                <span class="d-count">${arr.length} mudelit</span>
-              </button>
-            </li>
-          `;
-        }).join('')}
-      </ul>
-    `;
+    async function loadAll(){
+      if (location.protocol === 'file:'){
+        dayTitle.textContent = '';
+        dayCount.textContent = '';
+        dayGrid.innerHTML = '<p style="opacity:.7;">Ava see leht serveris (GitHub Pages vms).</p>';
+        currentInfo.textContent = '–';
+        return;
+      }
 
-    // vaikimisi näita kõige uuemat kuupäeva
-    renderDay(dateKeys[0]);
-  }
+      currentInfo.textContent = 'Laen andmeid…';
 
-  async function loadAll(){
-    if (location.protocol === 'file:'){
-      listHost.innerHTML = '<div style="opacity:.7">Ava leht serveris (GitHub Pages vms).</div>';
-      return;
-    }
-
-    let html = '';
-    try{
-      const r = await fetch('mudelid.html', { cache:'no-store' });
-      if (!r.ok) throw 0;
-      html = await r.text();
-    }catch{
-      listHost.innerHTML = '<div style="opacity:.7">Ei saanud mudelid.html lugeda.</div>';
-      return;
-    }
-
-    const doc  = new DOMParser().parseFromString(html,'text/html');
-    const base = new URL(location.href);
-    const brands = [...doc.querySelectorAll('.brand-card[href]')].map(a=>({
-      href : new URL(a.getAttribute('href'), base).href,
-      name : (a.querySelector('.brand-name')?.textContent || '').trim()
-    }));
-
-    await Promise.all(brands.map(async ({href,name})=>{
+      let html = '';
       try{
-        const r = await fetch(href,{cache:'no-store'});
-        if(!r.ok) return;
-        const h = await r.text();
-        const d = new DOMParser().parseFromString(h,'text/html');
-        const brand = d.querySelector('meta[name="brand"]')?.content?.trim() || name;
+        const r = await fetch('mudelid.html', { cache:'no-store' });
+        if (!r.ok) throw 0;
+        html = await r.text();
+      }catch{
+        dayTitle.textContent = '';
+        dayCount.textContent = '';
+        dayGrid.innerHTML = '<p style="opacity:.7;">Ei saanud mudelid.html lugeda.</p>';
+        currentInfo.textContent = 'Viga andmete laadimisel.';
+        return;
+      }
 
-        d.querySelectorAll('.card[data-added]').forEach(c=>{
-          const title = (c.querySelector('.title')?.textContent || '').trim();
-          const img   = c.querySelector('.thumb')?.getAttribute('src') || '';
-          const raw   = c.getAttribute('data-added') || '';
-          const ts    = Date.parse(raw);
-          if(!title || !img || isNaN(ts)) return;
+      const doc  = new DOMParser().parseFromString(html,'text/html');
+      const base = new URL(location.href);
+      const brands = [...doc.querySelectorAll('.brand-card[href]')].map(a=>({
+        href : new URL(a.getAttribute('href'), base).href,
+        name : (a.querySelector('.brand-name')?.textContent || '').trim()
+      }));
 
-          const dateObj = new Date(ts);
-          const key = dateObj.toISOString().slice(0,10); // YYYY-MM-DD
+      await Promise.all(brands.map(async ({href,name})=>{
+        try{
+          const r = await fetch(href,{cache:'no-store'});
+          if(!r.ok) return;
+          const h = await r.text();
+          const d = new DOMParser().parseFromString(h,'text/html');
+          const brand = d.querySelector('meta[name="brand"]')?.content?.trim() || name;
 
-          const full  = new URL(img, href).href;
-          const u     = new URL(href, base);
-          u.searchParams.set('m', title);
+          d.querySelectorAll('.card[data-added]').forEach(c=>{
+            const title = (c.querySelector('.title')?.textContent || '').trim();
+            const img   = c.querySelector('.thumb')?.getAttribute('src') || '';
+            const raw   = c.getAttribute('data-added') || '';
+            const ts    = Date.parse(raw);
+            if(!title || !img || isNaN(ts)) return;
 
-          (byDate[key] ||= []).push({
-            brand,
-            title,
-            img: full,
-            url: u.pathname + u.search,
-            ts
+            const dateObj = new Date(ts);
+            const key = dateObj.toISOString().slice(0,10); // YYYY-MM-DD
+
+            const full  = new URL(img, href).href;
+            const u     = new URL(href, base);
+            u.searchParams.set('m', title);
+
+            (byDate[key] ||= []).push({
+              brand,
+              title,
+              img: full,
+              url: u.pathname + u.search,
+              ts
+            });
           });
-        });
-      }catch{}
-    }));
+        }catch{
+          // vaikne ignore
+        }
+      }));
 
-    if (!Object.keys(byDate).length){
-      listHost.innerHTML = '<div style="opacity:.7">Hiljuti lisatud mudeleid ei leitud.</div>';
-      return;
+      if (!Object.keys(byDate).length){
+        dayTitle.textContent = '';
+        dayCount.textContent = '';
+        dayGrid.innerHTML = '<p style="opacity:.7;">Hiljuti lisatud mudeleid ei leitud.</p>';
+        currentInfo.textContent = 'Ei leitud hiljuti lisatud mudeleid.';
+        return;
+      }
+
+// sorteerime igas kuupäevas mudelid aja järgi (uuem enne)
+Object.keys(byDate).forEach(k => {
+  byDate[k].sort((a,b) => b.ts - a.ts);
+});
+
+// sorteerime kuupäevad uuem -> vanem
+dateKeys = Object.keys(byDate).sort((a,b) => b.localeCompare(a));
+
+currentKey = dateKeys[0]; // vaikimisi uusim päev
+
+// --- MUUDETAVA AJAGA COUNTER – INIT + LISTENER ---
+const sel = document.getElementById('recentRangeSelect');
+if(sel){
+  const days = parseInt(sel.value,10) || 14;
+  updateRangeCounter(days);  // ← siit kaob 0 ja tuleb kohe õige number
+
+  sel.addEventListener('change', () => {
+    const d = parseInt(sel.value,10) || 14;
+    updateRangeCounter(d);
+  });
+}
+
+renderDateModal();
+renderDay(currentKey);
     }
 
-    Object.keys(byDate).forEach(k => {
-      byDate[k].sort((a,b) => b.ts - a.ts);
+    // modal nupud
+    if (openBtn){
+      openBtn.addEventListener('click', openModal);
+    }
+    if (closeBtn){
+      closeBtn.addEventListener('click', closeModal);
+    }
+    modal.addEventListener('click', e=>{
+      if (e.target === modal) closeModal();
+    });
+    window.addEventListener('keydown', e=>{
+      if (e.key === 'Escape' && modal.classList.contains('open')){
+        closeModal();
+      }
     });
 
-    dateKeys = Object.keys(byDate).sort((a,b) => b.localeCompare(a));
-    renderDateList();
+// --- Viimase 14 päeva loendur ---
+const targetDays = 14;
+const now = Date.now();
+const cutoff = now - targetDays*24*60*60*1000;
 
-    // kuupäeva klikid (desktop + mobiil)
-    listHost.addEventListener('click', (e)=>{
-      const btnEl = e.target.closest('.date-btn');
-      if (!btnEl) return;
-      const key = btnEl.dataset.date;
+let count14 = 0;
+Object.values(byDate).forEach(list=>{
+  list.forEach(item=>{
+    if(item.ts >= cutoff) count14++;
+  });
+});
+
+const infoEl = document.getElementById('recent14Info');
+if(infoEl){
+  infoEl.textContent = `Lisatud viimase ${targetDays} päeva jooksul: ${count14}`;
+}
+
+    // kuupäeva valik
+    dateListEl.addEventListener('click', e=>{
+      const btn = e.target.closest('.date-btn');
+      if (!btn) return;
+      const key = btn.dataset.date;
       if (!key) return;
+      currentKey = key;
       renderDay(key);
+      closeModal();
     });
-  }
 
-  loadAll();
-})();
-</script>
+// --- Muudetava ajaga counter ---
+function updateRangeCounter(days){
+  const now = Date.now();
+  const cutoff = now - days * 24*60*60*1000;
+  let total = 0;
+  Object.values(byDate).forEach(list=>{
+    list.forEach(item=>{
+      if(item.ts >= cutoff) total++;
+    });
+  });
+  const span = document.getElementById('recentRangeCount');
+  if(span) span.textContent = total;
+}
 
+// esmane render (vaikimisi 14 päeva)
+updateRangeCounter(14);
+
+// muutmine selectist
+const sel = document.getElementById('recentRangeSelect');
+if(sel){
+  sel.addEventListener('change',()=>{
+    updateRangeCounter(parseInt(sel.value,10));
+  });
+}
+
+    loadAll();
+  })();
+  </script>
 
 </body>
 </html>
