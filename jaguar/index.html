@@ -1173,5 +1173,31 @@ document.addEventListener('click', (e) => {
 </script>
 <!-- === JOEL BRAND PILL v3 END === -->
 
+
+<script>
+/* JOEL-HILJUTI-BACK-OVERRIDE */
+(function(){
+  // Püüame kinni klikid lightboxi "← Tagasi" nupul
+  const referrer = document.referrer;
+
+  window.addEventListener('click', function(e){
+    const t = e.target;
+    if (!t || !t.closest) return;
+    const btn = t.closest('#lb-back-recent');
+    if (!btn) return;
+
+    // Meie võtame üle – ära lase algsel handleril joosta
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (referrer && history.length > 1) {
+      history.back();
+    } else {
+      // varuvariant, kui tuldi otse lingiga
+      location.href = '../index.html';
+    }
+  }, true); // capture-faasis, enne teisi kuulajaid
+})();
+</script>
 </body>
 </html>
