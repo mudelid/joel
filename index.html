@@ -256,58 +256,6 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
 }
 */
 
-/* STATISTIKA kast (TOP 10 asemel) */
-#stats-card {
-  /* kasutab sidebar-standalone baasi, siia võid lisada pisimuudatusi */
-}
-
-/* ruudustik numbrite jaoks */
-.stats-bar {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px 10px;
-  margin-top: 8px;
-}
-
-/* üks “kastike” – silt + number */
-.stats-bar .stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  padding: 6px 8px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 1px 3px rgba(0,0,0,.08);
-}
-
-/* ülemine väiksem tekst */
-.stats-bar .stat .label {
-  font-size: 14px;
-  letter-spacing: .5px;
-  text-transform: uppercase;
-  opacity: .7;
-  line-height: 1.1;
-}
-
-/* suur number */
-.stats-bar .stat .value {
-  font-size: 28px;
-  line-height: 1.1;
-}
-
-/* kitsamal ekraanil 2x2 ruudustik */
-@media (max-width: 600px) {
-  .stats-bar {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px 8px;
-  }
-  .stats-bar .stat .value {
-    font-size: 24px;
-  }
-}
-
 /* 🔹 Kompaktsemad "Hiljuti lisatud" kaardid avalehel */
 .recent-grid {
   gap: 8px;
@@ -645,40 +593,17 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
     <div class="daily-grid" id="dailyGrid"></div>
   </section>
 
-  <!-- KESKMINE TULP – hiljuti, kõik mudelid, statistika -->
+  <!-- KESKMINE TULP – HILJUTI LISATUD + KÕIK MUDELID -->
   <div class="home-center">
-   <div class="cta-wrap">
-  <a href="hiljutised.html" class="cta-btn">
-    HILJUTI LISATUD
-  </a>
-</div>
+    <div class="cta-wrap">
+      <a href="hiljutised.html" class="cta-btn">
+        HILJUTI LISATUD
+      </a>
+    </div>
 
     <div class="cta-wrap">
       <a href="mudelid.html" class="cta-btn">KÕIK MUDELID</a>
     </div>
-
-    <!-- STATISTIKA kast -->
-    <aside id="stats-card" class="sidebar-standalone">
-      <h3>STATISTIKA</h3>
-      <div class="stats-bar">
-        <div class="stat">
-          <span class="label">Mudeleid</span>
-          <span class="value" id="stat-total">–</span>
-        </div>
-        <div class="stat">
-          <span class="label">Automarke</span>
-          <span class="value" id="stat-brands">–</span>
-        </div>
-        <div class="stat">
-          <span class="label">TH</span>
-          <span class="value" id="stat-th">–</span>
-        </div>
-        <div class="stat">
-          <span class="label">STH</span>
-          <span class="value" id="stat-sth">–</span>
-        </div>
-      </div>
-    </aside>
   </div>
 
   <!-- PAREM TULP – KÕIK TOOTJAD -->
@@ -876,113 +801,13 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
   }
 
   // nupp: toggle + laadi vajadusel
-  btn.addEventListener('click', async ()=>{
-    const nowOpen = !wrap.classList.contains('open');
-    if (nowOpen) await loadOnce();
-    setOpen(nowOpen);
-  });
-})();
-</script>
-
-<script>
-(function(){
-  const wrap = document.getElementById('dailyWrap');
-  const grid = document.getElementById('dailyGrid');
-  if (!wrap || !grid) return;
-
-  // failis (file://) ei hakka midagi tegema
-  if (location.protocol === 'file:'){
-    grid.innerHTML = '<div style="opacity:.7">Ava leht serveris (GitHub Pages vms).</div>';
-    return;
-  }
-
-  const base = new URL(location.href);
-
-  // 1) loeme mudelid.html, et saada kõik tootjalehed
-  fetch('mudelid.html', { cache:'no-store' })
-    .then(r => r.ok ? r.text() : Promise.reject())
-    .then(html => {
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-      const brandLinks = [...doc.querySelectorAll('.brand-card[href]')].map(a => ({
-        href: new URL(a.getAttribute('href'), base).href,
-        name: (a.querySelector('.brand-name')?.textContent || '').trim()
-      }));
-
-      const items = [];
-
-      // 2) loeme KÕIK tootjalehed ja kõik .card elemendid
-      return Promise.all(brandLinks.map(b => {
-        return fetch(b.href, { cache:'no-store' })
-          .then(r => r.ok ? r.text() : null)
-          .then(h => {
-            if (!h) return;
-            const d = new DOMParser().parseFromString(h, 'text/html');
-            const brandName = d.querySelector('meta[name="brand"]')?.content?.trim() || b.name;
-
-            d.querySelectorAll('.card').forEach(card => {
-              const title = (card.querySelector('.title')?.textContent || '').trim();
-              const img   = card.querySelector('.thumb')?.getAttribute('src') || '';
-              if (!title || !img) return;
-
-              const fullImg = new URL(img, b.href).href;
-
-              const url = new URL(b.href, base);
-              url.searchParams.set('m', title);   // et tootjaleht avaks kohe selle pildi
-
-              items.push({
-                brand: brandName,
-                title,
-                img: fullImg,
-                url:  url.pathname + url.search
-              });
-            });
-          })
-          .catch(() => {});
-      })).then(() => items);
-    })
-    .then(items => {
-      if (!items.length){
-        grid.innerHTML = '<div style="opacity:.7">Ei leitud ühtegi mudelit.</div>';
-        return;
-      }
-
-      // --- 3) “päeva” valik – deterministlik 3 mudelit päevas ---
-      const today = new Date();
-      const dayOfYear = Math.floor(
-        (today - new Date(today.getFullYear(), 0, 0)) / 86400000
-      );
-
-      // et tulemus oleks stabiilne, sorteerime esmalt
-      items.sort((a,b) =>
-        (a.brand + ' ' + a.title).localeCompare(b.brand + ' ' + b.title)
-      );
-
-      const picked = [];
-      const used = new Set();
-      const len = items.length;
-
-      for (let k = 0; k < 3 && k < len; k++){
-        const idx = (dayOfYear * 7 + k * 97) % len;  // “pseudo-seemne” valem
-        const it = items[idx];
-        const key = it.brand + '|' + it.title;
-        if (used.has(key)) continue;
-        used.add(key);
-        picked.push(it);
-      }
-
-      grid.innerHTML = picked.map(it => `
-        <a class="daily-card" href="${it.url}">
-          <img class="thumb" src="${it.img}" alt="${it.title}" loading="lazy" decoding="async">
-          <div class="meta">
-            <div class="title">${it.title}</div>
-            <div class="brand">${it.brand}</div>
-          </div>
-        </a>
-      `).join('');
-    })
-    .catch(() => {
-      grid.innerHTML = '<div style="opacity:.7">Viga “päeva mudelite” laadimisel.</div>';
+  if (btn && wrap && grid) {
+    btn.addEventListener('click', async ()=>{
+      const nowOpen = !wrap.classList.contains('open');
+      if (nowOpen) await loadOnce();
+      setOpen(nowOpen);
     });
+  }
 })();
 </script>
 
