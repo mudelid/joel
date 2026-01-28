@@ -193,6 +193,25 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
   }
 }
 
+/* CTA stiil ka buttonile */
+button.cta-btn{
+  -webkit-appearance:none;
+  appearance:none;
+  border:1px solid var(--border);
+  cursor:pointer;
+}
+
+/* eemaldab buttoni vaikimisi outline/joone (vajadusel) */
+button.cta-btn:focus{
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+button.cta-btn{
+  -webkit-appearance:none;
+  appearance:none;
+  cursor:pointer;
+}
 
 /* Hiljuti lisatud kaardid */
 .recent-wrap{max-width:1200px;margin:12px auto 24px;padding:0 16px;}
@@ -645,7 +664,7 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
     <div class="daily-grid" id="dailyGrid"></div>
   </section>
 
-  <!-- KESKMINE TULP – hiljuti, kõik mudelid, statistika -->
+  <!-- KESKMINE TULP – hiljuti, kõik mudelid, random mudelid/tootjad -->
   <div class="home-center">
    <div class="cta-wrap">
   <a href="hiljutised.html" class="cta-btn">
@@ -657,28 +676,14 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
       <a href="mudelid.html" class="cta-btn">KÕIK MUDELID</a>
     </div>
 
-    <!-- STATISTIKA kast -->
-    <aside id="stats-card" class="sidebar-standalone">
-      <h3>STATISTIKA</h3>
-      <div class="stats-bar">
-        <div class="stat">
-          <span class="label">Mudeleid</span>
-          <span class="value" id="stat-total">–</span>
-        </div>
-        <div class="stat">
-          <span class="label">Automarke</span>
-          <span class="value" id="stat-brands">–</span>
-        </div>
-        <div class="stat">
-          <span class="label">TH</span>
-          <span class="value" id="stat-th">–</span>
-        </div>
-        <div class="stat">
-          <span class="label">STH</span>
-          <span class="value" id="stat-sth">–</span>
-        </div>
-      </div>
-    </aside>
+<div class="cta-wrap">
+  <button type="button" class="cta-btn" id="btnRandomBrand">SUVALINE TOOTJA</button>
+</div>
+
+<div class="cta-wrap">
+  <button type="button" class="cta-btn" id="btnRandomModel">SUVALINE MUDEL</button>
+</div>
+
   </div>
 
   <!-- PAREM TULP – KÕIK TOOTJAD -->
@@ -834,6 +839,7 @@ footer{max-width:var(--maxw);margin:0 auto 40px;padding:0 16px;
     }));
 
     const items = [];
+    window.__ALL_MODELS = items;
     await Promise.all(brands.map(async ({href,name})=>{
       try{
         const r = await fetch(href,{cache:'no-store'});
@@ -1000,6 +1006,49 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+
+<script>
+(function(){
+  const btnBrand = document.getElementById('btnRandomBrand');
+  const btnModel = document.getElementById('btnRandomModel');
+
+  function pick(arr){
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  // SUVALINE TOOTJA
+  btnBrand?.addEventListener('click', async ()=>{
+    if (location.protocol === 'file:'){
+      alert('Ava leht serveris (GitHub Pages).');
+      return;
+    }
+    try{
+      const r = await fetch('mudelid.html', { cache:'no-store' });
+      if (!r.ok) throw 0;
+      const html = await r.text();
+      const doc = new DOMParser().parseFromString(html,'text/html');
+      const cards = [...doc.querySelectorAll('.brand-card[href]')];
+      if (!cards.length) throw 0;
+      const a = pick(cards);
+      location.href = a.getAttribute('href');
+    }catch{
+      alert('Ei saanud tootjate listi lugeda.');
+    }
+  });
+
+  // SUVALINE MUDEL (kasutab PÄEVA MUDELITE andmeid)
+  btnModel?.addEventListener('click', ()=>{
+    const items = window.__ALL_MODELS || [];
+    if (!items.length){
+      alert('Mudelite andmed pole veel laetud. Proovi hetk pärast uuesti.');
+      return;
+    }
+    const it = pick(items);
+    location.href = it.url;
+  });
+})();
+</script>
+
 
 </body>
 
