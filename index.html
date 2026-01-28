@@ -1016,6 +1016,71 @@ document.addEventListener("DOMContentLoaded", () => {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
+  // Laeme kõik mudelid 1x (kasutame data-added kui olemas; kui pole, võtame kõik .card)
+  let ALL_MODELS = null;         // [{ url, title, brand }]
+  let LOADING_PROMISE = null;
+
+  async function loadAllModelsOnce(){
+    if (ALL_MODELS) return ALL_MODELS;
+    if (LOADING_PROMISE) return LOADING_PROMISE;
+
+    if (location.protocol === 'file:'){
+      throw new Error('file');
+    }
+
+    LOADING_PROMISE = (async () => {
+      // 1) loe mudelid.html, et saada brändide lingid
+      const r = await fetch('mudelid.html', { cache:'no-store' });
+      if (!r.ok) throw new Error('mudelid.html');
+
+      const html = await r.text();
+      const doc  = new DOMParser().parseFromString(html,'text/html');
+      const base = new URL(location.href);
+
+      const brandLinks = [...doc.querySelectorAll('.brand-card[href]')].map(a => ({
+        href: new URL(a.getAttribute('href'), base).href,
+        name: (a.querySelector('.brand-name')?.textContent || '').trim()
+      })).filter(x => x.href);
+
+      const items = [];
+
+      // 2) loe kõik tootjalehed ja korja mudelid
+      await Promise.all(brandLinks.map(async (b) => {
+        try{
+          const rr = await fetch(b.href, { cache:'no-store' });
+          if (!rr.ok) return;
+          const h = await rr.text();
+          const d = new DOMParser().parseFromString(h,'text/html');
+
+          const brandName = d.querySelector('meta[name="brand"]')?.content?.trim() || b.name;
+
+          // võta mudelid: eelistame .card[data-added], aga kui pole, võtame kõik .card
+          const cards = d.querySelectorAll('.card[data-added], .card');
+          cards.forEach(card => {
+            const title = (card.querySelector('.title')?.textContent || card.querySelector('h3')?.textContent || '').trim();
+            if (!title) return;
+
+            const url = new URL(b.href, base);
+            url.searchParams.set('m', title);
+
+            items.push({
+              brand: brandName,
+              title,
+              url: url.pathname + url.search
+            });
+          });
+        }catch{}
+      }));
+
+      if (!items.length) throw new Error('noitems');
+
+      ALL_MODELS = items;
+      return ALL_MODELS;
+    })();
+
+    return LOADING_PROMISE;
+  }
+
   // SUVALINE TOOTJA
   btnBrand?.addEventListener('click', async ()=>{
     if (location.protocol === 'file:'){
@@ -1036,15 +1101,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // SUVALINE MUDEL (kasutab PÄEVA MUDELITE andmeid)
-  btnModel?.addEventListener('click', ()=>{
-    const items = window.__ALL_MODELS || [];
-    if (!items.length){
-      alert('Mudelite andmed pole veel laetud. Proovi hetk pärast uuesti.');
-      return;
+  // SUVALINE MUDEL (laeb vajadusel andmed enne)
+  btnModel?.addEventListener('click', async ()=>{
+    const oldText = btnModel.textContent;
+    try{
+      btnModel.disabled = true;
+      btnModel.textContent = 'LAEN…';
+
+      const items = await loadAllModelsOnce();
+      const it = pick(items);
+      location.href = it.url;
+    }catch(e){
+      if (e && e.message === 'file'){
+        alert('Ava leht serveris (GitHub Pages).');
+      } else {
+        alert('Ei saanud mudelite andmeid laadida.');
+      }
+      btnModel.disabled = false;
+      btnModel.textContent = oldText;
     }
-    const it = pick(items);
-    location.href = it.url;
   });
 })();
 </script>
