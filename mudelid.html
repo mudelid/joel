@@ -267,22 +267,24 @@ main{ max-width: none; margin: 0; padding: 0; }
 
 /* 📱 Kompaktne mobiilivaade (muutujatega) */
 @media (max-width: 600px){
+  /* KÕIK: mahuta 4–5 veergu */
   .content{
-    --tile-min: 110px;
+    --tile-min: 78px;     /* ↓ 110 -> 78 */
+    --tile-gap: 6px;      /* ↓ 8 -> 6 */
+    --card-pad-y: 8px;    /* ↓ */
+    --card-pad-x: 6px;    /* ↓ */
+    --logo-size: 40px;    /* ↓ 56 -> 40 */
+    --name-size: 12px;    /* ↓ 14 -> 12 */
+  }
+
+  /* Filtreerides: veidi suurem, aga ikka 4 veeru lähedale */
+  .content.is-filtered{
+    --tile-min: 96px;     /* ↓ 140 -> 96 */
     --tile-gap: 8px;
     --card-pad-y: 10px;
     --card-pad-x: 8px;
-    --logo-size: 56px;
-    --name-size: 14px;
-  }
-  /* mobiilis “filtered” natuke suurem, mitte 1.5× */
-  .content.is-filtered{
-    --tile-min: 140px;
-    --tile-gap: 10px;
-    --card-pad-y: 12px;
-    --card-pad-x: 10px;
-    --logo-size: 72px;
-    --name-size: 17px;
+    --logo-size: 48px;    /* ↓ 72 -> 48 */
+    --name-size: 13px;    /* ↓ 17 -> 13 */
   }
 
   header{ margin: 10px auto 6px; }
