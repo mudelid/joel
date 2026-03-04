@@ -53,7 +53,7 @@
 
 
     header{max-width:var(--maxw); margin:60px auto 10px; padding:0 16px}
-    h1{margin:0 0 6px; font-size:50px; }
+    h1{margin:0 0 6px; font-size:85px; }
     p.lead{margin:0; color:var(--muted)}
     main{max-width:var(--maxw); margin:18px auto 60px; padding:0 16px}
     .list{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
@@ -83,10 +83,9 @@ footer{
 /* grid */
 .brand-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
   max-width: 1200px;
-  /* rohkem ruumi all servas, et tähestik ja logod ei jookseks vastu ääre */
   margin: 18px auto 100px;
   padding: 0 16px;
 }
@@ -98,8 +97,8 @@ footer{
   align-items: center;
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 25px;
-  padding: 24px 16px;
+  border-radius: 14px;
+  padding: 10px 8px;
   text-decoration: none;
   color: var(--link);
   transition: transform 0.2s, background 0.2s;
@@ -112,23 +111,24 @@ footer{
 }
 
 .brand-logo {
-  width: 100px;
-  height: 100px;
+  width: 75px;
+  height: 75px;
   object-fit: contain;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   background: #FFFFFF;
   border-radius: 8px;
 }
 
 .brand-name {
-  font-size: 25px;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 6px;
+  margin-bottom: 2px;
 }
 
 .hint {
-  font-size: 16px;
+  font-size: 12px;
   color: #000000;
+  opacity: .75;
 }
 
 /* --- TOP edetabel paremas servas --- */
@@ -229,12 +229,6 @@ a.back:hover {
   background: #FFFFFF;
 }
 
-@media (max-width: 600px) {
-  header {
-    margin-top: 80px !important;
-  }
-}
-
 /* Kaheveeruline paigutus: vasakul tähed, paremal grid */
 .brands-layout{
   max-width: 1200px;
@@ -249,11 +243,16 @@ a.back:hover {
 .alpha-nav{
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  font-size: 16px;
-  position: sticky;
-  top: 80px;            /* jääb kerimisel mõnusalt paika */
+  gap: 3px;
+  font-size: 30px;
+  position: static;  /* või lihtsalt kustuta position rida */
+  top: auto;         /* pole enam vajalik */
 }
+
+/* ära näita tähestikku enne joondust (väldib vilksatust) */
+.alpha-nav{ visibility: hidden; }
+.alpha-nav.is-ready{ visibility: visible; }
+.alpha-nav{ margin-top: 160px; }
 
 /* üks täht */
 .alpha-btn{
@@ -264,7 +263,7 @@ a.back:hover {
   color: #000;
   cursor: pointer;
   font-family: 'BebasKai', sans-serif;
-  font-size: 18px;
+  font-size: 30px;
   line-height: 1;
   text-align: center;
   min-width: 36px;
@@ -304,6 +303,32 @@ a.back:hover {
   }
 }
 
+/* Header ei tohi olla maxw=500 ja keskel */
+header{ max-width: none; margin: 0; padding: 0; }
+main{ max-width: none; margin: 0; padding: 0; }
+
+/* Parempoolne sisu (header + grid) */
+.content{
+  flex: 1;
+  min-width: 0;
+}
+
+/* Header stiil vasakjoonduses */
+.page-header{
+  padding: 0 0 12px;
+  text-align: left;
+}
+
+/* Search ei tohi ennast keskele suruda */
+.search{
+  max-width: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+.search input{
+  width: min(520px, 100%);
+}
+
   </style>
 
 </head>
@@ -313,19 +338,10 @@ a.back:hover {
   <img src="img/logo2.png" alt="Logo" onerror="this.parentElement.remove()">
 </a>
 
-<header>
-  <a class="back" href="index.html">← AVALEHT</a>
-  <h1>KÕIK MUDELID</h1>
-  <p class="lead">KOKKU ERINEVAID: <span id="count">0</span></p>
-   <div class="search">
-    <input id="brandSearch" type="search" placeholder="OTSI NIME" autocomplete="off">
-     </div>
-</header>
-
-<!-- NB! Siin EI ole "Hiljuti lisatud" ega TOP-külgriba -->
-
 <div class="brands-layout">
+
   <nav class="alpha-nav" aria-label="Tootja algustäht">
+
     <button type="button" class="alpha-btn active" data-letter="">KÕIK</button>
     <button type="button" class="alpha-btn" data-letter="A">A</button>
     <button type="button" class="alpha-btn" data-letter="B">B</button>
@@ -353,9 +369,21 @@ a.back:hover {
     <button type="button" class="alpha-btn" data-letter="X">X</button>
     <button type="button" class="alpha-btn" data-letter="Y">Y</button>
     <button type="button" class="alpha-btn" data-letter="Z">Z</button>
+
   </nav>
 
-  <main class="brand-grid">
+  <div class="content">
+    <header class="page-header">
+      <a class="back" href="index.html">← AVALEHT</a>
+      <h1>KÕIK MUDELID</h1>
+      <p class="lead">KOKKU ERINEVAID: <span id="count">0</span></p>
+      <div class="search">
+        <input id="brandSearch" type="search" placeholder="OTSI NIME" autocomplete="off">
+      </div>
+
+    </header>
+
+    <main class="brand-grid">
 
   <a class="brand-card" href="acura/index.html">
     <img src="img/logod/acura.png" alt="Acura logo" class="brand-logo">
@@ -717,7 +745,9 @@ a.back:hover {
     <span class="hint"></span>
   </a>
 
- </main>
+    </main>
+
+  </div>
 
 </div>
 
@@ -812,6 +842,34 @@ a.back:hover {
       });
     });
   }
+})();
+</script>
+
+<script>
+(() => {
+  const nav = document.querySelector('.alpha-nav');
+  const search = document.querySelector('.search');
+  if (!nav || !search) return;
+
+  function alignAlphaToSearch(){
+    nav.style.marginTop = '0px';
+
+    const navRect = nav.getBoundingClientRect();
+    const searchRect = search.getBoundingClientRect();
+
+    const delta = Math.round(searchRect.top - navRect.top);
+    nav.style.marginTop = `${Math.max(0, delta)}px`;
+
+    nav.classList.add('is-ready'); // näita alles pärast paika sättimist
+  }
+
+  // tee võimalikult vara
+  requestAnimationFrame(alignAlphaToSearch);
+  window.addEventListener('load', alignAlphaToSearch);
+  window.addEventListener('resize', () => {
+    nav.classList.remove('is-ready'); // et resize ajal ka ei “rebiks”
+    requestAnimationFrame(alignAlphaToSearch);
+  });
 })();
 </script>
 
