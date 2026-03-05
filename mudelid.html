@@ -28,20 +28,19 @@ body{
   font-size: 30px;
 }
 
-/* link (kest) – fikseeritud positsioon ja mõõdud */
 .logo{
-  position: fixed;
+  position: absolute;   /* ei jää enam scrollides ette */
   top: 12px;
-  left: 12px;
+  right: 12px;          /* paremasse nurka */
   width: 100px;
   height: 100px;
   display: block;
   border: 1px solid var(--border);
   border-radius: 7px;
   background: #fff;
-  z-index: 1000;
   text-decoration: none;
 }
+
 .logo img{
   width: 100%;
   height: 100%;
