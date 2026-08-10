@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>KÕIK MUDELID</title>
   <style>
+
 @font-face {
   font-family: 'BebasKai';
   src: url('fonts/bebaskai.woff2') format('woff2'),
@@ -14,294 +15,518 @@
 }
 
 :root{
-  --bg:#FFFFFF; --panel:#FFFFFF; --text:#000000; --muted:#000000; --border:#000000; --link:#000000;
-  --maxw:500px;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  background: url("img/taust3.jpg?v=2") no-repeat center center fixed;
-  background-size: cover;
-  color: var(--text);
-  font-family: 'BebasKai', sans-serif;
-  font-size: 30px;
+  --panel:#fff;
+  --text:#000;
+  --border:#000;
+  --maxw:1200px;
+  --radius:14px;
 }
 
+*{ box-sizing:border-box; }
+
+html{
+  min-height:100%;
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  min-height:100%;
+  background:url("img/taust3.jpg?v=2") no-repeat center center fixed;
+  background-size:cover;
+  color:var(--text);
+  font-family:'BebasKai',sans-serif;
+}
+
+/* =========================
+   JOELWHEELS LOGO
+   ========================= */
 .logo{
-  position: absolute;   /* ei jää enam scrollides ette */
-  top: 12px;
-  right: 12px;          /* paremasse nurka */
-  width: 100px;
-  height: 100px;
-  display: block;
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  background: #fff;
-  text-decoration: none;
+  position:fixed;
+  top:18px;
+  left:18px;
+  z-index:1000;
+  width:120px;
+  height:120px;
+  display:block;
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 5px 18px rgba(0,0,0,.14);
+  transition:
+    width .28s ease,
+    height .28s ease,
+    top .28s ease,
+    left .28s ease,
+    border-radius .28s ease,
+    box-shadow .28s ease;
 }
 
 .logo img{
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  border-radius: 7px;
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
 }
 
-header{max-width:var(--maxw); margin:60px auto 10px; padding:0 16px}
-h1{margin:0 0 6px; font-size:85px; }
-p.lead{margin:0; color:var(--muted)}
-main{max-width:var(--maxw); margin:18px auto 60px; padding:0 16px}
-.list{background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden}
-.hint{color:#000000; font-size:20px}
-
-footer{
-  max-width: 1200px;
-  margin: 0 auto 40px;
-  padding: 0 16px;
-  color: var(--muted);
-  font-size: 22px;
-  text-align: center;
+.logo.is-small{
+  width:30px;
+  height:30px;
+  top:10px;
+  left:10px;
+  border-radius:7px;
+  box-shadow:0 3px 10px rgba(0,0,0,.18);
 }
 
-@media (max-width:600px){
-  .logo{
-    width: 40px;
-    height: 40px;
-    top: 8px;
-    right: 8px;
-  }
-  header{ margin-top:12px; }
-}
-
-/* --- TOP edetabel paremas servas --- */
-#top-models-sidebar{ display:none; }
-@media (max-width: 1200px){ #top-models-sidebar{ display:none; } }
-
-/* --- kaheveeruline paigutus --- */
-.layout{ display:none; }
-.sidebar{ display:none; }
-@media (max-width: 1100px){
-  .layout{ display:none; }
-  .sidebar{ display:none; }
-}
-
-/* Otsing */
-.search{
-  max-width: var(--maxw);
-  margin: 10px auto 0;
-  padding: 0 16px;
-}
-.search input{
-  width: 90%;
-  font: 16px/1.3 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-
-/* Hiljuti lisatud blokk ja selle kaardid pole mudelid.html lehel kasutusel */
-.recent-wrap{ display:none; }
-.recent-grid{ display:none; }
-.recent-card{ display:none; }
-
-a.back{
-  display: inline-block;
-  margin-bottom: 12px;
-  font-size: 24px;
-  color: var(--link);
-  text-decoration: none;
-  border: 1px solid var(--border);
-  padding: 6px 12px;
-  border-radius: 8px;
-  transition: background 0.2s;
-}
-a.back:hover{ background:#FFFFFF; }
-
-/* Kaheveeruline paigutus: vasakul tähed, paremal sisu */
+/* =========================
+   LEHE ÜLDPAIGUTUS
+   ========================= */
 .brands-layout{
-  max-width: 1200px;
-  margin: 18px auto 80px;
-  padding: 0 16px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  max-width:var(--maxw);
+  margin:0 auto 70px;
+  padding:38px 18px 0;
+  display:grid;
+  grid-template-columns:58px minmax(0,1fr);
+  gap:16px;
+  align-items:start;
 }
 
-/* vasak tähestiku riba */
-.alpha-nav{
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  font-size: 30px;
-  position: static; /* EI sticky */
-  top: auto;
-}
-
-/* ära näita tähestikku enne joondust (väldib vilksatust) */
-.alpha-nav{ visibility: hidden; }
-.alpha-nav.is-ready{ visibility: visible; }
-
-/* üks täht */
-.alpha-btn{
-  padding: 4px 8px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.9);
-  color: #000;
-  cursor: pointer;
-  font-family: 'BebasKai', sans-serif;
-  font-size: 30px;
-  line-height: 1;
-  text-align: center;
-  min-width: 36px;
-  transition: background .15s, transform .15s;
-}
-.alpha-btn:hover{ background:#f2f2f2; transform: translateY(-1px); }
-.alpha-btn.active{ background:#000; color:#fff; }
-
-/* Header ei tohi olla maxw=500 ja keskel */
-header{ max-width: none; margin: 0; padding: 0; }
-main{ max-width: none; margin: 0; padding: 0; }
-
-/* Parempoolne sisu (header + grid) */
 .content{
-  flex: 1;
-  min-width: 0;
+  min-width:0;
 
-  /* ✅ Vaikimisi (KÕIK): kompaktne */
-  --tile-min: 120px;
-  --tile-gap: 10px;
-  --card-pad-y: 10px;
-  --card-pad-x: 8px;
-  --logo-size: 75px;
-  --name-size: 18px;
+  /* KÕIK – kompaktsemad kaardid */
+  --tile-min:145px;
+  --tile-gap:10px;
+  --card-pad-y:14px;
+  --card-pad-x:10px;
+  --logo-size:78px;
+  --name-size:18px;
 }
 
-/* ✅ Filtreerides (A/B/otsing): suurem ~1.5× */
 .content.is-filtered{
-  --tile-min: 180px;
-  --tile-gap: 15px;
-  --card-pad-y: 15px;
-  --card-pad-x: 12px;
-  --logo-size: 112px;
-  --name-size: 27px;
+  --tile-min:185px;
+  --tile-gap:14px;
+  --card-pad-y:18px;
+  --card-pad-x:12px;
+  --logo-size:108px;
+  --name-size:24px;
 }
 
-/* Header vasakjoonduses */
+/* =========================
+   PÄIS
+   ========================= */
 .page-header{
-  padding: 0 0 12px;
-  text-align: left;
+  text-align:center;
+  margin:0 0 20px;
 }
 
-/* Search ei tohi ennast keskele suruda */
+.back{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  margin:0 0 13px;
+  padding:8px 14px;
+  border:1px solid #000;
+  border-radius:999px;
+  background:#fff;
+  color:#000;
+  text-decoration:none;
+  font-size:18px;
+  letter-spacing:.3px;
+  box-shadow:0 3px 10px rgba(0,0,0,.07);
+  transition:transform .18s ease, background .18s ease;
+}
+
+.back:hover{
+  background:#f2f2f2;
+  transform:translateY(-1px);
+}
+
+h1{
+  margin:0;
+  font-size:66px;
+  line-height:.95;
+  letter-spacing:.6px;
+}
+
+.count-label{
+  margin:15px 0 7px;
+  font-size:21px;
+}
+
+/* =========================
+   FLIP-LOENDUR
+   ========================= */
+.flip-counter{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  min-height:60px;
+  margin:0 auto 16px;
+}
+
+.flip-digit{
+  position:relative;
+  width:45px;
+  height:58px;
+  border:1px solid #000;
+  border-radius:8px;
+  background:#fff;
+  box-shadow:0 3px 9px rgba(0,0,0,.11);
+  overflow:hidden;
+  perspective:400px;
+}
+
+.flip-digit::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:50%;
+  height:1px;
+  background:#000;
+  opacity:.55;
+  z-index:3;
+  pointer-events:none;
+}
+
+.flip-digit .digit{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:45px;
+  line-height:1;
+  padding-top:3px;
+  transform-origin:center bottom;
+  backface-visibility:hidden;
+}
+
+.flip-digit.animate .digit{
+  animation:flipIn .6s cubic-bezier(.2,.7,.2,1);
+}
+
+@keyframes flipIn{
+  0%{ transform:rotateX(-90deg); opacity:.15; }
+  65%{ transform:rotateX(12deg); opacity:1; }
+  100%{ transform:rotateX(0); opacity:1; }
+}
+
+/* =========================
+   OTSING
+   ========================= */
 .search{
-  max-width: none;
-  margin: 10px 0 0;
-  padding: 0;
-}
-.search input{
-  width: min(520px, 100%);
+  width:min(520px,100%);
+  margin:0 auto;
 }
 
-/* ✅ GRID (kasutab muutujaid) */
+.search-box{
+  position:relative;
+  width:100%;
+}
+
+.search-box::after{
+  content:"⌕";
+  position:absolute;
+  right:17px;
+  top:50%;
+  transform:translateY(-53%);
+  font-family:system-ui,-apple-system,sans-serif;
+  font-size:28px;
+  pointer-events:none;
+}
+
+.search input{
+  width:100%;
+  height:54px;
+  padding:10px 52px 10px 18px;
+  border:1px solid #000;
+  border-radius:14px;
+  background:#fff;
+  color:#000;
+  outline:none;
+  font-family:'BebasKai',sans-serif;
+  font-size:22px;
+  letter-spacing:.5px;
+  box-shadow:0 3px 10px rgba(0,0,0,.07);
+  -webkit-appearance:none;
+  appearance:none;
+}
+
+.search input:focus{
+  box-shadow:0 0 0 3px rgba(0,0,0,.13), 0 3px 10px rgba(0,0,0,.07);
+}
+
+.search input::placeholder{
+  color:#000;
+  opacity:.62;
+}
+
+/* =========================
+   TÄHESTIK
+   ========================= */
+.alpha-nav{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  visibility:hidden;
+}
+
+.alpha-nav.is-ready{
+  visibility:visible;
+}
+
+.alpha-btn{
+  width:44px;
+  min-height:36px;
+  padding:4px 5px;
+  border:1px solid #000;
+  border-radius:8px;
+  background:rgba(255,255,255,.94);
+  color:#000;
+  cursor:pointer;
+  font-family:'BebasKai',sans-serif;
+  font-size:22px;
+  line-height:1;
+  text-align:center;
+  box-shadow:0 2px 6px rgba(0,0,0,.05);
+  transition:background .15s ease, color .15s ease, transform .15s ease;
+}
+
+.alpha-btn:hover{
+  background:#f1f1f1;
+  transform:translateY(-1px);
+}
+
+.alpha-btn.active{
+  background:#000;
+  color:#fff;
+}
+
+/* =========================
+   TOOTJAKAARDID
+   ========================= */
 .brand-grid{
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--tile-min), 1fr));
-  gap: var(--tile-gap);
-  max-width: 1200px;
-  margin: 0;   /* sobib flexi sees */
-  padding: 0;
-  flex: 1;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(var(--tile-min),1fr));
+  gap:var(--tile-gap);
+  margin:0;
+  padding:0;
 }
 
 .brand-card{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: var(--card-pad-y) var(--card-pad-x);
-  text-decoration: none;
-  color: var(--link);
-  transition: transform 0.2s, background 0.2s, padding .15s;
-  text-align: center;
+  min-height:145px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:var(--card-pad-y) var(--card-pad-x);
+  border:1px solid #000;
+  border-radius:14px;
+  background:rgba(255,255,255,.97);
+  color:#000;
+  text-decoration:none;
+  text-align:center;
+  box-shadow:0 3px 10px rgba(0,0,0,.07);
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    box-shadow .18s ease,
+    padding .15s ease;
 }
-.brand-card:hover{ background:#FFFFFF; transform: translateY(-3px); }
+
+.brand-card:hover{
+  background:#f5f5f5;
+  transform:translateY(-3px);
+  box-shadow:0 6px 15px rgba(0,0,0,.11);
+}
 
 .brand-logo{
-  width: var(--logo-size);
-  height: var(--logo-size);
-  object-fit: contain;
-  margin-bottom: 8px;
-  background: #FFFFFF;
-  border-radius: 8px;
-  transition: width .15s, height .15s;
-}
-.brand-name{
-  font-size: var(--name-size);
-  font-weight: bold;
-  margin-bottom: 2px;
-  transition: font-size .15s;
-}
-.hint{
-  font-size: 12px;
-  color: #000000;
-  opacity: .75;
+  width:var(--logo-size);
+  height:var(--logo-size);
+  object-fit:contain;
+  margin-bottom:9px;
+  border-radius:8px;
+  transition:width .15s ease,height .15s ease;
 }
 
-/* 📱 Mobiil: peida tähestikuriba, jäta ainult grid */
-@media (max-width: 700px){
+.brand-name{
+  font-size:var(--name-size);
+  line-height:1.05;
+  font-weight:normal;
+  transition:font-size .15s ease;
+}
+
+.hint{
+  min-height:15px;
+  margin-top:4px;
+  font-size:13px;
+  opacity:.58;
+}
+
+/* Vanad kasutamata plokid */
+#top-models-sidebar,
+.layout,
+.sidebar,
+.recent-wrap,
+.recent-grid,
+.recent-card{
+  display:none;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+footer{
+  max-width:var(--maxw);
+  margin:0 auto 35px;
+  padding:0 16px;
+  text-align:center;
+  font-size:18px;
+}
+
+/* =========================
+   TABLET / MOBIIL
+   ========================= */
+@media (max-width:700px){
+  body{
+    background-attachment:scroll;
+  }
+
+  .logo{
+    width:92px;
+    height:92px;
+    top:10px;
+    left:10px;
+    border-radius:11px;
+  }
+
+  .logo.is-small{
+    width:24px;
+    height:24px;
+    top:8px;
+    left:8px;
+    border-radius:5px;
+  }
+
   .brands-layout{
     display:block;
-    max-width: 1200px;
-    margin: 18px auto 60px;
-    padding: 0 16px;
+    margin:0 auto 55px;
+    padding:116px 12px 0;
   }
-  .alpha-nav{ display:none; }
-  .brand-grid{ margin-top: 10px; }
-}
 
-/* 📱 Kompaktne mobiilivaade (muutujatega) */
-@media (max-width: 600px){
-  .content{
-    --tile-min: 110px;
-    --tile-gap: 8px;
-    --card-pad-y: 10px;
-    --card-pad-x: 8px;
-    --logo-size: 56px;
-    --name-size: 14px;
+  .page-header{
+    margin-bottom:13px;
   }
-  /* mobiilis “filtered” natuke suurem, mitte 1.5× */
+
+  h1{
+    font-size:42px;
+  }
+
+  .count-label{
+    font-size:18px;
+    margin-top:12px;
+  }
+
+  .flip-counter{
+    min-height:50px;
+    gap:4px;
+    margin-bottom:12px;
+  }
+
+  .flip-digit{
+    width:38px;
+    height:49px;
+    border-radius:7px;
+  }
+
+  .flip-digit .digit{
+    font-size:38px;
+  }
+
+  .search{
+    width:100%;
+  }
+
+  .search input{
+    height:50px;
+    font-size:20px;
+    border-radius:12px;
+  }
+
+  /* Telefonis A–Z ei kao ära – keritav rida */
+  .alpha-nav{
+    visibility:visible;
+    display:flex;
+    flex-direction:row;
+    gap:6px;
+    overflow-x:auto;
+    margin:0 0 12px !important;
+    padding:2px 1px 5px;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .alpha-nav::-webkit-scrollbar{
+    display:none;
+  }
+
+  .alpha-btn{
+    flex:0 0 auto;
+    width:auto;
+    min-width:38px;
+    height:38px;
+    min-height:38px;
+    padding:4px 9px;
+    font-size:20px;
+    border-radius:9px;
+  }
+
+  .content{
+    --tile-min:105px;
+    --tile-gap:8px;
+    --card-pad-y:10px;
+    --card-pad-x:7px;
+    --logo-size:58px;
+    --name-size:14px;
+  }
+
   .content.is-filtered{
-    --tile-min: 140px;
-    --tile-gap: 10px;
-    --card-pad-y: 12px;
-    --card-pad-x: 10px;
-    --logo-size: 72px;
-    --name-size: 17px;
+    --tile-min:140px;
+    --tile-gap:9px;
+    --card-pad-y:12px;
+    --card-pad-x:9px;
+    --logo-size:76px;
+    --name-size:18px;
   }
 
-  header{ margin: 10px auto 6px; }
-  h1{ font-size: 28px; margin-bottom: 2px; }
-  .lead{ font-size: 14px; }
+  .brand-card{
+    min-height:118px;
+    border-radius:11px;
+  }
 }
 
-/* Väga väike ekraan */
-@media (max-width: 380px){
+@media (max-width:380px){
+  h1{ font-size:38px; }
+
   .content{
-    --logo-size: 48px;
-    --name-size: 13px;
+    --tile-min:98px;
+    --logo-size:52px;
+    --name-size:13px;
   }
 }
 
-  </style>
+</style>
 </head>
 
 <body>
+
+<a href="index.html" class="logo" id="siteLogo" aria-label="Tagasi avalehele">
+  <img src="img/logod/joelwheels.png" alt="Joelwheels">
+</a>
 
 <div class="brands-layout">
 
@@ -339,9 +564,16 @@ main{ max-width: none; margin: 0; padding: 0; }
     <header class="page-header">
       <a class="back" href="index.html">← AVALEHT</a>
       <h1>KÕIK MUDELID</h1>
-      <p class="lead">KOKKU ERINEVAID: <span id="count">0</span></p>
+
+      <div class="count-label">KOKKU ERINEVAID MUDELEID</div>
+      <div class="flip-counter" id="flipCounter" aria-label="Mudelite koguarv">
+        <div class="flip-digit"><span class="digit">0</span></div>
+      </div>
+
       <div class="search">
-        <input id="brandSearch" type="search" placeholder="OTSI NIME" autocomplete="off">
+        <div class="search-box">
+          <input id="brandSearch" type="search" placeholder="OTSI TOOTJAT" autocomplete="off">
+        </div>
       </div>
     </header>
 
@@ -731,14 +963,34 @@ main{ max-width: none; margin: 0; padding: 0; }
 
 <!-- Loenda mudelid ja pane (n) vihjed kaardile -->
 <script>
+function renderFlipCounter(number){
+  const counter = document.getElementById('flipCounter');
+  if (!counter) return;
+
+  const digits = String(number ?? 0).split('');
+
+  counter.innerHTML = digits.map(d => `
+    <div class="flip-digit">
+      <span class="digit">${d}</span>
+    </div>
+  `).join('');
+
+  requestAnimationFrame(() => {
+    counter.querySelectorAll('.flip-digit').forEach((el, i) => {
+      setTimeout(() => el.classList.add('animate'), i * 80);
+    });
+  });
+
+  counter.setAttribute('aria-label', `Kokku ${number ?? 0} erinevat mudelit`);
+}
+
 (async () => {
   const brandCards = [...document.querySelectorAll('.brand-card')];
   let total = 0;
 
   if (location.protocol === 'file:') {
     console.warn('Ava leht läbi http://localhost:8000 või GitHub Pages.');
-    const totalEl = document.getElementById('count');
-    if (totalEl) totalEl.textContent = '—';
+    renderFlipCounter('—');
     return;
   }
 
@@ -750,21 +1002,23 @@ main{ max-width: none; margin: 0; padding: 0; }
     try {
       const res = await fetch(href, { cache: 'no-store' });
       if (!res.ok) return;
+
       const html = await res.text();
       const doc = new DOMParser().parseFromString(html, 'text/html');
 
       let n = doc.querySelectorAll('.card').length;
+
       if (!n) {
         const meta = doc.querySelector('meta[name="models-count"]');
         if (meta) n = parseInt(meta.content) || 0;
       }
+
       total += n;
       if (hint) hint.textContent = n ? `(${n})` : '';
-    } catch (_) { /* ignore */ }
+    } catch (_) {}
   }));
 
-  const totalEl = document.getElementById('count');
-  if (totalEl) totalEl.textContent = total;
+  renderFlipCounter(total);
 })();
 </script>
 
@@ -828,7 +1082,7 @@ main{ max-width: none; margin: 0; padding: 0; }
 })();
 </script>
 
-<!-- Joonda tähestik otsinguga (ilma vilkumiseta) -->
+<!-- Joonda tähestik otsinguga desktopis; mobiilis on tähestik horisontaalne -->
 <script>
 (() => {
   const nav = document.querySelector('.alpha-nav');
@@ -838,22 +1092,40 @@ main{ max-width: none; margin: 0; padding: 0; }
   function alignAlphaToSearch(){
     nav.style.marginTop = '0px';
 
+    if (window.innerWidth <= 700){
+      nav.classList.add('is-ready');
+      return;
+    }
+
     const navRect = nav.getBoundingClientRect();
     const searchRect = search.getBoundingClientRect();
-
     const delta = Math.round(searchRect.top - navRect.top);
-    nav.style.marginTop = `${Math.max(0, delta)}px`;
 
+    nav.style.marginTop = `${Math.max(0, delta)}px`;
     nav.classList.add('is-ready');
   }
 
-  // võimalikult vara
   requestAnimationFrame(alignAlphaToSearch);
   window.addEventListener('load', alignAlphaToSearch);
   window.addEventListener('resize', () => {
     nav.classList.remove('is-ready');
     requestAnimationFrame(alignAlphaToSearch);
   });
+})();
+</script>
+
+
+<script>
+(() => {
+  const logo = document.getElementById('siteLogo');
+  if (!logo) return;
+
+  function updateLogo(){
+    logo.classList.toggle('is-small', window.scrollY > 70);
+  }
+
+  updateLogo();
+  window.addEventListener('scroll', updateLogo, { passive:true });
 })();
 </script>
 
