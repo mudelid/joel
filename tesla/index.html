@@ -109,8 +109,70 @@
       letter-spacing:.6px;
     }
 
+    .count-label{
+      margin:14px 0 7px;
+      font-size:20px;
+      line-height:1;
+    }
+
+    .flip-counter{
+      display:flex;
+      justify-content:center;
+      gap:6px;
+      min-height:58px;
+      margin:0 auto 12px;
+    }
+
+    .flip-digit{
+      position:relative;
+      width:44px;
+      height:56px;
+      border:1px solid #000;
+      border-radius:8px;
+      background:#fff;
+      box-shadow:0 3px 9px rgba(0,0,0,.11);
+      overflow:hidden;
+      perspective:400px;
+    }
+
+    .flip-digit::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:50%;
+      height:1px;
+      background:#000;
+      opacity:.55;
+      z-index:3;
+      pointer-events:none;
+    }
+
+    .flip-digit .digit{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:44px;
+      line-height:1;
+      padding-top:3px;
+      transform-origin:center bottom;
+      backface-visibility:hidden;
+    }
+
+    .flip-digit.animate .digit{
+      animation:flipIn .6s cubic-bezier(.2,.7,.2,1);
+    }
+
+    @keyframes flipIn{
+      0%{ transform:rotateX(-90deg); opacity:.15; }
+      65%{ transform:rotateX(12deg); opacity:1; }
+      100%{ transform:rotateX(0); opacity:1; }
+    }
+
     .lead{
-      margin:11px 0 0;
+      margin:8px 0 0;
       font-size:18px;
       opacity:.7;
     }
@@ -262,18 +324,21 @@
       touch-action:none;
     }
 
-    #lb-zoom{
+    #lb-info{
       position:fixed;
       left:50%;
-      bottom:52px;
+      bottom:16px;
       transform:translateX(-50%);
       z-index:10003;
-      padding:4px 9px;
+      width:min(90vw,900px);
+      padding:6px 11px;
       border:1px solid rgba(255,255,255,.45);
       border-radius:999px;
       background:rgba(0,0,0,.36);
       color:#fff;
-      font:14px/1 system-ui,-apple-system,Segoe UI,sans-serif;
+      text-align:center;
+      font-size:22px;
+      line-height:1;
       backdrop-filter:blur(4px);
       pointer-events:none;
     }
@@ -324,17 +389,6 @@
     #lb-prev{ left:16px; }
     #lb-next{ right:16px; }
 
-    #lb-cap{
-      position:fixed;
-      bottom:16px;
-      left:50%;
-      transform:translateX(-50%);
-      width:min(90vw,900px);
-      color:#fff;
-      text-align:center;
-      font-size:30px;
-      line-height:1;
-    }
 
     .brand-arrow{
       position:fixed;
@@ -409,6 +463,40 @@
       display:none !important;
     }
 
+    #to-top{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      z-index:8500;
+      width:46px;
+      height:46px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid #000;
+      border-radius:50%;
+      background:rgba(255,255,255,.94);
+      color:#000;
+      font-size:26px;
+      line-height:1;
+      cursor:pointer;
+      box-shadow:0 4px 14px rgba(0,0,0,.14);
+      opacity:0;
+      visibility:hidden;
+      transform:translateY(8px);
+      transition:opacity .2s ease,visibility .2s ease,transform .2s ease,background .2s ease;
+    }
+
+    #to-top.show{
+      opacity:1;
+      visibility:visible;
+      transform:translateY(0);
+    }
+
+    #to-top:hover{ background:#f2f2f2; }
+
+    body.lb-open #to-top{ display:none; }
+
     footer{
       max-width:var(--maxw);
       margin:0 auto 35px;
@@ -439,6 +527,27 @@
       .page-header{ padding:116px 12px 12px; }
       h1{ font-size:48px; }
 
+      .count-label{
+        margin-top:11px;
+        font-size:17px;
+      }
+
+      .flip-counter{
+        min-height:48px;
+        gap:4px;
+        margin-bottom:10px;
+      }
+
+      .flip-digit{
+        width:37px;
+        height:47px;
+        border-radius:7px;
+      }
+
+      .flip-digit .digit{
+        font-size:37px;
+      }
+
       main{
         padding:0 10px;
         grid-template-columns:repeat(2,minmax(0,1fr));
@@ -463,9 +572,19 @@
         max-width:96vw;
         max-height:76vh;
       }
-      #lb-zoom{
-        bottom:68px;
-        font-size:12px;
+      #lb-info{
+        bottom:72px;
+        width:calc(100vw - 24px);
+        padding:6px 9px;
+        font-size:16px;
+      }
+
+      #to-top{
+        right:12px;
+        bottom:76px;
+        width:40px;
+        height:40px;
+        font-size:23px;
       }
 
       .lb-arrow{
@@ -478,7 +597,6 @@
 
       #lb-prev{ left:18px; }
       #lb-next{ right:18px; }
-      #lb-cap{ bottom:27px; width:calc(100vw - 150px); font-size:18px; }
       #lb-back{ font-size:15px; }
     }
   </style>
@@ -493,6 +611,12 @@
   <header class="page-header">
     <a class="back" href="../mudelid.html">← KÕIK MUDELID</a>
     <h1>TESLA</h1>
+
+    <div class="count-label">KOKKU MUDELEID</div>
+    <div class="flip-counter" id="modelCounter" aria-label="Mudelite arv">
+      <div class="flip-digit"><span class="digit">0</span></div>
+    </div>
+
     <p class="lead">VAJUTA PILDILE, ET NÄHA SUURELT</p>
   </header>
 
@@ -546,6 +670,50 @@
       window.addEventListener('scroll', updateLogo, {passive:true});
     })();
 
+    /* MUDELITE ARV – flip-counter */
+    (() => {
+      const counter = document.getElementById('modelCounter');
+      if (!counter) return;
+
+      const total = document.querySelectorAll('main .card').length;
+      const digits = String(total).split('');
+
+      counter.innerHTML = digits.map(d => `
+        <div class="flip-digit">
+          <span class="digit">${d}</span>
+        </div>
+      `).join('');
+
+      requestAnimationFrame(() => {
+        counter.querySelectorAll('.flip-digit').forEach((el, i) => {
+          setTimeout(() => el.classList.add('animate'), i * 80);
+        });
+      });
+
+      counter.setAttribute('aria-label', `Kokku ${total} mudelit`);
+    })();
+
+    /* TAGASI ÜLES */
+    (() => {
+      const btn = document.createElement('button');
+      btn.id = 'to-top';
+      btn.type = 'button';
+      btn.setAttribute('aria-label', 'Tagasi üles');
+      btn.textContent = '↑';
+      document.body.appendChild(btn);
+
+      function update(){
+        btn.classList.toggle('show', window.scrollY > 500);
+      }
+
+      btn.addEventListener('click', () => {
+        window.scrollTo({top:0, behavior:'smooth'});
+      });
+
+      update();
+      window.addEventListener('scroll', update, {passive:true});
+    })();
+
     /* LIGHTBOX + täpne ?img= identifikaator */
     (() => {
       const cards = [...document.querySelectorAll('.card')];
@@ -560,15 +728,13 @@
           <img id="lb-img" alt="">
         </div>
         <button class="lb-arrow" id="lb-next" type="button" aria-label="Järgmine">›</button>
-        <div id="lb-zoom">1.0×</div>
-        <div id="lb-cap" aria-live="polite"></div>
+        <div id="lb-info" aria-live="polite"></div>
       `;
       document.body.appendChild(overlay);
 
       const stageEl = overlay.querySelector('#lb-stage');
       const imgEl = overlay.querySelector('#lb-img');
-      const zoomEl = overlay.querySelector('#lb-zoom');
-      const capEl = overlay.querySelector('#lb-cap');
+      const infoEl = overlay.querySelector('#lb-info');
       const prevBtn = overlay.querySelector('#lb-prev');
       const nextBtn = overlay.querySelector('#lb-next');
       const closeBtn = overlay.querySelector('#lb-close');
@@ -628,9 +794,23 @@
         return Math.max(min, Math.min(max, value));
       }
 
+      function updateInfo(){
+        if (!infoEl || !gallery.length) return;
+        const item = gallery[current];
+        infoEl.textContent = `${item.label} · ${current + 1} / ${gallery.length} · ${zoom.toFixed(1)}×`;
+      }
+
       function applyTransform(){
         imgEl.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
-        if (zoomEl) zoomEl.textContent = `${zoom.toFixed(1)}×`;
+        updateInfo();
+      }
+
+      function updateModelUrl(item){
+        const url = new URL(location.href);
+        url.searchParams.delete('m');
+        url.searchParams.set('img', item.file);
+        /* from=daily / from=recent ja muud parameetrid jäävad alles. */
+        history.replaceState({}, '', url.pathname + url.search + url.hash);
       }
 
       function resetZoom(){
@@ -778,7 +958,8 @@
         resetZoom();
         imgEl.src = item.src;
         imgEl.alt = item.label;
-        capEl.textContent = item.label;
+        updateInfo();
+        updateModelUrl(item);
 
         overlay.classList.add('open');
         document.body.classList.add('lb-open');
@@ -804,7 +985,6 @@
         const clean = new URL(location.href);
         clean.searchParams.delete('img');
         clean.searchParams.delete('m');
-        clean.searchParams.delete('from');
         history.replaceState({}, '', clean.pathname + clean.search + clean.hash);
       }
 

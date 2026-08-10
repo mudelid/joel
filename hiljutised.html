@@ -902,5 +902,44 @@ if(sel){
 })();
 </script>
 
+
+<script>
+/* ==========================================================
+   HILJUTI LISATUD – MÄLETA VALITUD PERIOODI
+   ========================================================== */
+(() => {
+  const select = document.getElementById('recentRangeSelect');
+  if (!select) return;
+
+  const STORAGE_KEY = 'joelwheelsRecentRange';
+  const allowed = new Set([...select.options].map(o => o.value));
+
+  // Taasta viimane valik enne kasutaja sekkumist.
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (saved && allowed.has(saved)){
+      select.value = saved;
+
+      // Olemasolev leht kuulab select'i "change" sündmust.
+      // Käivitame selle, et nii flip-loendur kui ka kõik muud seotud
+      // arvutused kasutaksid kohe taastatud perioodi.
+      select.dispatchEvent(new Event('change', { bubbles:true }));
+    }
+  }catch(e){
+    console.warn('Hiljutiste perioodi ei saanud taastada:', e);
+  }
+
+  // Salvesta iga uus valik.
+  select.addEventListener('change', () => {
+    try{
+      localStorage.setItem(STORAGE_KEY, select.value);
+    }catch(e){
+      console.warn('Hiljutiste perioodi ei saanud salvestada:', e);
+    }
+  });
+})();
+</script>
+
 </body>
 </html>

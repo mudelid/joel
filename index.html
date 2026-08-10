@@ -477,6 +477,186 @@
     }
 
     /* =========================
+       OTSING / ÜLLATA MIND
+       ========================= */
+
+    .modal-tools{
+      display:flex;
+      gap:9px;
+      margin:0 0 12px;
+    }
+
+    .modal-tool-btn{
+      width:100%;
+      min-height:44px;
+      border:1px solid #000;
+      border-radius:11px;
+      background:#fff;
+      color:#000;
+      font-family:'BebasKai',sans-serif;
+      font-size:18px;
+      letter-spacing:.3px;
+      cursor:pointer;
+      padding:9px 12px;
+      transition:background .15s ease, transform .15s ease;
+      -webkit-appearance:none;
+      appearance:none;
+    }
+
+    .modal-tool-btn:hover{
+      background:#f2f2f2;
+      transform:translateY(-1px);
+    }
+
+    .search-field{
+      position:relative;
+      margin-bottom:12px;
+    }
+
+    .search-field input{
+      width:100%;
+      height:50px;
+      padding:9px 48px 9px 14px;
+      border:1px solid #000;
+      border-radius:12px;
+      background:#fff;
+      color:#000;
+      font-family:'BebasKai',sans-serif;
+      font-size:21px;
+      letter-spacing:.4px;
+      outline:none;
+      -webkit-appearance:none;
+      appearance:none;
+    }
+
+    .search-field input:focus{
+      box-shadow:0 0 0 3px rgba(0,0,0,.12);
+    }
+
+    .search-field::after{
+      content:"⌕";
+      position:absolute;
+      right:14px;
+      top:50%;
+      transform:translateY(-54%);
+      font:26px/1 system-ui,-apple-system,sans-serif;
+      pointer-events:none;
+    }
+
+    .search-results{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .search-result{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:7px 9px;
+      border:1px solid #000;
+      border-radius:11px;
+      background:#fff;
+      color:#000;
+      text-decoration:none;
+      transition:background .15s ease, transform .15s ease;
+    }
+
+    .search-result:hover{
+      background:#f5f5f5;
+      transform:translateY(-1px);
+    }
+
+    .search-result img{
+      width:96px;
+      aspect-ratio:4/3;
+      object-fit:cover;
+      border-radius:7px;
+      flex:0 0 auto;
+    }
+
+    .search-result .r-meta{
+      min-width:0;
+      flex:1;
+    }
+
+    .search-result .r-title{
+      font-size:19px;
+      line-height:1.05;
+    }
+
+    .search-result .r-brand{
+      margin-top:4px;
+      font-size:14px;
+      opacity:.62;
+    }
+
+    .search-summary{
+      margin:0 0 10px;
+      font-size:15px;
+      opacity:.65;
+      text-align:center;
+    }
+
+    .surprise-card{
+      overflow:hidden;
+      border:1px solid #000;
+      border-radius:14px;
+      background:#fff;
+      box-shadow:0 3px 10px rgba(0,0,0,.07);
+    }
+
+    .surprise-card img{
+      display:block;
+      width:100%;
+      aspect-ratio:4/3;
+      object-fit:cover;
+      background:#222;
+    }
+
+    .surprise-meta{
+      padding:12px 14px 14px;
+      text-align:center;
+    }
+
+    .surprise-title{
+      font-size:28px;
+      line-height:1.02;
+    }
+
+    .surprise-brand{
+      margin-top:5px;
+      font-size:17px;
+      opacity:.62;
+    }
+
+    .surprise-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:9px;
+      margin-top:13px;
+    }
+
+    .surprise-link{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:44px;
+      padding:9px 12px;
+      border:1px solid #000;
+      border-radius:11px;
+      background:#000;
+      color:#fff;
+      text-decoration:none;
+      font-size:18px;
+      letter-spacing:.3px;
+    }
+
+    .surprise-link:hover{
+      opacity:.82;
+    }
+
+    /* =========================
        FOOTER
        ========================= */
 
@@ -498,8 +678,8 @@
       }
 
       .logo{
-        width:96px;
-        height:96px;
+        width:74px;
+        height:74px;
         top:10px;
         left:10px;
         border-radius:11px;
@@ -614,6 +794,22 @@
       .ranking-list .count{
         font-size:16px;
       }
+
+      .search-result img{
+        width:82px;
+      }
+
+      .search-result .r-title{
+        font-size:17px;
+      }
+
+      .surprise-title{
+        font-size:23px;
+      }
+
+      .surprise-actions{
+        grid-template-columns:1fr;
+      }
     }
   </style>
 </head>
@@ -660,13 +856,18 @@
         <span class="action-icon" aria-hidden="true">▦</span>
       </a>
 
+      <button type="button" class="action-btn" id="btnSearch">
+        <span>OTSI MUDELIT</span>
+        <span class="action-icon" aria-hidden="true">⌕</span>
+      </button>
+
       <button type="button" class="action-btn" id="btnRandomBrand">
         <span>SUVALINE TOOTJA</span>
         <span class="action-icon" aria-hidden="true">↻</span>
       </button>
 
-      <button type="button" class="action-btn" id="btnRandomModel">
-        <span>SUVALINE MUDEL</span>
+      <button type="button" class="action-btn" id="btnSurprise">
+        <span>ÜLLATA MIND</span>
         <span class="action-icon" aria-hidden="true">◆</span>
       </button>
     </div>
@@ -687,6 +888,10 @@
         <div class="daily-grid" id="dailyGrid">
           <div class="loading">LAEN…</div>
         </div>
+
+        <div class="modal-tools" style="margin-top:12px;margin-bottom:0;">
+          <button type="button" class="modal-tool-btn" id="btnDailyRefresh">🎲 ANNA 3 UUT</button>
+        </div>
       </div>
     </div>
   </div>
@@ -703,6 +908,38 @@
         <ol class="ranking-list" id="rankingList">
           <li><span class="loading">LAEN…</span></li>
         </ol>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- OTSINGU MODAAL -->
+  <div class="modal-backdrop" id="searchModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="searchTitle">
+      <div class="modal-head">
+        <h2 id="searchTitle">OTSI MUDELIT</h2>
+        <button class="modal-close" type="button" data-close-modal aria-label="Sulge">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="search-field">
+          <input id="collectionSearch" type="search" placeholder="KIRJUTA MUDELI VÕI TOOTJA NIMI" autocomplete="off">
+        </div>
+        <div class="search-summary" id="searchSummary">ALUSTA KIRJUTAMIST</div>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÜLLATA MIND MODAAL -->
+  <div class="modal-backdrop" id="surpriseModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="surpriseTitle">
+      <div class="modal-head">
+        <h2 id="surpriseTitle">ÜLLATA MIND</h2>
+        <button class="modal-close" type="button" data-close-modal aria-label="Sulge">×</button>
+      </div>
+      <div class="modal-body" id="surpriseBody">
+        <div class="loading">LAEN…</div>
       </div>
     </div>
   </div>
@@ -731,10 +968,15 @@
        MODAALID
        ========================= */
     (() => {
-      const dailyModal   = document.getElementById('dailyModal');
-      const rankingModal = document.getElementById('rankingModal');
-      const btnDaily     = document.getElementById('btnDaily');
-      const btnRanking   = document.getElementById('btnRanking');
+      const dailyModal    = document.getElementById('dailyModal');
+      const rankingModal  = document.getElementById('rankingModal');
+      const searchModal   = document.getElementById('searchModal');
+      const surpriseModal = document.getElementById('surpriseModal');
+
+      const btnDaily    = document.getElementById('btnDaily');
+      const btnRanking  = document.getElementById('btnRanking');
+      const btnSearch   = document.getElementById('btnSearch');
+      const btnSurprise = document.getElementById('btnSurprise');
 
       let lastFocused = null;
 
@@ -764,6 +1006,20 @@
 
       btnDaily?.addEventListener('click', () => openModal(dailyModal));
       btnRanking?.addEventListener('click', () => openModal(rankingModal));
+      btnSearch?.addEventListener('click', () => {
+        openModal(searchModal);
+        setTimeout(() => document.getElementById('collectionSearch')?.focus(), 40);
+      });
+      btnSurprise?.addEventListener('click', () => openModal(surpriseModal));
+
+      window.AppModals = {
+        openModal,
+        closeModal,
+        dailyModal,
+        rankingModal,
+        searchModal,
+        surpriseModal
+      };
 
       document.querySelectorAll('[data-close-modal]').forEach(btn => {
         btn.addEventListener('click', () => closeModal(btn.closest('.modal-backdrop')));
@@ -950,15 +1206,36 @@
        PÄEVA MUDELID
        ========================= */
 
-    function renderDaily(models){
+    function renderDailyCards(items){
       const grid = document.getElementById('dailyGrid');
       if (!grid) return;
 
-      if (!models.length){
+      if (!items.length){
         grid.innerHTML = '<div class="error">ÜHTEGI MUDELIT EI LEITUD.</div>';
         return;
       }
 
+      grid.innerHTML = items.map(it => {
+        const dailyUrl = new URL(it.url, location.href);
+        dailyUrl.searchParams.set('from', 'daily');
+
+        return `
+          <a class="daily-card" href="${dailyUrl.pathname + dailyUrl.search}">
+            ${
+              it.img
+                ? `<img class="thumb" src="${it.img}" alt="${escapeHtml(it.title)}" loading="lazy" decoding="async">`
+                : ''
+            }
+            <div class="meta">
+              <div class="title">${escapeHtml(it.title)}</div>
+              <div class="brand">${escapeHtml(it.brand)}</div>
+            </div>
+          </a>
+        `;
+      }).join('');
+    }
+
+    function pickDailyModels(models){
       const today = new Date();
       const dayOfYear = Math.floor(
         (today - new Date(today.getFullYear(), 0, 0)) / 86400000
@@ -968,39 +1245,32 @@
       const used = new Set();
       const len = models.length;
 
-      /*
-        Sama põhimõte mis sinu vanas versioonis:
-        valik on ühe päeva jooksul stabiilne.
-      */
       for (let k = 0; k < 3 && picked.length < 3 && k < len * 2; k++){
         const idx = (dayOfYear * 7 + k * 97) % len;
         const it = models[idx];
-        const key = it.brand + '|' + it.title;
-
+        const key = it.brand + '|' + it.title + '|' + it.img;
         if (used.has(key)) continue;
-
         used.add(key);
         picked.push(it);
       }
 
-      grid.innerHTML = picked.map(it => {
-        const dailyUrl = new URL(it.url, location.href);
-        dailyUrl.searchParams.set('from', 'daily');
+      return picked;
+    }
 
-        return `
-        <a class="daily-card" href="${dailyUrl.pathname + dailyUrl.search}">
-          ${
-            it.img
-              ? `<img class="thumb" src="${it.img}" alt="${escapeHtml(it.title)}" loading="lazy" decoding="async">`
-              : ''
-          }
-          <div class="meta">
-            <div class="title">${escapeHtml(it.title)}</div>
-            <div class="brand">${escapeHtml(it.brand)}</div>
-          </div>
-        </a>
-      `;
-      }).join('');
+    function pickRandomModels(models, count = 3){
+      const pool = [...models];
+      const picked = [];
+
+      while (pool.length && picked.length < count){
+        const index = Math.floor(Math.random() * pool.length);
+        picked.push(pool.splice(index, 1)[0]);
+      }
+
+      return picked;
+    }
+
+    function renderDaily(models){
+      renderDailyCards(pickDailyModels(models));
     }
 
 
@@ -1079,31 +1349,124 @@
       }
     });
 
-    document.getElementById('btnRandomModel')?.addEventListener('click', async () => {
-      const btn = document.getElementById('btnRandomModel');
-      const textSpan = btn?.querySelector('span:first-child');
-      const oldText = textSpan?.textContent || 'SUVALINE MUDEL';
+    function modelViewUrl(it, from = ''){
+      const u = new URL(it.url, location.href);
+      if (from) u.searchParams.set('from', from);
+      return u.pathname + u.search;
+    }
+
+    function renderSurpriseModel(model){
+      const body = document.getElementById('surpriseBody');
+      if (!body) return;
+
+      body.innerHTML = `
+        <div class="surprise-card">
+          ${
+            model.img
+              ? `<img src="${model.img}" alt="${escapeHtml(model.title)}">`
+              : ''
+          }
+          <div class="surprise-meta">
+            <div class="surprise-title">${escapeHtml(model.title)}</div>
+            <div class="surprise-brand">${escapeHtml(model.brand)}</div>
+
+            <div class="surprise-actions">
+              <button type="button" class="modal-tool-btn" id="surpriseAgain">🎲 PROOVI UUESTI</button>
+              <a class="surprise-link" href="${modelViewUrl(model)}">VAATA MUDELIT →</a>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('surpriseAgain')?.addEventListener('click', async () => {
+        const data = await CollectionData.load();
+        renderSurpriseModel(pick(data.models));
+      });
+    }
+
+    document.getElementById('btnSurprise')?.addEventListener('click', async () => {
+      const body = document.getElementById('surpriseBody');
+      if (body) body.innerHTML = '<div class="loading">LAEN…</div>';
 
       try{
-        if (btn) btn.disabled = true;
-        if (textSpan) textSpan.textContent = 'LAEN…';
-
         const data = await CollectionData.load();
-
         if (!data.models.length) throw new Error('no-models');
-
-        const model = pick(data.models);
-        location.href = model.url;
-
+        renderSurpriseModel(pick(data.models));
       }catch(e){
-        if (e?.message === 'file'){
-          alert('Ava leht serveris (GitHub Pages).');
-        } else {
-          alert('Ei saanud mudelite andmeid laadida.');
+        if (body){
+          body.innerHTML = '<div class="error">EI SAANUD MUDELIT VALIDA.</div>';
+        }
+      }
+    });
+
+
+    /* =========================
+       KOGU KOLLEKTSIOONI OTSING
+       ========================= */
+
+    (() => {
+      const input = document.getElementById('collectionSearch');
+      const results = document.getElementById('searchResults');
+      const summary = document.getElementById('searchSummary');
+
+      if (!input || !results || !summary) return;
+
+      let models = [];
+
+      CollectionData.load()
+        .then(data => { models = data.models; })
+        .catch(() => {});
+
+      function draw(){
+        const q = input.value.trim().toLowerCase();
+
+        if (!q){
+          results.innerHTML = '';
+          summary.textContent = 'ALUSTA KIRJUTAMIST';
+          return;
         }
 
-        if (btn) btn.disabled = false;
-        if (textSpan) textSpan.textContent = oldText;
+        const found = models.filter(it =>
+          it.title.toLowerCase().includes(q) ||
+          it.brand.toLowerCase().includes(q)
+        );
+
+        summary.textContent = found.length
+          ? `LEITUD ${found.length}`
+          : 'TULEMUSI EI LEITUD';
+
+        results.innerHTML = found.slice(0, 50).map(it => `
+          <a class="search-result" href="${modelViewUrl(it)}">
+            ${
+              it.img
+                ? `<img src="${it.img}" alt="${escapeHtml(it.title)}" loading="lazy" decoding="async">`
+                : ''
+            }
+            <div class="r-meta">
+              <div class="r-title">${escapeHtml(it.title)}</div>
+              <div class="r-brand">${escapeHtml(it.brand)}</div>
+            </div>
+          </a>
+        `).join('');
+      }
+
+      input.addEventListener('input', draw);
+    })();
+
+
+    /* =========================
+       PÄEVA MUDELID – ANNA 3 UUT
+       ========================= */
+
+    document.getElementById('btnDailyRefresh')?.addEventListener('click', async () => {
+      try{
+        const data = await CollectionData.load();
+        renderDailyCards(pickRandomModels(data.models, 3));
+      }catch{
+        const grid = document.getElementById('dailyGrid');
+        if (grid){
+          grid.innerHTML = '<div class="error">EI SAANUD UUSI MUDELEID VALIDA.</div>';
+        }
       }
     });
 
