@@ -49,7 +49,7 @@
     .logo{
       position:fixed;
       top:18px;
-      left:18px;
+      right:18px;
       z-index:900;
       width:120px;
       height:120px;
@@ -79,7 +79,7 @@
       width:30px;
       height:30px;
       top:10px;
-      left:10px;
+      right:10px;
       border-radius:7px;
       box-shadow:0 3px 10px rgba(0,0,0,.18);
     }
@@ -501,7 +501,7 @@
         width:96px;
         height:96px;
         top:10px;
-        left:10px;
+        right:10px;
         border-radius:11px;
       }
 
@@ -509,7 +509,7 @@
         width:24px;
         height:24px;
         top:8px;
-        left:8px;
+        right:8px;
         border-radius:5px;
       }
 
@@ -754,6 +754,11 @@
         modal.classList.remove('open');
         modal.setAttribute('aria-hidden','true');
         document.body.classList.remove('modal-open');
+
+        if (modal === dailyModal && location.hash === '#daily'){
+          history.replaceState({}, '', location.pathname + location.search);
+        }
+
         lastFocused?.focus?.();
       }
 
@@ -775,6 +780,12 @@
         const open = document.querySelector('.modal-backdrop.open');
         if (open) closeModal(open);
       });
+
+      // Kui mudeli lightboxist tullakse tagasi Päeva mudelitesse,
+      // avaneb Päeva mudelite modaal automaatselt.
+      if (location.hash === '#daily'){
+        setTimeout(() => openModal(dailyModal), 0);
+      }
     })();
 
 
@@ -785,9 +796,26 @@
     const CollectionData = (() => {
       let loadingPromise = null;
 
-      function makeModelUrl(brandPageHref, title, base){
+      function imageFileName(imgUrl){
+        try{
+          const u = new URL(imgUrl, location.href);
+          return decodeURIComponent(u.pathname.split('/').pop() || '');
+        }catch{
+          return (imgUrl || '').split('/').pop().split('?')[0];
+        }
+      }
+
+      function makeModelUrl(brandPageHref, title, imgUrl, base){
         const url = new URL(brandPageHref, base);
-        url.searchParams.set('m', title);
+
+        const file = imageFileName(imgUrl);
+        if (file){
+          url.searchParams.set('img', file);
+        } else {
+          // Fallback vanemate / ilma pildita kaartide jaoks
+          url.searchParams.set('m', title);
+        }
+
         return url.pathname + url.search;
       }
 
@@ -860,7 +888,7 @@
                   brand: brandName,
                   title,
                   img: img ? new URL(img, brand.href).href : '',
-                  url: makeModelUrl(brand.href, title, base)
+                  url: makeModelUrl(brand.href, title, img, base)
                 });
               });
 
@@ -955,8 +983,12 @@
         picked.push(it);
       }
 
-      grid.innerHTML = picked.map(it => `
-        <a class="daily-card" href="${it.url}">
+      grid.innerHTML = picked.map(it => {
+        const dailyUrl = new URL(it.url, location.href);
+        dailyUrl.searchParams.set('from', 'daily');
+
+        return `
+        <a class="daily-card" href="${dailyUrl.pathname + dailyUrl.search}">
           ${
             it.img
               ? `<img class="thumb" src="${it.img}" alt="${escapeHtml(it.title)}" loading="lazy" decoding="async">`
@@ -967,7 +999,8 @@
             <div class="brand">${escapeHtml(it.brand)}</div>
           </div>
         </a>
-      `).join('');
+      `;
+      }).join('');
     }
 
 

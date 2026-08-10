@@ -719,7 +719,22 @@ a,a:link,a:visited{color:#000}
 
             const full  = new URL(img, href).href;
             const u     = new URL(href, base);
-            u.searchParams.set('m', title);
+
+            let imageFile = '';
+            try{
+              imageFile = decodeURIComponent(new URL(full).pathname.split('/').pop() || '');
+            }catch{
+              imageFile = (img || '').split('/').pop().split('?')[0];
+            }
+
+            if (imageFile){
+              u.searchParams.set('img', imageFile);
+            } else {
+              // Fallback juhuks, kui pildi failinime ei ole võimalik tuvastada
+              u.searchParams.set('m', title);
+            }
+
+            u.searchParams.set('from', 'recent');
 
             (byDate[key] ||= []).push({
               brand,
