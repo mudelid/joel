@@ -251,34 +251,50 @@
 
     .info-btn:hover{ background:#fff; }
 
+
 /* DIORAAMA NUPP */
-.diorama-btn{
-  position:absolute;
-  z-index:5;
-  top:8px;
-  right:8px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:30px;
-  height:30px;
-  padding:0;
-  border:1px solid #000;
-  border-radius:50%;
-  background:rgba(255,255,255,.92);
-  color:#000;
-  font-family:Arial,sans-serif;
-  font-size:18px;
-  font-weight:bold;
-  cursor:pointer;
-  box-shadow:0 2px 6px rgba(0,0,0,.15);
-  transition:background .2s,transform .2s;
+.diorama-btn {
+  position: absolute;
+  z-index: 5;
+  top: 8px;
+  left: 8px;
+  right: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+  padding: 0;
+
+  border: 1px solid rgba(0,0,0,.35);
+  border-radius: 50%;
+
+  background: rgba(255,255,255,.45);
+  color: rgba(0,0,0,.85);
+
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+
+  cursor: pointer;
+  backdrop-filter: blur(3px);
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  transition: background .2s, transform .2s;
 }
 
-.diorama-btn:hover{
-  background:#fff;
-  transform:scale(1.1);
+.diorama-btn:hover {
+  background: rgba(255,255,255,.85);
+  transform: scale(1.08);
 }
+
+/* Kui LISAINFO nupp on olemas,
+   liigub küsimärk selle alla */
+.card:has(.info-btn) .diorama-btn {
+  top: 44px;
+}
+
 
 /* DIORAAMA SUUR PILT */
 #diorama-overlay{
@@ -705,7 +721,7 @@
 
         <article class="card" 
 	data-added="2026-09-20"
-	data-diorama="img/dioramad/AIbmwm3japan.jpg">
+	data-diorama="img/AIbmwm3japan.jpg">
       <img class="thumb" src="img/hwbmwm3premroh.jpg" alt="BMW M3">
       <div class="content">
         <h3 class="title">BMW M3</h3>
@@ -1379,7 +1395,7 @@
 
     /* LISAINFO */
 
-/* AI DIORAAMA */
+/* ===== AI DIORAAMA SKRIPT ===== */
 (() => {
   const cards = document.querySelectorAll(
     '.card[data-diorama]'
@@ -1387,18 +1403,25 @@
 
   if (!cards.length) return;
 
+  // Väldi sama süsteemi topeltlisamist
+  if (document.getElementById('diorama-overlay')) return;
+
   const overlay = document.createElement('div');
   overlay.id = 'diorama-overlay';
   overlay.setAttribute('role', 'dialog');
   overlay.setAttribute('aria-modal', 'true');
   overlay.setAttribute('aria-label', 'AI dioraama pilt');
+  overlay.setAttribute('aria-hidden', 'true');
 
   overlay.innerHTML = `
     <button id="diorama-close"
             type="button"
             aria-label="Sulge">×</button>
+
     <img id="diorama-image" alt="">
+
     <div id="diorama-label">
+      AI-GA LOODUD DIORAAMA
     </div>
   `;
 
@@ -1406,10 +1429,12 @@
 
   const image = overlay.querySelector('#diorama-image');
   const closeBtn = overlay.querySelector('#diorama-close');
+
   let previousFocus = null;
 
-  function closeDiorama(){
+  function closeDiorama() {
     overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('lb-open');
     image.removeAttribute('src');
     previousFocus?.focus();
@@ -1423,6 +1448,7 @@
     btn.type = 'button';
     btn.className = 'diorama-btn';
     btn.textContent = '?';
+
     btn.setAttribute(
       'aria-label',
       'Vaata AI dioraama pilti'
@@ -1435,12 +1461,14 @@
       e.stopPropagation();
 
       previousFocus = btn;
+
       image.src = url;
       image.alt =
-        card.querySelector('.title')?.textContent +
-        ' AI dioraama';
+        (card.querySelector('.title')?.textContent ||
+        'Automudel') + ' AI dioraama';
 
       overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
       document.body.classList.add('lb-open');
       closeBtn.focus();
     });
@@ -1449,13 +1477,15 @@
   closeBtn.addEventListener('click', closeDiorama);
 
   overlay.addEventListener('click', e => {
-    if(e.target === overlay) closeDiorama();
+    if (e.target === overlay) {
+      closeDiorama();
+    }
   });
 
   window.addEventListener('keydown', e => {
-    if(!overlay.classList.contains('open')) return;
+    if (!overlay.classList.contains('open')) return;
 
-    if(e.key === 'Escape'){
+    if (e.key === 'Escape') {
       e.stopImmediatePropagation();
       closeDiorama();
     }
