@@ -251,6 +251,87 @@
 
     .info-btn:hover{ background:#fff; }
 
+/* DIORAAMA NUPP */
+.diorama-btn{
+  position:absolute;
+  z-index:5;
+  top:8px;
+  right:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;
+  height:30px;
+  padding:0;
+  border:1px solid #000;
+  border-radius:50%;
+  background:rgba(255,255,255,.92);
+  color:#000;
+  font-family:Arial,sans-serif;
+  font-size:18px;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  transition:background .2s,transform .2s;
+}
+
+.diorama-btn:hover{
+  background:#fff;
+  transform:scale(1.1);
+}
+
+/* DIORAAMA SUUR PILT */
+#diorama-overlay{
+  position:fixed;
+  inset:0;
+  z-index:15000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:65px 15px;
+  background:rgba(0,0,0,.9);
+  backdrop-filter:blur(5px);
+}
+
+#diorama-overlay.open{
+  display:flex;
+}
+
+#diorama-overlay img{
+  max-width:95vw;
+  max-height:80vh;
+  object-fit:contain;
+  border-radius:12px;
+  box-shadow:0 12px 45px rgba(0,0,0,.5);
+}
+
+#diorama-close{
+  position:fixed;
+  top:16px;
+  right:16px;
+  width:42px;
+  height:42px;
+  border:1px solid rgba(255,255,255,.55);
+  border-radius:11px;
+  background:rgba(255,255,255,.14);
+  color:#fff;
+  font-size:25px;
+  cursor:pointer;
+}
+
+#diorama-label{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#fff;
+  font-family:'BebasKai',sans-serif;
+  font-size:20px;
+  text-align:center;
+  width:90%;
+}
+
+
     #info-popover{
       position:fixed;
       z-index:12000;
@@ -622,7 +703,9 @@
 
 <main> 
 
-        <article class="card" data-added="2026-09-20">
+        <article class="card" 
+	data-added="2026-09-20"
+	data-diorama="img/dioramad/AIbmwm3japan.jpg">
       <img class="thumb" src="img/hwbmwm3premroh.jpg" alt="BMW M3">
       <div class="content">
         <h3 class="title">BMW M3</h3>
@@ -1295,6 +1378,90 @@
     })();
 
     /* LISAINFO */
+
+/* AI DIORAAMA */
+(() => {
+  const cards = document.querySelectorAll(
+    '.card[data-diorama]'
+  );
+
+  if (!cards.length) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'diorama-overlay';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'AI dioraama pilt');
+
+  overlay.innerHTML = `
+    <button id="diorama-close"
+            type="button"
+            aria-label="Sulge">×</button>
+    <img id="diorama-image" alt="">
+    <div id="diorama-label">
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  const image = overlay.querySelector('#diorama-image');
+  const closeBtn = overlay.querySelector('#diorama-close');
+  let previousFocus = null;
+
+  function closeDiorama(){
+    overlay.classList.remove('open');
+    document.body.classList.remove('lb-open');
+    image.removeAttribute('src');
+    previousFocus?.focus();
+  }
+
+  cards.forEach(card => {
+    const url = card.dataset.diorama?.trim();
+    if (!url) return;
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'diorama-btn';
+    btn.textContent = '?';
+    btn.setAttribute(
+      'aria-label',
+      'Vaata AI dioraama pilti'
+    );
+
+    card.appendChild(btn);
+
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      previousFocus = btn;
+      image.src = url;
+      image.alt =
+        card.querySelector('.title')?.textContent +
+        ' AI dioraama';
+
+      overlay.classList.add('open');
+      document.body.classList.add('lb-open');
+      closeBtn.focus();
+    });
+  });
+
+  closeBtn.addEventListener('click', closeDiorama);
+
+  overlay.addEventListener('click', e => {
+    if(e.target === overlay) closeDiorama();
+  });
+
+  window.addEventListener('keydown', e => {
+    if(!overlay.classList.contains('open')) return;
+
+    if(e.key === 'Escape'){
+      e.stopImmediatePropagation();
+      closeDiorama();
+    }
+  });
+})();
+
     (() => {
       const cards = [...document.querySelectorAll('.card[data-info]')];
 
